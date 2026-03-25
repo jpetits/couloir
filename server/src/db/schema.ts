@@ -8,6 +8,7 @@ import {
   timestamp,
   boolean,
 } from "drizzle-orm/pg-core";
+import { relations } from "drizzle-orm";
 
 export const users = pgTable("users", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -28,6 +29,10 @@ export const activities = pgTable("activities", {
   maxSlope: real("max_slope").notNull(), // in degrees
 });
 
+export const activitiesRelations = relations(activities, ({ many }) => ({
+  points: many(points),
+}));
+
 export const points = pgTable("points", {
   id: uuid("id").primaryKey().defaultRandom(),
   activityId: uuid("activity_id")
@@ -39,3 +44,7 @@ export const points = pgTable("points", {
   speed: real("speed").notNull(), // km/h
   time: date("time").notNull(),
 });
+
+export const pointsRelations = relations(points, ({ one }) => ({
+  activity: one(activities, { fields: [points.activityId], references: [activities.id] }),
+}));

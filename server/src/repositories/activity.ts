@@ -9,7 +9,10 @@ export const activityRepository = (db: Db) => ({
     return db.select().from(activities).limit(limit);
   },
   findById: async (id: string) => {
-    return db.select().from(activities).where(eq(activities.id, id));
+    return db.query.activities.findFirst({
+      where: eq(activities.id, id),
+      with: { points: true },
+    });
   },
   create: async (data: any) => {
     return db.insert(activities).values(data).returning();
