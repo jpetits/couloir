@@ -11,13 +11,13 @@ export const getActivities = async (limit: number) => {
   return activitiesList;
 };
 
-export const getActivity = async (id: number) => {
+export const getActivity = async (id: string) => {
   const activity = await activityRepository(db).findById(id);
   if (!activity) throw new AppError("Activity not found", 404);
   return activity;
 };
 
-export const deleteActivity = async (id: number) => {
+export const deleteActivity = async (id: string) => {
   await activityRepository(db).delete(id);
 };
 

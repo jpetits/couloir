@@ -2,11 +2,7 @@ import type { Request, Response, NextFunction, RequestHandler } from "express";
 import * as activityService from "../services/activity";
 import asyncHandler from "../middleware/asyncHandler";
 import { AppError } from "../types/appError";
-import type {
-  deleteActivitySchema,
-  getActivitiesSchema,
-  getActivitySchema,
-} from "../schema/query";
+import type { getActivitiesSchema } from "../schema/query";
 import { z } from "zod";
 
 //@route GET /activities
@@ -26,13 +22,8 @@ const getActivities: RequestHandler = asyncHandler(
 // @access Public
 const findActivity: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const activity = await activityService.getActivity(
-      (req.validatedQuery as z.infer<typeof getActivitySchema>).id,
-    );
-    if (!activity) {
-      const error = new AppError("Activity not found", 404);
-      return next(error);
-    }
+    const id = req.params.id as string;
+    const activity = await activityService.getActivity(id);
     res.status(200).json(activity);
   },
 );
@@ -60,7 +51,7 @@ const postActivity: RequestHandler = asyncHandler(
 // @access Public
 const deleteActivity: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const id = (req.validatedQuery as z.infer<typeof deleteActivitySchema>).id;
+    const id = req.params.id as string;
     await activityService.deleteActivity(id);
     res.status(204).send();
   },
