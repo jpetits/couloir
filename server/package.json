@@ -2,10 +2,11 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "server.js",
   "type": "module",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "tsx watch --no-cache --env-file=.env server.js",
+    "db:push": "drizzle-kit push"
   },
   "keywords": [],
   "author": "",
@@ -35,8 +36,11 @@
     "@types/multer": "^2.1.0",
     "@types/node": "^25.5.0",
     "@types/turf": "^3.5.32",
+    "eslint": "^10.1.0",
     "nodemon": "^3.1.14",
+    "prettier": "^3.8.1",
     "ts-node": "^10.9.2",
+    "tsx": "^4.21.0",
     "typescript": "^6.0.2"
   }
 }

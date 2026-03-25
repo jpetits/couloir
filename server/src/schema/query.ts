@@ -6,3 +6,11 @@ export const getActivitiesSchema = z.object({
     .gt(0, { message: "errors.amountRequired" })
     .default(10),
 });
+
+export const getActivitySchema = z.object({
+  id: z.coerce.number().gt(0, { message: "errors.idRequired" }),
+});
+
+export const deleteActivitySchema = z.object({
+  id: z.coerce.number().gt(0, { message: "errors.idRequired" }),
+});

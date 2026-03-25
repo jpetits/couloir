@@ -1,5 +1,5 @@
 import type { Request, Response, NextFunction } from "express";
-import { HttpError } from "../types/types";
+import { type HttpError } from "../types/types";
 
 const errorHandler = (
   err: HttpError,

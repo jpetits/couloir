@@ -1,26 +1,25 @@
-import express from "express";
+import express, { type Router } from "express";
+import multer from "multer";
 import {
   getActivities,
-  updateActivities,
-  postActivities,
+  postActivity,
   deleteActivity,
   findActivity,
-} from "../controllers/activityController.js";
+} from "../controllers/activity";
 import { validateQuery } from "../middleware/validate.js";
-import { getActivitiesSchema } from "../schema/query";
+import {
+  getActivitiesSchema,
+  getActivitySchema,
+  deleteActivitySchema,
+} from "../schema/query";
 import authMiddleware from "../middleware/auth";
 
-const router = express.Router();
+const router: Router = express.Router();
+const upload = multer({ storage: multer.memoryStorage() });
 
-router.get(
-  "/",
-  authMiddleware,
-  validateQuery(getActivitiesSchema),
-  getActivities,
-);
-router.get("/:id", authMiddleware, findActivity);
-router.post("/", authMiddleware, postActivity);
-router.put("/:id", authMiddleware, updateActivity);
-router.delete("/:id", authMiddleware, deleteActivity);
+router.get("/", validateQuery(getActivitiesSchema), getActivities);
+router.get("/:id", validateQuery(getActivitySchema), findActivity);
+router.post("/", upload.single("file"), postActivity);
+router.delete("/:id", validateQuery(deleteActivitySchema), deleteActivity);
 
 export default router;

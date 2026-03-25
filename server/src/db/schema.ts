@@ -3,7 +3,7 @@ import {
   uuid,
   varchar,
   text,
-  integer,
+  real,
   date,
   timestamp,
   boolean,
@@ -18,28 +18,24 @@ export const users = pgTable("users", {
 
 export const activities = pgTable("activities", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
+  userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
   date: date("date").notNull(),
-  duration: integer("duration").notNull(), // in seconds
-  distance: integer("distance").notNull(), // in meters
-  elevGain: integer("elev_gain").notNull(), // in meters
-  elevLoss: integer("elev_loss").notNull(), // in meters
-  maxSpeed: integer("max_speed").notNull(), // in m/s
-  maxSlope: integer("max_slope").notNull(), // in degrees
-  points: text("points").notNull(), // JSON stringified array of points
+  duration: real("duration").notNull(), // in seconds
+  distance: real("distance").notNull(), // in meters
+  elevGain: real("elev_gain").notNull(),
+  elevLoss: real("elev_loss").notNull(),
+  maxSpeed: real("max_speed").notNull(), // km/h
+  maxSlope: real("max_slope").notNull(), // in degrees
 });
 
-export const sessions = pgTable("sessions", {
+export const points = pgTable("points", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id")
-    .notNull()
-    .references(() => users.id, { onDelete: "cascade" }),
   activityId: uuid("activity_id")
     .notNull()
     .references(() => activities.id, { onDelete: "cascade" }),
-  token: varchar("token", { length: 255 }).notNull().unique(),
-  expiresAt: timestamp("expires_at").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
+  lat: real("lat").notNull(),
+  lng: real("lng").notNull(),
+  ele: real("ele").notNull(),
+  speed: real("speed").notNull(), // km/h
+  time: date("time").notNull(),
 });

@@ -1,18 +1,18 @@
-import express, { type Application } from "express";
+import express from "express";
 import cors from "cors";
 import helmet from "helmet";
 import dotenv from "dotenv";
-import errorHandler from "./middleware/error";
-import notFoundHandler from "./middleware/notFound";
-import activityRouter from "./routes/activities";
+import errorHandler from "./src/middleware/error";
+import notFoundHandler from "./src/middleware/notFound";
+import activityRouter from "./src/routes/activities";
 
 dotenv.config();
 
-const app: Application = express();
+const app = express();
 const PORT = process.env.PORT || 3001;
 
 app.use(helmet());
-app.use(cors({ origin: "http://localhost:5173" }));
+app.use(cors({ origin: `http://localhost:${PORT}` }));
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 

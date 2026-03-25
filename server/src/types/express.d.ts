@@ -1,9 +1,9 @@
-import { User } from "@prisma/client"; // Assuming User is a Prisma model
+import type { JwtPayload } from "jsonwebtoken";
 
 declare global {
   namespace Express {
     interface Request {
-      user?: User;
+      user?: JwtPayload | string;
       validatedQuery?: unknown;
     }
   }
