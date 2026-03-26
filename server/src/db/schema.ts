@@ -10,16 +10,9 @@ import {
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
-export const users = pgTable("users", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  email: varchar("email", { length: 255 }).notNull().unique(),
-  passwordHash: text("password_hash").notNull(),
-  createdAt: timestamp("created_at").defaultNow(),
-});
-
 export const activities = pgTable("activities", {
   id: uuid("id").primaryKey().defaultRandom(),
-  userId: uuid("user_id").references(() => users.id, { onDelete: "cascade" }),
+  userId: text("user_id").notNull(),
   date: date("date").notNull(),
   duration: real("duration").notNull(), // in seconds
   distance: real("distance").notNull(), // in meters
@@ -46,5 +39,8 @@ export const points = pgTable("points", {
 });
 
 export const pointsRelations = relations(points, ({ one }) => ({
-  activity: one(activities, { fields: [points.activityId], references: [activities.id] }),
+  activity: one(activities, {
+    fields: [points.activityId],
+    references: [activities.id],
+  }),
 }));

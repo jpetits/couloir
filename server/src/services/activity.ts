@@ -1,7 +1,6 @@
 import { db } from "../db/index";
 import { activityRepository } from "../repositories/activity";
 import { pointRepository } from "../repositories/point";
-import { activities, points } from "../db/schema";
 import { type NewPoint } from "../types/types";
 import { AppError } from "../types/appError";
 import { parseFitFile } from "./fitParser";
@@ -21,11 +20,14 @@ export const deleteActivity = async (id: string) => {
   await activityRepository(db).delete(id);
 };
 
-export const postActivity = async (buffer: Buffer) => {
+export const postActivity = async (buffer: Buffer, userId: string) => {
   const { points: parsedPoints, ...activityFields } =
     await parseFitFile(buffer);
 
-  const [activity] = await activityRepository(db).create({ ...activityFields });
+  const [activity] = await activityRepository(db).create({
+    ...activityFields,
+    userId,
+  });
 
   if (!activity) throw new AppError("Failed to create activity", 500);
 

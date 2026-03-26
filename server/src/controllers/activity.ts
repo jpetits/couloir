@@ -4,6 +4,7 @@ import asyncHandler from "../middleware/asyncHandler";
 import { AppError } from "../types/appError";
 import type { getActivitiesSchema } from "../schema/query";
 import { z } from "zod";
+import { getAuth } from "@clerk/express";
 
 //@route GET /activities
 //@desc Get all activities
@@ -40,7 +41,14 @@ const postActivity: RequestHandler = asyncHandler(
       return next(error);
     }
 
-    const activity = await activityService.postActivity(file.buffer);
+    const { userId } = getAuth(req);
+
+    if (!userId) {
+      const error = new AppError("User not authenticated", 401);
+      return next(error);
+    }
+
+    const activity = await activityService.postActivity(file.buffer, userId);
 
     res.status(201).json(activity);
   },
