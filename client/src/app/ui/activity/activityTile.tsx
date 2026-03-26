@@ -20,6 +20,7 @@ const ActivityTile = memo(function ActivityTile({
     >
       <h1>{activity.id}</h1>
       <p>{activity.date}</p>
+      <p>UserId : {activity.userId}</p>
       <ul>
         <li>Durée : {Math.round(activity.duration / 60)} min</li>
         <li>Distance : {(activity.distance / 1000).toFixed(1)} km</li>

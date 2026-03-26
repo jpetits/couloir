@@ -15,7 +15,7 @@ export type Point = z.infer<typeof PointSchema>;
 
 export const ActivitySchema = z.object({
   id: z.string(),
-  userId: z.string().nullable(),
+  userId: z.string(),
   date: z.string(),
   duration: z.number(),
   distance: z.number(),

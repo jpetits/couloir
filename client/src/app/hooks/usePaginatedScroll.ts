@@ -1,18 +1,21 @@
 import { useEffect, useMemo } from "react";
 import { useInfiniteQuery } from "@tanstack/react-query";
+import { useApi } from "./useApi";
 
 export function usePaginatedScroll<T>(
   initialMovieList: T[],
   fetchMorePath: string,
   ref: React.RefObject<HTMLDivElement | null>,
 ) {
+  const apiFetch = useApi();
+
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, error } =
     useInfiniteQuery({
-      queryKey: ["movies", fetchMorePath],
+      queryKey: ["activities", fetchMorePath],
       queryFn: async ({ pageParam }) => {
-        const url = new URL(fetchMorePath, window.location.origin);
+        const url = new URL(fetchMorePath);
         url.searchParams.set("page", String(pageParam));
-        return await fetch(url.toString()).then((res) => res.json());
+        return apiFetch(url.toString());
       },
       initialPageParam: 1,
       getNextPageParam: (lastPage, _, lastPageParam) =>

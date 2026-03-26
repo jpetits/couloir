@@ -9,10 +9,12 @@ export function useApi() {
   ): Promise<T> {
     const token = await getToken();
 
+    const isFormData = options?.body instanceof FormData;
+
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${path}`, {
       ...options,
       headers: {
-        "Content-Type": "application/json",
+        ...(!isFormData && { "Content-Type": "application/json" }),
         ...(token && { Authorization: `Bearer ${token}` }),
         ...options?.headers,
       },

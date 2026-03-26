@@ -13,3 +13,21 @@ export async function fetchActivity(id: string): Promise<Activity> {
   );
   return activity;
 }
+
+export async function postActivity(file: File): Promise<Activity> {
+  const formData = new FormData();
+  formData.append("file", file);
+
+  const activity = await apiFetch<Activity>("/api/activities", {
+    method: "POST",
+    body: formData,
+  }).then((data) => ActivitySchema.parse(data));
+
+  return activity;
+}
+
+export async function deleteActivity(id: string): Promise<void> {
+  await apiFetch("/api/activities/" + id, {
+    method: "DELETE",
+  });
+}
