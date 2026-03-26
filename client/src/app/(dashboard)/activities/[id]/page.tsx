@@ -1,6 +1,6 @@
-import Image from "next/image";
 import { notFound } from "next/navigation";
 import { fetchActivity } from "@/lib/data";
+import ActivityMapWrapper from "@/app/ui/activity/activityMapWrapper";
 
 export default async function ActivityPage({
   params,
@@ -31,6 +31,9 @@ export default async function ActivityPage({
         </li>
       </ul>
       <p>{activity.points?.length} points GPS enregistrés</p>
+      {activity.points && activity.points.length > 0 && (
+        <ActivityMapWrapper points={activity.points} />
+      )}
     </main>
   );
 }
