@@ -1,4 +1,4 @@
-import type { JwtPayload } from "jsonwebtoken";
+import type {} from "@clerk/express";
 
 declare global {
   namespace Express {

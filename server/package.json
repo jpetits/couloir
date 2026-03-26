@@ -13,6 +13,7 @@
   "license": "ISC",
   "packageManager": "pnpm@10.28.2",
   "dependencies": {
+    "@clerk/express": "^2.0.7",
     "@turf/length": "^7.3.4",
     "@turf/turf": "^7.3.4",
     "bcryptjs": "^3.0.3",

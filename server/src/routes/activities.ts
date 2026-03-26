@@ -8,14 +8,19 @@ import {
 } from "../controllers/activity";
 import { validateQuery } from "../middleware/validate.js";
 import { getActivitiesSchema } from "../schema/query";
-import authMiddleware from "../middleware/auth";
+import { requireAuth } from "@clerk/express";
 
 const router: Router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
-router.get("/", validateQuery(getActivitiesSchema), getActivities);
-router.get("/:id", findActivity);
-router.post("/", upload.single("file"), postActivity);
-router.delete("/:id", deleteActivity);
+router.get(
+  "/",
+  requireAuth(),
+  validateQuery(getActivitiesSchema),
+  getActivities,
+);
+router.get("/:id", requireAuth(), findActivity);
+router.post("/", requireAuth(), upload.single("file"), postActivity);
+router.delete("/:id", requireAuth(), deleteActivity);
 
 export default router;
