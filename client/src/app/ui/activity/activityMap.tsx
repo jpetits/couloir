@@ -24,7 +24,7 @@ export default function ActivityMap({ points }: { points: Point[] }) {
 
   return (
     <MapContainer
-      style={{ height: 400, width: "100%" }}
+      style={{ height: 600, width: "100%" }}
       center={positions[0] ?? [0, 0]}
       zoom={13}
     >

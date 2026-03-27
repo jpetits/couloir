@@ -29,11 +29,7 @@ export default function ActivityList({
           className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 xl:grid-cols-6 gap-3"
         >
           {page.map((activity: Activity, index: number) => (
-            <ActivityTile
-              key={activity.id}
-              activity={activity}
-              priority={pageIndex === 0 && index < 6}
-            />
+            <ActivityTile key={activity.id} activity={activity} />
           ))}
         </div>
       ))}

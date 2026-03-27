@@ -4,16 +4,32 @@ import { useRef, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { useApi } from "@/app/hooks/useApi";
 import { ActivitySchema } from "@/lib/schema";
-import { useUpload } from "@/app/hooks/useUpload";
 
 export default function UploadButton() {
   const inputRef = useRef<HTMLInputElement>(null);
-
-  const { uploadFile, error, loading } = useUpload();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const apiFetch = useApi();
+  const queryClient = useQueryClient();
 
   async function handleFile(file: File) {
-    await uploadFile(file);
-    if (inputRef.current) inputRef.current.value = "";
+    setLoading(true);
+    setError(null);
+    try {
+      const formData = new FormData();
+      formData.append("file", file);
+      const data = await apiFetch("/api/activities", {
+        method: "POST",
+        body: formData,
+      });
+      ActivitySchema.parse(data);
+      await queryClient.invalidateQueries({ queryKey: ["movies"] });
+    } catch (e) {
+      setError(e instanceof Error ? e.message : "Upload failed");
+    } finally {
+      setLoading(false);
+      if (inputRef.current) inputRef.current.value = "";
+    }
   }
 
   return (
