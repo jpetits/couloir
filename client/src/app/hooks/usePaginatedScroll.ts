@@ -11,7 +11,7 @@ export function usePaginatedScroll<T>(
 
   const { data, fetchNextPage, hasNextPage, isFetchingNextPage, error } =
     useInfiniteQuery({
-      queryKey: ["activities", fetchMorePath],
+      queryKey: ["activities"],
       queryFn: async ({ pageParam }) => {
         const url = new URL(fetchMorePath);
         url.searchParams.set("page", String(pageParam));
@@ -24,7 +24,6 @@ export function usePaginatedScroll<T>(
         pages: [initialMovieList],
         pageParams: [1],
       },
-      staleTime: Infinity,
     });
 
   useEffect(() => {

@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { fetchActivity } from "@/lib/data";
 import ActivityMapWrapper from "@/app/ui/activity/activityMapWrapper";
+import BackButton from "@/app/ui/dashboard/backButton";
 
 export default async function ActivityPage({
   params,
@@ -18,6 +19,7 @@ export default async function ActivityPage({
 
   return (
     <main>
+      <BackButton />
       <h1>{activity.id}</h1>
       <p>{activity.date}</p>
       <ul>
