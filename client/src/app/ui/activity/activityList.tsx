@@ -1,21 +1,12 @@
 "use client";
 
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableFooter,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
 import { useRef } from "react";
-import ActivityTile from "./activityTile";
+import { columns } from "./columns";
 import { usePaginatedScroll } from "../../hooks/usePaginatedScroll";
 import { ActivityListSkeleton, ActivityTileSkeleton } from "../skeletons";
 import { Activity } from "@/lib/schema";
 import { useMutationState } from "@tanstack/react-query";
+import { DataTable } from "./dataTable";
 
 export default function ActivityList({
   initialActivityList,
@@ -26,11 +17,8 @@ export default function ActivityList({
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
-  const { data, isFetchingNextPage, error } = usePaginatedScroll<Activity>(
-    initialActivityList,
-    fetchMorePath,
-    ref,
-  );
+  const { data, allItems, isFetchingNextPage, error } =
+    usePaginatedScroll<Activity>(initialActivityList, fetchMorePath, ref);
 
   const isPendingUpload =
     useMutationState({
@@ -42,30 +30,7 @@ export default function ActivityList({
 
   return (
     <div className="flex flex-row">
-      <Table>
-        <TableCaption>A list of your recent invoices.</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">Date</TableHead>
-            <TableHead>Distance</TableHead>
-            <TableHead>Duration</TableHead>
-            <TableHead>Dénivelé</TableHead>
-            <TableHead className="text-right">Vitesse moy</TableHead>
-            <TableHead className="text-right">Vitesse max</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {data.pages.map((page, pageIndex) => (
-            <TableRow key={pageIndex} className="">
-              {page.map((activity: Activity) => (
-                <ActivityTile key={activity.id} activity={activity} />
-              ))}
-
-              {isPendingUpload && <ActivityTileSkeleton />}
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+      <DataTable columns={columns} data={allItems} />
 
       <div ref={ref} />
       {isFetchingNextPage && !error && <ActivityListSkeleton />}
