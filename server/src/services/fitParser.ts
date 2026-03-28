@@ -82,6 +82,7 @@ export const parseFitFile = (fileBuffer: Buffer): Promise<ParsedActivity> => {
 
       const session = data?.sessions?.[0];
       const firstPoint = points[0];
+      const name = data.activity?.event ?? "Activity";
 
       resolve({
         date: firstPoint?.time
@@ -89,11 +90,12 @@ export const parseFitFile = (fileBuffer: Buffer): Promise<ParsedActivity> => {
           : new Date().toISOString(),
         duration: session?.total_timer_time ?? 0,
         distance: totalDistance,
-        elevGain,
-        elevLoss,
+        elevGain: session?.total_ascent ?? elevGain,
+        elevLoss: session?.total_descent ?? elevLoss,
         maxSpeed: session?.max_speed ?? Math.max(...points.map((p) => p.speed)),
         maxSlope,
         points,
+        name: name,
       });
     });
   });

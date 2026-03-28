@@ -12,6 +12,7 @@ import { relations } from "drizzle-orm";
 
 export const activities = pgTable("activities", {
   id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull().default("Activity"),
   userId: text("user_id").notNull(),
   date: date("date").notNull(),
   duration: real("duration").notNull(), // in seconds

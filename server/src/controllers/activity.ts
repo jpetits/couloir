@@ -83,7 +83,7 @@ const deleteActivity: RequestHandler = asyncHandler(
     }
 
     await activityService.deleteActivity(id, userId);
-    res.status(204).send();
+    res.status(200).json({ id });
   },
 );
 
