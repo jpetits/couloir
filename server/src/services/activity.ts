@@ -10,6 +10,10 @@ export const getActivities = async (limit: number, userId: string) => {
   return activitiesList;
 };
 
+export const getActivitiesStats = async (userId: string) => {
+  return await activityRepository(db).getStats(userId);
+};
+
 export const getActivity = async (id: string, userId: string) => {
   const activity = await activityRepository(db).findById(id, userId);
   if (!activity) throw new AppError("Activity not found", 404);

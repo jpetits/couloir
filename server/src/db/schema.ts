@@ -1,13 +1,4 @@
-import {
-  pgTable,
-  uuid,
-  varchar,
-  text,
-  real,
-  date,
-  timestamp,
-  boolean,
-} from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, real, date } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
 export const activities = pgTable("activities", {

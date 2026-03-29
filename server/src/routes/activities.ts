@@ -5,10 +5,12 @@ import {
   postActivity,
   deleteActivity,
   findActivity,
+  getActivitiesStats,
 } from "../controllers/activity";
 import { validateQuery } from "../middleware/validate.js";
 import { getActivitiesSchema } from "../schema/query";
 import { requireAuth } from "@clerk/express";
+import { attachUser } from "../middleware/attachUser";
 
 const router: Router = express.Router();
 const upload = multer({ storage: multer.memoryStorage() });
@@ -16,11 +18,19 @@ const upload = multer({ storage: multer.memoryStorage() });
 router.get(
   "/",
   requireAuth(),
+  attachUser,
   validateQuery(getActivitiesSchema),
   getActivities,
 );
-router.get("/:id", requireAuth(), findActivity);
-router.post("/", requireAuth(), upload.single("file"), postActivity);
-router.delete("/:id", requireAuth(), deleteActivity);
+router.get("/stats", requireAuth(), attachUser, getActivitiesStats);
+router.get("/:id", requireAuth(), attachUser, findActivity);
+router.post(
+  "/",
+  requireAuth(),
+  attachUser,
+  upload.single("file"),
+  postActivity,
+);
+router.delete("/:id", requireAuth(), attachUser, deleteActivity);
 
 export default router;

@@ -1,5 +1,5 @@
 import { activities } from "../db/schema";
-import { eq } from "drizzle-orm";
+import { eq, sum, count } from "drizzle-orm";
 import { db } from "../db/index";
 
 type Db = typeof db;
@@ -24,5 +24,25 @@ export const activityRepository = (db: Db) => ({
   },
   delete: async (id: string, userId: string) => {
     return db.delete(activities).where(eq(activities.id, id));
+  },
+  getStats: async (userId: string) => {
+    const result = await db
+      .select({
+        totalDistance: sum(activities.distance),
+        totalDuration: sum(activities.duration),
+        totalElevationLoss: sum(activities.elevLoss),
+        count: count(),
+      })
+      .from(activities)
+      .where(eq(activities.userId, userId));
+
+    return (
+      result[0] || {
+        totalDistance: 0,
+        totalDuration: 0,
+        totalElevationLoss: 0,
+        count: 0,
+      }
+    );
   },
 });

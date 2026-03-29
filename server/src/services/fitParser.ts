@@ -82,7 +82,7 @@ export const parseFitFile = (fileBuffer: Buffer): Promise<ParsedActivity> => {
 
       const session = data?.sessions?.[0];
       const firstPoint = points[0];
-      const name = data.activity?.event ?? "Activity";
+      const name = data?.activity?.event ?? "Activity";
 
       resolve({
         date: firstPoint?.time

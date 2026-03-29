@@ -11,16 +11,9 @@ import { getAuth } from "@clerk/express";
 //@access Public
 const getActivities: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { userId } = getAuth(req);
-
-    if (!userId) {
-      const error = new AppError("User not authenticated", 401);
-      return next(error);
-    }
-
     const activitiesList = await activityService.getActivities(
       (req.validatedQuery as z.infer<typeof getActivitiesSchema>).limit,
-      userId,
+      req.userId,
     );
     return res.status(200).json(activitiesList);
   },
@@ -32,19 +25,13 @@ const getActivities: RequestHandler = asyncHandler(
 const findActivity: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id as string;
-    const { userId } = getAuth(req);
 
-    if (!userId) {
-      const error = new AppError("User not authenticated", 401);
-      return next(error);
-    }
-
-    const activity = await activityService.getActivity(id, userId);
+    const activity = await activityService.getActivity(id, req.userId);
     res.status(200).json(activity);
   },
 );
 
-// @route POST /activity
+// @route POST /activities
 // @desc Create a new activity
 // @access Public
 const postActivity: RequestHandler = asyncHandler(
@@ -56,35 +43,42 @@ const postActivity: RequestHandler = asyncHandler(
       return next(error);
     }
 
-    const { userId } = getAuth(req);
-
-    if (!userId) {
-      const error = new AppError("User not authenticated", 401);
-      return next(error);
-    }
-
-    const activity = await activityService.postActivity(file.buffer, userId);
+    const activity = await activityService.postActivity(
+      file.buffer,
+      req.userId,
+    );
 
     res.status(201).json(activity);
   },
 );
 
-// @route DELETE /activity/:id
+// @route DELETE /activities/:id
 // @desc Delete an activity by id
 // @access Public
 const deleteActivity: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id as string;
-    const { userId } = getAuth(req);
 
-    if (!userId) {
-      const error = new AppError("User not authenticated", 401);
-      return next(error);
-    }
-
-    await activityService.deleteActivity(id, userId);
+    await activityService.deleteActivity(id, req.userId);
     res.status(200).json({ id });
   },
 );
 
-export { getActivities, findActivity, postActivity, deleteActivity };
+// @route GET /activities/stats
+// @desc Get activities stats
+// @access Public
+const getActivitiesStats: RequestHandler = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const stats = await activityService.getActivitiesStats(req.userId);
+    console.log(stats);
+    res.status(200).json(stats);
+  },
+);
+
+export {
+  getActivities,
+  findActivity,
+  postActivity,
+  deleteActivity,
+  getActivitiesStats,
+};
