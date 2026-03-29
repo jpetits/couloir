@@ -8,6 +8,10 @@ export default async function StatsPage() {
   return (
     <div>
       <h1 className="text-2xl font-bold">Stats</h1>
+      <StatsCard title="Nombre d'activités">
+        <p className="text-3xl font-bold">{stats.count}</p>
+        <p className="text-sm text-muted-foreground">ce mois-ci</p>
+      </StatsCard>
       <StatsCard title="Distance totale">
         <p className="text-3xl font-bold">
           {(stats.totalDistance / 1000).toFixed(1)} km

@@ -32,9 +32,9 @@ export type Activity = z.infer<typeof ActivitySchema>;
 export const ActivityListSchema = z.array(ActivitySchema);
 
 export const ActivityStatsSchema = z.object({
-  totalDistance: z.number(),
-  totalDuration: z.number(),
-  totalElevationLoss: z.number(),
+  totalDistance: z.string().transform((str) => parseInt(str)),
+  totalDuration: z.string().transform((str) => parseInt(str)),
+  totalElevationLoss: z.string().transform((str) => parseInt(str)),
   count: z.number(),
 });
 

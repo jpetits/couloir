@@ -22,7 +22,8 @@ export async function fetchActivity(id: string): Promise<Activity> {
 }
 
 export async function fetchStats(): Promise<ActivityStats> {
-  const stats = await apiFetch<ActivityStats>(ROUTES.api.stats);
-
+  const stats = await apiFetch<ActivityStats>(ROUTES.api.stats).then((data) =>
+    ActivityStatsSchema.parse(data),
+  );
   return stats;
 }
