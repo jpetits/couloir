@@ -5,8 +5,8 @@ import { type NewPoint } from "../types/types";
 import { AppError } from "../types/appError";
 import { parseFitFile } from "./fitParser";
 
-export const getActivities = async (limit: number, userId: string) => {
-  const activitiesList = await activityRepository(db).list(limit, userId);
+export const getActivities = async (limit: number, page: number, userId: string) => {
+  const activitiesList = await activityRepository(db).list(limit, page, userId);
   return activitiesList;
 };
 

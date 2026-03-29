@@ -11,10 +11,8 @@ import { getAuth } from "@clerk/express";
 //@access Public
 const getActivities: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const activitiesList = await activityService.getActivities(
-      (req.validatedQuery as z.infer<typeof getActivitiesSchema>).limit,
-      req.userId,
-    );
+    const { limit, page } = req.validatedQuery as z.infer<typeof getActivitiesSchema>;
+    const activitiesList = await activityService.getActivities(limit, page, req.userId);
     return res.status(200).json(activitiesList);
   },
 );
@@ -70,7 +68,7 @@ const deleteActivity: RequestHandler = asyncHandler(
 const getActivitiesStats: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const stats = await activityService.getActivitiesStats(req.userId);
-    console.log(stats);
+
     res.status(200).json(stats);
   },
 );

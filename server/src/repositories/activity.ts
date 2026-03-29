@@ -5,12 +5,13 @@ import { db } from "../db/index";
 type Db = typeof db;
 
 export const activityRepository = (db: Db) => ({
-  list: async (limit: number, userId: string) => {
+  list: async (limit: number, page: number, userId: string) => {
     return db
       .select()
       .from(activities)
       .where(eq(activities.userId, userId))
-      .limit(limit);
+      .limit(limit)
+      .offset((page - 1) * limit);
   },
   findById: async (id: string, userId: string) => {
     return db.query.activities.findFirst({

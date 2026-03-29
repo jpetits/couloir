@@ -5,4 +5,5 @@ export const getActivitiesSchema = z.object({
     .number()
     .gt(0, { message: "errors.amountRequired" })
     .default(10),
+  page: z.coerce.number().gt(0).default(1),
 });
