@@ -4,7 +4,7 @@ export interface FitRecord {
   position_lat?: number;
   position_long?: number;
   altitude?: number;
-  speed?: number;
+  enhanced_speed?: number;
   timestamp?: string;
   enhanced_altitude?: number;
 }

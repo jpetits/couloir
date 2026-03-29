@@ -64,26 +64,28 @@ const getPointsFromRecords = (records: FitRecord[]) => {
     simplified.geometry.coordinates.map(([lng, lat]) => `${lng},${lat}`),
   );
 
+  let cumDist = 0;
+
   return filtered
     .filter((r) => simplifiedCoords.has(`${r.position_long},${r.position_lat}`))
     .map((r, i, arr) => {
       const prev = arr[i - 1];
+      const dist = prev
+        ? distance(
+            point([prev.position_long as number, prev.position_lat as number]),
+            point([r.position_long as number, r.position_lat as number]),
+            { units: "meters" },
+          )
+        : 0;
+      cumDist += dist;
       return {
         lat: r.position_lat as number,
         lng: r.position_long as number,
         ele: r.enhanced_altitude ?? 0,
-        speed: r.speed ?? 0,
+        speed: r.enhanced_speed ?? 0,
         time: r.timestamp ? new Date(r.timestamp).toISOString() : "",
-        dist: prev
-          ? distance(
-              point([
-                prev.position_long as number,
-                prev.position_lat as number,
-              ]),
-              point([r.position_long as number, r.position_lat as number]),
-              { units: "meters" },
-            )
-          : 0,
+        dist,
+        cumDist,
       };
     });
 };

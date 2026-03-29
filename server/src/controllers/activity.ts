@@ -4,7 +4,6 @@ import asyncHandler from "../middleware/asyncHandler";
 import { AppError } from "../types/appError";
 import type { getActivitiesSchema } from "../schema/query";
 import { z } from "zod";
-import { getAuth } from "@clerk/express";
 
 //@route GET /activities
 //@desc Get all activities

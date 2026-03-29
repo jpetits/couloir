@@ -29,6 +29,7 @@ export const points = pgTable("points", {
   speed: real("speed").notNull(), // km/h
   time: date("time").notNull(),
   dist: real("dist").notNull(), // distance from previous point in meters
+  cumDist: real("cum_dist").notNull(), // cumulative distance from start in meters
 });
 
 export const pointsRelations = relations(points, ({ one }) => ({
