@@ -1,15 +1,31 @@
+import { ROUTES } from "@/routing/constants";
 import type { Activity } from "./schema";
 import { ActivitySchema } from "./schema";
 
 export type ApiFetch = <T>(path: string, options?: RequestInit) => Promise<T>;
 
 export const deleteActivity = (apiFetch: ApiFetch, id: string): Promise<void> =>
-  apiFetch(`/api/activities/${id}`, { method: "DELETE" });
+  apiFetch(ROUTES.api.deleteActivity(id), { method: "DELETE" });
 
-export const postActivity = (apiFetch: ApiFetch, file: File): Promise<Activity> => {
+export const postActivity = (
+  apiFetch: ApiFetch,
+  file: File,
+): Promise<Activity> => {
   const formData = new FormData();
   formData.append("file", file);
-  return apiFetch<Activity>("/api/activities", { method: "POST", body: formData }).then(
-    (data) => ActivitySchema.parse(data),
-  );
+  return apiFetch<Activity>(ROUTES.api.postActivity(), {
+    method: "POST",
+    body: formData,
+  }).then((data) => ActivitySchema.parse(data));
 };
+
+export const patchActivity = (
+  apiFetch: ApiFetch,
+  id: string,
+  fields: Partial<Activity>,
+): Promise<Activity> =>
+  apiFetch<Activity>(ROUTES.api.patchActivity(id), {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(fields),
+  }).then((data) => ActivitySchema.parse(data));

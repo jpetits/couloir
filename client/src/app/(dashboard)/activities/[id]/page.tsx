@@ -1,7 +1,7 @@
-import { notFound } from "next/navigation";
 import { fetchActivity } from "@/lib/data";
 import ActivityDetailClient from "@/app/ui/activity/activityDetailClient";
 import BackButton from "@/app/ui/dashboard/backButton";
+import ActivityName from "@/app/ui/activity/activityName";
 
 export default async function ActivityPage({
   params,
@@ -9,18 +9,12 @@ export default async function ActivityPage({
   params: Promise<{ id: string }>;
 }) {
   const { id } = await params;
-  if (!id) {
-    notFound();
-  }
   const activity = await fetchActivity(id);
-  if (!activity) {
-    notFound();
-  }
 
   return (
     <main>
       <BackButton />
-      <h1>{activity.id}</h1>
+      <ActivityName activity={activity} />
       <p>{activity.date}</p>
       <ul>
         <li>Durée : {Math.round(activity.duration / 60)} min</li>
@@ -32,7 +26,6 @@ export default async function ActivityPage({
           {(activity.distance / (activity.duration / 3600)).toFixed(1)} km/h
         </li>
       </ul>
-      <p>{activity.points?.length} points GPS enregistrés</p>
       {activity.points && activity.points.length > 0 && (
         <ActivityDetailClient points={activity.points} />
       )}
