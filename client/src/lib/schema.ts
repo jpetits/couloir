@@ -30,3 +30,12 @@ export const ActivitySchema = z.object({
 export type Activity = z.infer<typeof ActivitySchema>;
 
 export const ActivityListSchema = z.array(ActivitySchema);
+
+export const ActivityStatsSchema = z.object({
+  totalDistance: z.number(),
+  totalDuration: z.number(),
+  totalElevationLoss: z.number(),
+  count: z.number(),
+});
+
+export type ActivityStats = z.infer<typeof ActivityStatsSchema>;

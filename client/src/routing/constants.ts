@@ -1,10 +1,12 @@
+import { stat } from "node:fs";
+
 export const ROUTES = {
   home: "/",
   activities: "/activities",
   activity: (id: string) => `/activities/${id}`,
   api: {
-    activities: `${process.env.NEXT_PUBLIC_API_URL}/api/activities`,
-    activity: (id: string) =>
-      `${process.env.NEXT_PUBLIC_API_URL}/api/activities/${id}`,
+    activities: (page: number) => `/api/activities?page=${page}`,
+    activity: (id: string) => `/api/activities/${id}`,
+    stats: `/api/activities/stats`,
   },
 } as const;

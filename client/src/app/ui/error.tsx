@@ -1,13 +1,11 @@
 import { ROUTES } from "@/routing/constants";
 import Link from "next/link";
 
-export default function ErrorDisplay() {
+export default function ErrorDisplay({ message }: { message: string }) {
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 text-center">
       <h1 className="text-2xl font-bold text-zinc-100">Something went wrong</h1>
-      <p className="text-zinc-400 text-sm">
-        {"We couldn't load this movie. Please try again."}
-      </p>
+      <p className="text-zinc-400 text-sm">{message}</p>
       <div className="flex gap-3">
         <Link
           href={ROUTES.activities}
