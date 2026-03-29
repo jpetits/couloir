@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect } from "react";
+import { use, useCallback, useEffect } from "react";
+import { useDebouncedCallback } from "use-debounce";
 import {
   MapContainer,
   TileLayer,
@@ -10,6 +11,7 @@ import {
 } from "react-leaflet";
 import type { Point } from "@/lib/schema";
 import "leaflet/dist/leaflet.css";
+import { LeafletMouseEvent } from "leaflet";
 
 function FitBounds({ positions }: { positions: [number, number][] }) {
   const map = useMap();
@@ -20,14 +22,30 @@ function FitBounds({ positions }: { positions: [number, number][] }) {
 }
 
 export default function ActivityMap({
+  onHover,
   points,
   hoveredIndex,
 }: {
+  onHover: (index: number | null) => void;
   points: Point[];
   hoveredIndex?: number | null;
 }) {
   const hoveredPoint = hoveredIndex != null ? points[hoveredIndex] : null;
   const positions = points.map((p) => [p.lat, p.lng] as [number, number]);
+
+  const handleMouseMove = useCallback(
+    (e: LeafletMouseEvent) => {
+      const closest = points.reduce(
+        (best, p, i) => {
+          const d = e.latlng.distanceTo([p.lat, p.lng]);
+          return d < best.d ? { d, i } : best;
+        },
+        { d: Infinity, i: 0 },
+      );
+      onHover(closest.i);
+    },
+    [onHover, points],
+  );
 
   return (
     <MapContainer
@@ -40,6 +58,14 @@ export default function ActivityMap({
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       <Polyline positions={positions} color="#3b82f6" weight={3} />
+      <Polyline
+        positions={positions}
+        color="transparent"
+        weight={20}
+        eventHandlers={{
+          mousemove: handleMouseMove,
+        }}
+      />
       <FitBounds positions={positions} />
       {hoveredPoint && (
         <CircleMarker

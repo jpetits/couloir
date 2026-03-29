@@ -9,6 +9,7 @@ export const PointSchema = z.object({
   speed: z.number(),
   time: z.string(),
   dist: z.number(),
+  cumDist: z.number(),
 });
 
 export type Point = z.infer<typeof PointSchema>;
