@@ -58,6 +58,9 @@ const postActivity: RequestHandler = asyncHandler(
   },
 );
 
+// @route PATCH /activities/:id
+// @desc Update an activity by id
+// @access Public
 const patchActivity: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id as string;
@@ -89,6 +92,8 @@ const deleteActivity: RequestHandler = asyncHandler(
 const getActivitiesStats: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const stats = await activityService.getActivitiesStats(req.userId);
+
+    console.log(stats);
 
     res.status(200).json(stats);
   },

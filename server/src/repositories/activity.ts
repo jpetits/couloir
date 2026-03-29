@@ -38,23 +38,30 @@ export const activityRepository = (db: Db) => ({
     return result[0];
   },
   getStats: async (userId: string) => {
-    const result = await db
-      .select({
-        totalDistance: sum(activities.distance),
-        totalDuration: sum(activities.duration),
-        totalElevationLoss: sum(activities.elevLoss),
-        count: count(),
-      })
-      .from(activities)
-      .where(eq(activities.userId, userId));
+    const [statsResult, activityList] = await Promise.all([
+      db
+        .select({
+          totalDistance: sum(activities.distance),
+          totalDuration: sum(activities.duration),
+          totalElevationLoss: sum(activities.elevLoss),
+          count: count(),
+        })
+        .from(activities)
+        .where(eq(activities.userId, userId)),
+      db.query.activities.findMany({
+        where: (activities, { eq }) => eq(activities.userId, userId),
+        with: { points: true },
+      }),
+    ]);
 
-    return (
-      result[0] || {
+    return {
+      ...(statsResult[0] || {
         totalDistance: 0,
         totalDuration: 0,
         totalElevationLoss: 0,
         count: 0,
-      }
-    );
+      }),
+      activityList,
+    };
   },
 });
