@@ -11,18 +11,24 @@ import {
   Tooltip,
 } from "recharts";
 import type { MouseHandlerDataParam, TooltipIndex } from "recharts";
+import type { Point } from "@/lib/schema";
 import { useCallback } from "react";
 
 export default function DataChart({
   data,
   onHover,
-  hoveredIndex,
+  hoveredPoint,
   dataKey,
   unit,
 }: {
-  data: { cumDist: number; speed: number; ele: number; index: number }[];
-  onHover: (index: number | null) => void;
-  hoveredIndex?: number | null;
+  data: (Point & {
+    cumDist: number;
+    speed: number;
+    ele: number;
+    index: number;
+  })[];
+  onHover: (point: Point | null) => void;
+  hoveredPoint?: Point | null;
   dataKey: "speed" | "ele";
   children?: React.ReactNode;
   unit?: string;
@@ -31,10 +37,10 @@ export default function DataChart({
     (e: MouseHandlerDataParam) => {
       const activeIndex = e?.activeIndex as TooltipIndex | undefined;
       if (activeIndex != null && parseInt(activeIndex) >= 0) {
-        onHover(parseInt(activeIndex));
+        onHover(data[parseInt(activeIndex)]);
       }
     },
-    [onHover],
+    [onHover, data],
   );
 
   const handleMouseLeave = useCallback(() => onHover(null), [onHover]);
@@ -83,13 +89,13 @@ export default function DataChart({
             labelFormatter={(v) => `${v} km`}
             formatter={(v) => (v != null ? [`${v} ${unit}`, "Speed"] : [])}
           />
-          {hoveredIndex != null && data[hoveredIndex] && (
+          {hoveredPoint != null && (
             <ReferenceLine
-              x={data[hoveredIndex].cumDist}
+              x={hoveredPoint.cumDist}
               stroke="#3b82f6"
               strokeDasharray="3 3"
               label={{
-                value: `${data[hoveredIndex][dataKey]} ${unit}`,
+                value: `${hoveredPoint[dataKey]} ${unit}`,
                 fill: "#fff",
                 fontSize: 11,
                 position: "insideTopRight",

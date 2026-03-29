@@ -1,43 +1,48 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useState, useCallback, useMemo } from "react";
 import type { Point } from "@/lib/schema";
 import ActivityMapWrapper from "./activityMapWrapper";
 import DataChart from "./dataChart";
 
 export default function ActivityDetailClient({ points }: { points: Point[] }) {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+  const [hoveredPoint, setHoveredPoint] = useState<Point | null>(null);
   const handleHover = useCallback(
-    (index: number | null) => setHoveredIndex(index),
+    (point: Point | null) => setHoveredPoint(point),
     [],
   );
-  const data = points.map((p, i) => {
-    return {
-      cumDist: parseFloat((p.cumDist / 1000).toFixed(2)),
-      speed: Math.round(p.speed),
-      ele: Math.round(p.ele * 1000),
-      index: i,
-    };
-  });
+  const data = useMemo(
+    () =>
+      points.map((p, i) => {
+        return {
+          ...p,
+          cumDist: parseFloat((p.cumDist / 1000).toFixed(2)),
+          speed: Math.round(p.speed),
+          ele: Math.round(p.ele * 1000),
+          index: i,
+        };
+      }),
+    [points],
+  );
 
   return (
     <>
       <ActivityMapWrapper
-        points={points}
-        hoveredIndex={hoveredIndex}
+        points={[data]}
+        hoveredPoint={hoveredPoint}
         onHover={handleHover}
       />
       <DataChart
         data={data}
         onHover={handleHover}
-        hoveredIndex={hoveredIndex}
+        hoveredPoint={hoveredPoint}
         dataKey="ele"
         unit="m"
       />
       <DataChart
         data={data}
         onHover={handleHover}
-        hoveredIndex={hoveredIndex}
+        hoveredPoint={hoveredPoint}
         dataKey="speed"
         unit="km/h"
       />

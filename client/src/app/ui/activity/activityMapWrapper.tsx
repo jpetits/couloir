@@ -7,12 +7,18 @@ const ActivityMap = dynamic(() => import("./activityMap"), { ssr: false });
 
 export default function ActivityMapWrapper({
   points,
-  hoveredIndex,
+  hoveredPoint,
   onHover,
 }: {
-  points: Point[];
-  hoveredIndex?: number | null;
-  onHover: (index: number | null) => void;
+  points: Point[][];
+  hoveredPoint?: Point | null;
+  onHover: (point: Point | null) => void;
 }) {
-  return <ActivityMap points={points} hoveredIndex={hoveredIndex} onHover={onHover} />;
+  return (
+    <ActivityMap
+      points={points}
+      hoveredPoint={hoveredPoint}
+      onHover={onHover}
+    />
+  );
 }

@@ -89,7 +89,7 @@ export const columns: ColumnDef<Activity>[] = [
 
       return (
         <Button onClick={() => onDelete(activity)} variant="outline">
-          <TrashIcon className="h-5 w-5 hover:cursor-pointer" />
+          <TrashIcon className="h-5 w-5 hover:cursor-pointer text-red-500" />
         </Button>
       );
     },
