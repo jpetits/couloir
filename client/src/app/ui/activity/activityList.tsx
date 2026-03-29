@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { columns } from "./columns";
 import { usePaginatedScroll } from "../../hooks/usePaginatedScroll";
-import { ActivityListSkeleton, ActivityTileSkeleton } from "../skeletons";
+import { ActivityListSkeleton } from "../skeletons";
 import { Activity } from "@/lib/schema";
 import { useMutationState } from "@tanstack/react-query";
 import { DataTable } from "./dataTable";

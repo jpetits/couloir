@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 import { fetchActivity } from "@/lib/data";
-import ActivityMapWrapper from "@/app/ui/activity/activityMapWrapper";
+import ActivityDetailClient from "@/app/ui/activity/activityDetailClient";
 import BackButton from "@/app/ui/dashboard/backButton";
 
 export default async function ActivityPage({
@@ -34,7 +34,7 @@ export default async function ActivityPage({
       </ul>
       <p>{activity.points?.length} points GPS enregistrés</p>
       {activity.points && activity.points.length > 0 && (
-        <ActivityMapWrapper points={activity.points} />
+        <ActivityDetailClient points={activity.points} />
       )}
     </main>
   );

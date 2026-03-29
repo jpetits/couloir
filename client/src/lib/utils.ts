@@ -1,3 +1,4 @@
+import { point, distance, Units } from "@turf/turf";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 
@@ -28,4 +29,17 @@ export function formatDate(dateString: string): string {
     month: "short",
     day: "numeric",
   });
+}
+
+export function getDistancePoints(
+  lat1: number,
+  lng1: number,
+  lat2: number,
+  lng2: number,
+  units: Units = "meters",
+): number {
+  const from = point([lng1, lat1]);
+  const to = point([lng2, lat2]);
+  const segDist = distance(from, to, { units });
+  return segDist;
 }

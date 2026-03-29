@@ -1,5 +1,3 @@
-import { stat } from "node:fs";
-
 export const ROUTES = {
   home: "/",
   activities: "/activities",

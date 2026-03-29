@@ -1,4 +1,3 @@
-import { use } from "react";
 import { z } from "zod";
 
 export const PointSchema = z.object({
@@ -9,6 +8,7 @@ export const PointSchema = z.object({
   ele: z.number(),
   speed: z.number(),
   time: z.string(),
+  dist: z.number(),
 });
 
 export type Point = z.infer<typeof PointSchema>;
@@ -32,9 +32,9 @@ export type Activity = z.infer<typeof ActivitySchema>;
 export const ActivityListSchema = z.array(ActivitySchema);
 
 export const ActivityStatsSchema = z.object({
-  totalDistance: z.string().transform((str) => parseInt(str)),
-  totalDuration: z.string().transform((str) => parseInt(str)),
-  totalElevationLoss: z.string().transform((str) => parseInt(str)),
+  totalDistance: z.coerce.number(),
+  totalDuration: z.coerce.number(),
+  totalElevationLoss: z.coerce.number(),
   count: z.number(),
 });
 
