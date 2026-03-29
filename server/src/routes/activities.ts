@@ -8,7 +8,7 @@ import {
   getActivitiesStats,
   patchActivity,
 } from "../controllers/activity";
-import { validateQuery } from "../middleware/validate.js";
+import { validateBody, validateQuery } from "../middleware/validate.js";
 import { getActivitiesSchema, patchActivitiesSchema } from "../schema/query";
 import { requireAuth } from "@clerk/express";
 import { attachUser } from "../middleware/attachUser";
@@ -29,7 +29,7 @@ router.patch(
   "/:id",
   requireAuth(),
   attachUser,
-  validateQuery(patchActivitiesSchema),
+  validateBody(patchActivitiesSchema),
   patchActivity,
 );
 router.post(

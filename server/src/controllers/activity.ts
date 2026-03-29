@@ -61,9 +61,7 @@ const postActivity: RequestHandler = asyncHandler(
 const patchActivity: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id as string;
-    const { name } = req.validatedQuery as z.infer<
-      typeof patchActivitiesSchema
-    >;
+    const { name } = req.validatedBody as z.infer<typeof patchActivitiesSchema>;
 
     const activity = await activityService.patchActivity(id, req.userId, {
       name: name as string,
