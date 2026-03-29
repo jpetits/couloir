@@ -1,5 +1,5 @@
 import FitParser from "fit-file-parser";
-import { lineString, point, distance } from "@turf/turf";
+import { lineString, point, distance, simplify } from "@turf/turf";
 import turfLength from "@turf/length";
 import {
   type FitRecord,
@@ -54,15 +54,38 @@ const getStatsFromPoints = (points: ParsedPoint[]) => {
 };
 
 const getPointsFromRecords = (records: FitRecord[]) => {
-  return records
-    .filter((r) => r.position_lat && r.position_long)
-    .map((r) => ({
-      lat: r.position_lat as number,
-      lng: r.position_long as number,
-      ele: r.altitude ?? 0,
-      speed: r.speed ?? 0,
-      time: r.timestamp ? new Date(r.timestamp).toISOString() : "",
-    }));
+  const filtered = records.filter((r) => r.position_lat && r.position_long);
+
+  const line = lineString(
+    filtered.map((r) => [r.position_long as number, r.position_lat as number]),
+  );
+  const simplified = simplify(line, { tolerance: 0.0001, highQuality: false });
+  const simplifiedCoords = new Set(
+    simplified.geometry.coordinates.map(([lng, lat]) => `${lng},${lat}`),
+  );
+
+  return filtered
+    .filter((r) => simplifiedCoords.has(`${r.position_long},${r.position_lat}`))
+    .map((r, i, arr) => {
+      const prev = arr[i - 1];
+      return {
+        lat: r.position_lat as number,
+        lng: r.position_long as number,
+        ele: r.enhanced_altitude ?? 0,
+        speed: r.speed ?? 0,
+        time: r.timestamp ? new Date(r.timestamp).toISOString() : "",
+        dist: prev
+          ? distance(
+              point([
+                prev.position_long as number,
+                prev.position_lat as number,
+              ]),
+              point([r.position_long as number, r.position_lat as number]),
+              { units: "meters" },
+            )
+          : 0,
+      };
+    });
 };
 
 export const parseFitFile = (fileBuffer: Buffer): Promise<ParsedActivity> => {

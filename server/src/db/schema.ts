@@ -1,4 +1,4 @@
-import { pgTable, uuid, text, real, date } from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, real, date, numeric } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
 export const activities = pgTable("activities", {
@@ -28,6 +28,7 @@ export const points = pgTable("points", {
   ele: real("ele").notNull(),
   speed: real("speed").notNull(), // km/h
   time: date("time").notNull(),
+  dist: real("dist").notNull(), // distance from previous point in meters
 });
 
 export const pointsRelations = relations(points, ({ one }) => ({
