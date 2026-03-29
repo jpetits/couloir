@@ -1,16 +1,6 @@
 import { Activity } from "@/lib/schema";
 import { ColumnDef, TableMeta } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import {
-  Dialog,
-  DialogClose,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 import { formatDate, formatDuration } from "@/lib/utils";
 import Link from "next/link";
 import { ROUTES } from "@/routing/constants";

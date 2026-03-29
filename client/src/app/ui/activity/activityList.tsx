@@ -30,7 +30,7 @@ export default function ActivityList({
 
   return (
     <div className="flex flex-row">
-      <DataTable columns={columns} data={allItems} />
+      <DataTable columns={columns} data={allItems} isPendingUpload={isPendingUpload} />
 
       <div ref={ref} />
       {isFetchingNextPage && !error && <ActivityListSkeleton />}

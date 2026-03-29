@@ -26,11 +26,13 @@ import { useDeleteActivity } from "@/app/hooks/useDeleteActivity";
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
   data: TData[];
+  isPendingUpload?: boolean;
 }
 
 export function DataTable<TData, TValue>({
   columns,
   data,
+  isPendingUpload,
 }: DataTableProps<TData, TValue>) {
   const [selectedActivityToDelete, setSelectedActivityToDelete] =
     useState<Activity | null>(null);
@@ -93,6 +95,15 @@ export function DataTable<TData, TValue>({
                 >
                   No results.
                 </TableCell>
+              </TableRow>
+            )}
+            {isPendingUpload && (
+              <TableRow>
+                {columns.map((_, i) => (
+                  <TableCell key={i}>
+                    <div className="h-4 rounded bg-muted animate-pulse" />
+                  </TableCell>
+                ))}
               </TableRow>
             )}
           </TableBody>

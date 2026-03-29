@@ -1,9 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
-import { useQueryClient } from "@tanstack/react-query";
-import { useApi } from "@/app/hooks/useApi";
-import { ActivitySchema } from "@/lib/schema";
+import { useRef } from "react";
 import { useUploadActivity } from "@/app/hooks/useUploadActivity";
 
 export default function UploadButton() {
