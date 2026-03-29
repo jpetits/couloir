@@ -2,7 +2,10 @@ import type { Request, Response, NextFunction, RequestHandler } from "express";
 import * as activityService from "../services/activity";
 import asyncHandler from "../middleware/asyncHandler";
 import { AppError } from "../types/appError";
-import type { getActivitiesSchema } from "../schema/query";
+import type {
+  getActivitiesSchema,
+  patchActivitiesSchema,
+} from "../schema/query";
 import { z } from "zod";
 
 //@route GET /activities
@@ -10,8 +13,14 @@ import { z } from "zod";
 //@access Public
 const getActivities: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { limit, page } = req.validatedQuery as z.infer<typeof getActivitiesSchema>;
-    const activitiesList = await activityService.getActivities(limit, page, req.userId);
+    const { limit, page } = req.validatedQuery as z.infer<
+      typeof getActivitiesSchema
+    >;
+    const activitiesList = await activityService.getActivities(
+      limit,
+      page,
+      req.userId,
+    );
     return res.status(200).json(activitiesList);
   },
 );
@@ -49,6 +58,21 @@ const postActivity: RequestHandler = asyncHandler(
   },
 );
 
+const patchActivity: RequestHandler = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const id = req.params.id as string;
+    const { name } = req.validatedQuery as z.infer<
+      typeof patchActivitiesSchema
+    >;
+
+    const activity = await activityService.patchActivity(id, req.userId, {
+      name: name as string,
+    });
+
+    res.status(200).json(activity);
+  },
+);
+
 // @route DELETE /activities/:id
 // @desc Delete an activity by id
 // @access Public
@@ -76,6 +100,7 @@ export {
   getActivities,
   findActivity,
   postActivity,
+  patchActivity,
   deleteActivity,
   getActivitiesStats,
 };

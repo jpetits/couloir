@@ -6,9 +6,10 @@ import {
   deleteActivity,
   findActivity,
   getActivitiesStats,
+  patchActivity,
 } from "../controllers/activity";
 import { validateQuery } from "../middleware/validate.js";
-import { getActivitiesSchema } from "../schema/query";
+import { getActivitiesSchema, patchActivitiesSchema } from "../schema/query";
 import { requireAuth } from "@clerk/express";
 import { attachUser } from "../middleware/attachUser";
 
@@ -24,6 +25,13 @@ router.get(
 );
 router.get("/stats", requireAuth(), attachUser, getActivitiesStats);
 router.get("/:id", requireAuth(), attachUser, findActivity);
+router.patch(
+  "/:id",
+  requireAuth(),
+  attachUser,
+  validateQuery(patchActivitiesSchema),
+  patchActivity,
+);
 router.post(
   "/",
   requireAuth(),

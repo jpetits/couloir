@@ -5,7 +5,11 @@ import { type NewPoint } from "../types/types";
 import { AppError } from "../types/appError";
 import { parseFitFile } from "./fitParser";
 
-export const getActivities = async (limit: number, page: number, userId: string) => {
+export const getActivities = async (
+  limit: number,
+  page: number,
+  userId: string,
+) => {
   const activitiesList = await activityRepository(db).list(limit, page, userId);
   return activitiesList;
 };
@@ -22,6 +26,16 @@ export const getActivity = async (id: string, userId: string) => {
 
 export const deleteActivity = async (id: string, userId: string) => {
   await activityRepository(db).delete(id, userId);
+};
+
+export const patchActivity = async (
+  id: string,
+  userId: string,
+  fields: { name?: string },
+) => {
+  const activity = await activityRepository(db).update(id, userId, fields);
+  if (!activity) throw new AppError("Activity not found", 404);
+  return activity;
 };
 
 export const postActivity = async (buffer: Buffer, userId: string) => {

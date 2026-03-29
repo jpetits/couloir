@@ -24,7 +24,18 @@ export const activityRepository = (db: Db) => ({
     return db.insert(activities).values(data).returning();
   },
   delete: async (id: string, userId: string) => {
-    return db.delete(activities).where(eq(activities.id, id));
+    return db
+      .delete(activities)
+      .where(eq(activities.id, id) && eq(activities.userId, userId));
+  },
+  update: async (id: string, userId: string, fields: { name?: string }) => {
+    const result = await db
+      .update(activities)
+      .set(fields)
+      .where(eq(activities.id, id) && eq(activities.userId, userId))
+      .returning();
+
+    return result[0];
   },
   getStats: async (userId: string) => {
     const result = await db

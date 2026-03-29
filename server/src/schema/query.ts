@@ -7,3 +7,7 @@ export const getActivitiesSchema = z.object({
     .default(10),
   page: z.coerce.number().gt(0).default(1),
 });
+
+export const patchActivitiesSchema = z.object({
+  name: z.string().optional(),
+});
