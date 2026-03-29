@@ -17,8 +17,11 @@ export default function ActivityList({
 }) {
   const ref = useRef<HTMLDivElement>(null);
 
-  const { data, allItems, isFetchingNextPage, error } =
-    usePaginatedScroll<Activity>(initialActivityList, fetchMorePath, ref);
+  const { allItems, isFetchingNextPage, error } = usePaginatedScroll<Activity>(
+    initialActivityList,
+    fetchMorePath,
+    ref,
+  );
 
   const isPendingUpload =
     useMutationState({
@@ -30,13 +33,14 @@ export default function ActivityList({
 
   return (
     <div className="flex flex-row">
-      <DataTable columns={columns} data={allItems} isPendingUpload={isPendingUpload} />
+      <DataTable
+        columns={columns}
+        data={allItems}
+        isPendingUpload={isPendingUpload}
+      />
 
       <div ref={ref} />
       {isFetchingNextPage && !error && <ActivityListSkeleton />}
-      {!isFetchingNextPage && data.pages[0].length === 0 && (
-        <p className="mt-12 text-center text-zinc-400">No activities found.</p>
-      )}
     </div>
   );
 }

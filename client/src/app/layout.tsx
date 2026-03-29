@@ -3,6 +3,7 @@ import "./globals.css";
 import Providers from "./providers";
 import { Inter } from "next/font/google";
 import { cn } from "@/lib/utils";
+import { Toaster } from "sonner";
 
 const inter = Inter({subsets:['latin'],variable:'--font-sans'});
 
@@ -20,6 +21,7 @@ export default function RootLayout({
     <html lang="fr" className={cn("dark font-sans", inter.variable)}>
       <body>
         <Providers>{children}</Providers>
+        <Toaster />
       </body>
     </html>
   );
