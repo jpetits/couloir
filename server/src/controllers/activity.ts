@@ -93,8 +93,6 @@ const getActivitiesStats: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const stats = await activityService.getActivitiesStats(req.userId);
 
-    console.log(stats);
-
     res.status(200).json(stats);
   },
 );
