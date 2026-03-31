@@ -29,8 +29,7 @@ export default function DataChart({
   })[];
   onHover: (point: Point | null) => void;
   hoveredPoint?: Point | null;
-  dataKey: "speed" | "ele";
-  children?: React.ReactNode;
+  dataKey: keyof Point;
   unit?: string;
 }) {
   const handleMouseMove = useCallback(

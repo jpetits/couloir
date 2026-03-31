@@ -8,8 +8,6 @@ import { Suspense } from "react";
 export default async function StatsPage() {
   const stats = await fetchStats();
 
-  console.log("StatsPage stats:", stats);
-
   return (
     <div>
       <h1 className="text-2xl font-bold">Stats</h1>
