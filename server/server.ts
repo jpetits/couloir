@@ -1,4 +1,4 @@
-import express from "express";
+import express, { type Express } from "express";
 import cors from "cors";
 import helmet from "helmet";
 import dotenv from "dotenv";
@@ -28,4 +28,4 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
 
-export default app;
+export default app as Express;
