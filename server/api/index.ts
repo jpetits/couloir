@@ -1,2 +1,3 @@
-import app from "../server.js";
+import app from "../src/app";
+
 export default app;
