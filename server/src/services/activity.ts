@@ -4,13 +4,13 @@ import { pointRepository } from "../repositories/point";
 import { type NewPoint } from "../types/types";
 import { AppError } from "../types/appError";
 import { parseFitFile } from "./fitParser";
+import type { ActivityFilters } from "../schema/query";
 
 export const getActivities = async (
-  limit: number,
-  page: number,
   userId: string,
+  filters: ActivityFilters,
 ) => {
-  const activitiesList = await activityRepository(db).list(limit, page, userId);
+  const activitiesList = await activityRepository(db).list(userId, filters);
   return activitiesList;
 };
 
@@ -19,13 +19,17 @@ export const getActivitiesStats = async (userId: string) => {
 };
 
 export const getActivity = async (id: string, userId: string) => {
-  const activity = await activityRepository(db).findById(id, userId);
+  const activity = await activityRepository(db).findById(id);
   if (!activity) throw new AppError("Activity not found", 404);
+  if (userId !== activity.userId) throw new AppError("Unauthorized", 401);
   return activity;
 };
 
 export const deleteActivity = async (id: string, userId: string) => {
-  await activityRepository(db).delete(id, userId);
+  const activity = await activityRepository(db).findById(id);
+  if (!activity) throw new AppError("Activity not found", 404);
+  if (userId !== activity.userId) throw new AppError("Unauthorized", 401);
+  await activityRepository(db).delete(id);
 };
 
 export const patchActivity = async (

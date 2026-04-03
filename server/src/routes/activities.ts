@@ -9,7 +9,7 @@ import {
   patchActivity,
 } from "../controllers/activity";
 import { validateBody, validateQuery } from "../middleware/validate.js";
-import { getActivitiesSchema, patchActivitiesSchema } from "../schema/query";
+import { activityFiltersSchema, patchActivitiesSchema } from "../schema/query";
 import { requireAuth } from "@clerk/express";
 import { attachUser } from "../middleware/attachUser";
 
@@ -20,7 +20,7 @@ router.get(
   "/",
   requireAuth(),
   attachUser,
-  validateQuery(getActivitiesSchema),
+  validateQuery(activityFiltersSchema),
   getActivities,
 );
 router.get("/stats", requireAuth(), attachUser, getActivitiesStats);

@@ -2,10 +2,7 @@ import type { Request, Response, NextFunction, RequestHandler } from "express";
 import * as activityService from "../services/activity";
 import asyncHandler from "../middleware/asyncHandler";
 import { AppError } from "../types/appError";
-import type {
-  getActivitiesSchema,
-  patchActivitiesSchema,
-} from "../schema/query";
+import type { ActivityFilters, patchActivitiesSchema } from "../schema/query";
 import { z } from "zod";
 
 //@route GET /activities
@@ -13,13 +10,9 @@ import { z } from "zod";
 //@access Public
 const getActivities: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const { limit, page } = req.validatedQuery as z.infer<
-      typeof getActivitiesSchema
-    >;
     const activitiesList = await activityService.getActivities(
-      limit,
-      page,
       req.userId,
+      req.validatedQuery as ActivityFilters,
     );
     return res.status(200).json(activitiesList);
   },

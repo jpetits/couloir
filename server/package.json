@@ -2,10 +2,10 @@
   "name": "server",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "server.ts",
   "type": "module",
   "scripts": {
-    "dev": "tsx watch --no-cache --env-file=.env server.js",
+    "dev": "tsx watch --no-cache --env-file=.env server.ts",
     "db:push": "drizzle-kit push",
     "test": "jest",
     "typecheck": "tsc --noEmit"
