@@ -1,4 +1,8 @@
 import z from "zod";
+import { getTableColumns } from "drizzle-orm";
+import { activities } from "../db/schema";
+
+const activityColumns = Object.keys(getTableColumns(activities));
 
 export const activityFiltersSchema = z.object({
   dateFrom: z.string().optional(),
@@ -7,7 +11,7 @@ export const activityFiltersSchema = z.object({
   maxDistance: z.coerce.number().optional(),
   minDuration: z.coerce.number().optional(),
   maxDuration: z.coerce.number().optional(),
-  sortBy: z.enum(["date", "distance", "duration"]).default("date"),
+  sortBy: z.enum(activityColumns).default("date"),
   sortOrder: z.enum(["asc", "desc"]).default("desc"),
   limit: z.coerce
     .number()

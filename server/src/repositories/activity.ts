@@ -1,11 +1,19 @@
 import { activities } from "../db/schema";
-import { eq, sum, count, lte, gte, and, desc, asc } from "drizzle-orm";
+import {
+  eq,
+  sum,
+  count,
+  lte,
+  gte,
+  and,
+  desc,
+  asc,
+  getTableColumns,
+} from "drizzle-orm";
 import { db } from "../db/index";
 import type { ActivityFilters } from "../schema/query";
-import type { NewActivity } from "../types/types";
 
 type Db = typeof db;
-type Activity = Omit<NewActivity, "id" | "userId">;
 
 export const activityRepository = (db: Db) => ({
   list: async (userId: string, filters: ActivityFilters) => {
@@ -30,16 +38,17 @@ export const activityRepository = (db: Db) => ({
       conditions.push(lte(activities.duration, filters.maxDuration));
     }
 
-    const sortColumn =
-      filters?.sortBy === "distance" ? activities.distance : activities.date;
+    const orderFns = { asc, desc } as const;
+    const orderFn = orderFns[filters.sortOrder];
 
-    const sortOrder = filters?.sortOrder === "asc" ? asc : desc;
+    const columns = getTableColumns(activities);
+    const orderCol = columns[filters.sortBy as keyof typeof columns];
 
     return db
       .select()
       .from(activities)
       .where(and(...conditions))
-      .orderBy(sortOrder(sortColumn))
+      .orderBy(orderFn(orderCol))
       .offset((filters.page - 1) * filters.limit)
       .limit(filters.limit);
   },

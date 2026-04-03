@@ -1,7 +1,7 @@
 import { db } from "../db/index";
 import { activityRepository } from "../repositories/activity";
 import { pointRepository } from "../repositories/point";
-import { type NewPoint } from "../types/types";
+import type { NewPoint } from "../db/schema";
 import { AppError } from "../types/appError";
 import { parseFitFile } from "./fitParser";
 import type { ActivityFilters } from "../schema/query";
