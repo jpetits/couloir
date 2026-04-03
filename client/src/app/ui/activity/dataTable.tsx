@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { Activity } from "@/lib/schema";
 import {
   ColumnDef,
@@ -7,6 +8,8 @@ import {
   getCoreRowModel,
   getPaginationRowModel,
   useReactTable,
+  getSortedRowModel,
+  SortingState,
 } from "@tanstack/react-table";
 
 import {
@@ -22,6 +25,10 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import DeleteDialog from "../modal/deleteDialog";
 import { useDeleteActivity } from "@/app/hooks/useDeleteActivity";
+import {
+  useRouter,
+  useSearchParams,
+} from "next/dist/client/components/navigation";
 
 interface DataTableProps<TData, TValue> {
   columns: ColumnDef<TData, TValue>[];
@@ -34,16 +41,48 @@ export function DataTable<TData, TValue>({
   data,
   isPendingUpload,
 }: DataTableProps<TData, TValue>) {
+  const searchParms = useSearchParams();
+  const router = useRouter();
+
   const [selectedActivityToDelete, setSelectedActivityToDelete] =
     useState<Activity | null>(null);
+
+  const [sorting, setSorting] = useState<SortingState>(() => {
+    const sort = searchParms.get("sortBy");
+    const order = searchParms.get("sortOrder");
+    return sort ? [{ id: sort, desc: order === "desc" }] : [];
+  });
+
+  const handleSortingChange = (
+    updater: SortingState | ((prev: SortingState) => SortingState),
+  ) => {
+    const params = new URLSearchParams(searchParms.toString());
+    const newSorting = updater instanceof Function ? updater(sorting) : updater;
+    setSorting(newSorting);
+
+    if (newSorting.length > 0) {
+      params.set("sortBy", newSorting[0].id);
+      params.set("sortOrder", newSorting[0].desc ? "desc" : "asc");
+    } else {
+      params.delete("sortBy");
+      params.delete("sortOrder");
+    }
+    router.push(`?${params}`);
+  };
+
   const table = useReactTable({
     data,
-    columns,
+    columns: React.useMemo(() => columns, [columns]),
     meta: {
       onDelete: (activity: Activity) => setSelectedActivityToDelete(activity),
     },
     getCoreRowModel: getCoreRowModel(),
     getPaginationRowModel: getPaginationRowModel(),
+    getSortedRowModel: getSortedRowModel(),
+    onSortingChange: handleSortingChange,
+    state: {
+      sorting,
+    },
   });
 
   const { mutate: deleteActivity } = useDeleteActivity();

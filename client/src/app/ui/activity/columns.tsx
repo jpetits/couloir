@@ -1,10 +1,14 @@
+import React from "react";
 import { Activity } from "@/lib/schema";
-import { ColumnDef, TableMeta } from "@tanstack/react-table";
+import { Column, ColumnDef, TableMeta } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { formatDate, formatDuration } from "@/lib/utils";
 import Link from "next/link";
 import { ROUTES } from "@/routing/constants";
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
+import ChevronUpIcon from "@heroicons/react/24/outline/ChevronUpIcon";
+import ChevronDownIcon from "@heroicons/react/24/outline/ChevronDownIcon";
+import ChevronUpDownIcon from "@heroicons/react/24/outline/ChevronUpDownIcon";
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData> {
@@ -12,10 +16,39 @@ declare module "@tanstack/react-table" {
   }
 }
 
+const HeaderCell = ({
+  column,
+  title,
+}: {
+  column: Column<Activity>;
+  title: string;
+}) => {
+  const toggleSorting = () => {
+    const isSorted = column.getIsSorted();
+    column.toggleSorting(isSorted === "asc");
+  };
+
+  return (
+    <button
+      onClick={toggleSorting}
+      className="flex items-center cursor-pointer  text-gray-400  gap-1"
+    >
+      {title}
+      {column.getIsSorted() === "asc" ? (
+        <ChevronUpIcon className="h-3 w-3" />
+      ) : column.getIsSorted() === "desc" ? (
+        <ChevronDownIcon className="h-3 w-3" />
+      ) : (
+        <ChevronUpDownIcon className="h-3 w-3" />
+      )}
+    </button>
+  );
+};
+
 export const columns: ColumnDef<Activity>[] = [
   {
     accessorKey: "name",
-    header: "Name",
+    header: ({ column }) => <HeaderCell column={column} title="Name" />,
     cell: ({ row }) => {
       return (
         <Link
@@ -31,14 +64,14 @@ export const columns: ColumnDef<Activity>[] = [
   },
   {
     accessorKey: "date",
-    header: "Date",
+    header: ({ column }) => <HeaderCell column={column} title="Date" />,
     cell: ({ row }) => {
       return <div className="font-medium">{formatDate(row.original.date)}</div>;
     },
   },
   {
     accessorKey: "distance",
-    header: "Distance",
+    header: ({ column }) => <HeaderCell column={column} title="Distance" />,
     cell: ({ row }) => {
       return (
         <div className="text-right font-medium">
@@ -49,7 +82,7 @@ export const columns: ColumnDef<Activity>[] = [
   },
   {
     accessorKey: "duration",
-    header: "Duration",
+    header: ({ column }) => <HeaderCell column={column} title="Duration" />,
     cell: ({ row }) => {
       return (
         <div className="text-right font-medium">
@@ -60,11 +93,11 @@ export const columns: ColumnDef<Activity>[] = [
   },
   {
     accessorKey: "elevLoss",
-    header: "Dénivelé",
+    header: ({ column }) => <HeaderCell column={column} title="Dénivelé" />,
   },
   {
     accessorKey: "averageSpeed",
-    header: "Vitesse moy",
+    header: ({ column }) => <HeaderCell column={column} title="Vitesse moy" />,
     cell: ({ row }) => {
       return (
         <div className="text-right font-medium">
@@ -79,10 +112,12 @@ export const columns: ColumnDef<Activity>[] = [
   },
   {
     accessorKey: "maxSpeed",
-    header: "Vitesse max",
+    header: ({ column }) => <HeaderCell column={column} title="Vitesse max" />,
   },
   {
     id: "actions",
+    enableSorting: false,
+    header: () => <span className="sr-only">Actions</span>,
     cell: ({ row, table }) => {
       const activity = row.original;
       const { onDelete } = table.options.meta as TableMeta<Activity>;

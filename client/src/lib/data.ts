@@ -2,15 +2,18 @@ import { ROUTES } from "@/routing/constants";
 import { apiFetch } from "./api";
 import {
   Activity,
+  ActivityFilters,
   ActivityListSchema,
   ActivitySchema,
   ActivityStats,
   ActivityStatsSchema,
 } from "./schema";
 
-export async function fetchActivities(page = 1): Promise<Activity[]> {
-  return await apiFetch<Activity[]>(ROUTES.api.activities(page)).then((data) =>
-    ActivityListSchema.parse(data),
+export async function fetchActivities(
+  filters?: ActivityFilters,
+): Promise<Activity[]> {
+  return await apiFetch<Activity[]>(ROUTES.api.activities(filters)).then(
+    (data) => ActivityListSchema.parse(data),
   );
 }
 

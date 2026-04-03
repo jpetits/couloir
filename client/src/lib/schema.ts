@@ -41,3 +41,20 @@ export const ActivityStatsSchema = z.object({
 });
 
 export type ActivityStats = z.infer<typeof ActivityStatsSchema>;
+
+const activityColumns = Object.keys(ActivitySchema.shape);
+
+export const ActivityFiltersSchema = z.object({
+  dateFrom: z.string().optional(),
+  dateTo: z.string().optional(),
+  minDistance: z.coerce.string().optional(),
+  maxDistance: z.coerce.string().optional(),
+  minDuration: z.coerce.string().optional(),
+  maxDuration: z.coerce.string().optional(),
+  sortBy: z.enum(activityColumns).default("date"),
+  sortOrder: z.enum(["asc", "desc"]).default("desc"),
+  page: z.coerce.string().default("1"),
+  limit: z.coerce.string().default("10"),
+});
+
+export type ActivityFilters = z.infer<typeof ActivityFiltersSchema>;
