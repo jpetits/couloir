@@ -58,3 +58,9 @@ export const ActivityFiltersSchema = z.object({
 });
 
 export type ActivityFilters = z.infer<typeof ActivityFiltersSchema>;
+
+export const ActivityApiParamsSchema = ActivityFiltersSchema.transform((f) => ({
+  ...f,
+  minDistance: f.minDistance ? String(Number(f.minDistance) * 1000) : undefined,
+  maxDistance: f.maxDistance ? String(Number(f.maxDistance) * 1000) : undefined,
+}));

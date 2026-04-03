@@ -4,23 +4,21 @@ import { useRef } from "react";
 import { columns } from "./columns";
 import { usePaginatedScroll } from "../../hooks/usePaginatedScroll";
 import { ActivityListSkeleton } from "../skeletons";
+import ActivityFilters from "./activityFilters";
 import { Activity } from "@/lib/schema";
 import { useMutationState } from "@tanstack/react-query";
 import { DataTable } from "./dataTable";
 
 export default function ActivityList({
   initialActivityList,
-  fetchMorePath,
 }: {
   initialActivityList: Activity[];
-  fetchMorePath: string;
 }) {
-  const ref = useRef<HTMLDivElement>(null);
+  const loadMoreRef = useRef<HTMLDivElement>(null);
 
   const { allItems, isFetchingNextPage, error } = usePaginatedScroll<Activity>(
     initialActivityList,
-    fetchMorePath,
-    ref,
+    loadMoreRef,
   );
 
   const isPendingUpload =
@@ -32,15 +30,18 @@ export default function ActivityList({
     }).length > 0;
 
   return (
-    <div className="flex flex-row">
-      <DataTable
-        columns={columns}
-        data={allItems}
-        isPendingUpload={isPendingUpload}
-      />
+    <>
+      <ActivityFilters />
+      <div className="flex flex-row">
+        <DataTable
+          columns={columns}
+          data={allItems}
+          isPendingUpload={isPendingUpload}
+        />
 
-      <div ref={ref} />
-      {isFetchingNextPage && !error && <ActivityListSkeleton />}
-    </div>
+        <div ref={loadMoreRef} />
+        {isFetchingNextPage && !error && <ActivityListSkeleton />}
+      </div>
+    </>
   );
 }

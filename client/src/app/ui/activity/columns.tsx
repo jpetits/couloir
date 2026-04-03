@@ -97,7 +97,8 @@ export const columns: ColumnDef<Activity>[] = [
   },
   {
     accessorKey: "averageSpeed",
-    header: ({ column }) => <HeaderCell column={column} title="Vitesse moy" />,
+    enableSorting: false,
+    header: "Vitesse moy",
     cell: ({ row }) => {
       return (
         <div className="text-right font-medium">

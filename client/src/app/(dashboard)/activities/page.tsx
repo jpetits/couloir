@@ -18,10 +18,7 @@ export default async function Activities({
   return (
     <>
       <UploadButton />
-      <ActivityList
-        initialActivityList={data}
-        fetchMorePath={ROUTES.api.activities(parsedFilters)}
-      />
+      <ActivityList initialActivityList={data} />
     </>
   );
 }
