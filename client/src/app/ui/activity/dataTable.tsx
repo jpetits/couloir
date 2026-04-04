@@ -20,9 +20,8 @@ import {
   TableRow,
 } from "@/components/ui/table";
 
-import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import DeleteDialog from "../modal/deleteDialog";
+import DeleteDialog from "@/app/ui/modal/DeleteDialog";
 import { useDeleteActivity } from "@/app/hooks/useDeleteActivity";
 import {
   useRouter,

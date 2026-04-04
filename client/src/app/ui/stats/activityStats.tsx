@@ -1,9 +1,9 @@
 "use client";
 
-import ActivityMapWrapper from "@/app/ui/activity/activityMapWrapper";
+import ActivityMapWrapper from "@/app/ui/activity/ActivityMapWrapper";
 import { Activity, Point } from "@/lib/schema";
 import { useCallback, useMemo, useState } from "react";
-import DataChart from "../activity/dataChart";
+import DataChart from "../activity/DataChart";
 import { stat } from "node:fs";
 
 export default function ActivityStats({ stats }: { stats: any }) {

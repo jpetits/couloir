@@ -2,8 +2,8 @@
 
 import { useState, useCallback, useMemo } from "react";
 import type { Point } from "@/lib/schema";
-import ActivityMapWrapper from "./activityMapWrapper";
-import DataChart from "./dataChart";
+import ActivityMapWrapper from "./ActivityMapWrapper";
+import DataChart from "./DataChart";
 
 export default function ActivityDetailClient({ points }: { points: Point[] }) {
   const [hoveredPoint, setHoveredPoint] = useState<Point | null>(null);

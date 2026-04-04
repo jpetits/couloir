@@ -1,13 +1,13 @@
 "use client";
 
 import { useRef } from "react";
-import { columns } from "./columns";
+import { columns } from "./Columns";
 import { usePaginatedScroll } from "../../hooks/usePaginatedScroll";
 import { ActivityListSkeleton } from "../skeletons";
-import ActivityFilters from "./activityFilters";
+import ActivityFilters from "./ActivityFilters";
 import { Activity } from "@/lib/schema";
 import { useMutationState } from "@tanstack/react-query";
-import { DataTable } from "./dataTable";
+import { DataTable } from "./DataTable";
 
 export default function ActivityList({
   initialActivityList,

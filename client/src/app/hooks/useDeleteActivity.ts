@@ -3,7 +3,7 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { InfiniteData, QueryKey } from "@tanstack/react-query";
 import { useApi } from "./useApi";
-import { deleteActivity } from "@/lib/data.client";
+import { deleteActivity } from "@/lib/dataClient";
 import type { Activity } from "@/lib/schema";
 import { useRef } from "react";
 import { toast } from "sonner";

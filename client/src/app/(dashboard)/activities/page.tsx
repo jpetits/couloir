@@ -1,8 +1,7 @@
 import { fetchActivities } from "@/lib/data";
-import { ROUTES } from "@/routing/constants";
-import ActivityList from "@/app/ui/activity/activityList";
-import UploadButton from "@/app/ui/activity/uploadButton";
-import { Activity, ActivityFiltersSchema } from "@/lib/schema";
+import ActivityList from "@/app/ui/activity/ActivityList";
+import UploadButton from "@/app/ui/activity/UploadButton";
+import { ActivityFiltersSchema } from "@/lib/schema";
 
 export default async function Activities({
   searchParams,

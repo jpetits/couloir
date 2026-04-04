@@ -1,7 +1,7 @@
 import { fetchActivity } from "@/lib/data";
-import ActivityDetailClient from "@/app/ui/activity/activityDetailClient";
-import BackButton from "@/app/ui/dashboard/backButton";
-import ActivityName from "@/app/ui/activity/activityName";
+import ActivityDetailClient from "@/app/ui/activity/ActivityDetailClient";
+import BackButton from "@/app/ui/dashboard/BackButton";
+import ActivityName from "@/app/ui/activity/ActivityName";
 import { formatDuration } from "@/lib/utils";
 
 export default async function ActivityPage({

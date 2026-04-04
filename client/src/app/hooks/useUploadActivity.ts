@@ -4,7 +4,7 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { useApi } from "./useApi";
-import { postActivity } from "@/lib/data.client";
+import { postActivity } from "@/lib/dataClient";
 import { Activity } from "@/lib/schema";
 
 export function useUploadActivity() {
