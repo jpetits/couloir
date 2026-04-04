@@ -16,7 +16,12 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   return (
     <QueryClientProvider client={queryClient}>
       <ClerkProvider>
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="dark"
+          enableSystem
+          disableTransitionOnChange
+        >
           <header className="flex justify-end items-center p-4 gap-4 h-16">
             <ThemeButton />
             <Show when="signed-out">
