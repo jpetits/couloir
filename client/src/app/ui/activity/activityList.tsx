@@ -16,10 +16,8 @@ export default function ActivityList({
 }) {
   const loadMoreRef = useRef<HTMLDivElement>(null);
 
-  const { allItems, isFetchingNextPage, error } = usePaginatedScroll<Activity>(
-    initialActivityList,
-    loadMoreRef,
-  );
+  const { allItems, isFetchingNextPage, error, isLoading } =
+    usePaginatedScroll<Activity>(initialActivityList, loadMoreRef);
 
   const isPendingUpload =
     useMutationState({
@@ -32,7 +30,7 @@ export default function ActivityList({
   return (
     <>
       <ActivityFilters />
-      <div className="flex flex-row">
+      <div className="w-full">
         <DataTable
           columns={columns}
           data={allItems}
@@ -41,6 +39,7 @@ export default function ActivityList({
 
         <div ref={loadMoreRef} />
         {isFetchingNextPage && !error && <ActivityListSkeleton />}
+        {isLoading && !isFetchingNextPage && !error && <ActivityListSkeleton />}
       </div>
     </>
   );

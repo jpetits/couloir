@@ -74,7 +74,7 @@ export const columns: ColumnDef<Activity>[] = [
     header: ({ column }) => <HeaderCell column={column} title="Distance" />,
     cell: ({ row }) => {
       return (
-        <div className="text-right font-medium">
+        <div className="font-medium">
           {(row.original.distance / 1000).toFixed(1)} km
         </div>
       );
@@ -85,7 +85,7 @@ export const columns: ColumnDef<Activity>[] = [
     header: ({ column }) => <HeaderCell column={column} title="Duration" />,
     cell: ({ row }) => {
       return (
-        <div className="text-right font-medium">
+        <div className="font-medium">
           {formatDuration(row.original.duration, false)}
         </div>
       );
@@ -101,7 +101,7 @@ export const columns: ColumnDef<Activity>[] = [
     header: "Vitesse moy",
     cell: ({ row }) => {
       return (
-        <div className="text-right font-medium">
+        <div className="font-medium">
           {(
             row.original.distance /
             1000 /

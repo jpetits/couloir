@@ -1,5 +1,5 @@
 import { useEffect, useMemo } from "react";
-import { useInfiniteQuery } from "@tanstack/react-query";
+import { useInfiniteQuery, keepPreviousData } from "@tanstack/react-query";
 import { useApi } from "./useApi";
 import { useFilters } from "./useFilters";
 import { ROUTES } from "@/routing/constants";
@@ -12,22 +12,28 @@ export function usePaginatedScroll<T>(
   const { filters } = useFilters();
   const fetchMorePath = ROUTES.api.activities(filters);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage, error } =
-    useInfiniteQuery({
-      queryKey: [fetchMorePath],
-      queryFn: async ({ pageParam }) => {
-        const url = new URL(fetchMorePath);
-        url.searchParams.set("page", String(pageParam));
-        return apiFetch(url.toString());
-      },
-      initialPageParam: 1,
-      getNextPageParam: (lastPage, _, lastPageParam) =>
-        lastPage.length > 0 ? lastPageParam + 1 : undefined,
-      initialData: {
-        pages: [initialMovieList],
-        pageParams: [1],
-      },
-    });
+  const {
+    data,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage,
+    error,
+    isLoading,
+  } = useInfiniteQuery({
+    queryKey: [fetchMorePath],
+    queryFn: async ({ pageParam }) => {
+      const url = new URL(fetchMorePath);
+      url.searchParams.set("page", String(pageParam));
+      return apiFetch(url.toString());
+    },
+    initialPageParam: 1,
+    getNextPageParam: (lastPage, _, lastPageParam) =>
+      lastPage.length > 0 ? lastPageParam + 1 : undefined,
+    initialData: {
+      pages: [initialMovieList],
+      pageParams: [1],
+    },
+  });
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -50,5 +56,5 @@ export function usePaginatedScroll<T>(
 
   const allItems = useMemo(() => data.pages.flat(), [data.pages]);
 
-  return { data, allItems, hasNextPage, isFetchingNextPage, error };
+  return { data, allItems, hasNextPage, isFetchingNextPage, error, isLoading };
 }

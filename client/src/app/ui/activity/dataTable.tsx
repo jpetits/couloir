@@ -6,7 +6,6 @@ import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
-  getPaginationRowModel,
   useReactTable,
   getSortedRowModel,
   SortingState,
@@ -77,7 +76,6 @@ export function DataTable<TData, TValue>({
       onDelete: (activity: Activity) => setSelectedActivityToDelete(activity),
     },
     getCoreRowModel: getCoreRowModel(),
-    getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
     onSortingChange: handleSortingChange,
     state: {
@@ -89,7 +87,7 @@ export function DataTable<TData, TValue>({
 
   return (
     <div className="w-full mt-5">
-      <div className="overflow-hidden rounded-md border">
+      <div className="overflow-hidden rounded-md border w-full">
         <Table>
           <TableHeader>
             {table.getHeaderGroups().map((headerGroup) => (
@@ -147,24 +145,6 @@ export function DataTable<TData, TValue>({
             )}
           </TableBody>
         </Table>
-      </div>
-      <div className="flex items-center justify-end space-x-2 py-4">
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.previousPage()}
-          disabled={!table.getCanPreviousPage()}
-        >
-          Previous
-        </Button>
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={() => table.nextPage()}
-          disabled={!table.getCanNextPage()}
-        >
-          Next
-        </Button>
       </div>
       {selectedActivityToDelete && (
         <DeleteDialog
