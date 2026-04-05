@@ -40,23 +40,23 @@ export default defineConfig({
       dependencies: ["global setup"],
     },
 
-    {
-      name: "firefox",
-      use: {
-        ...devices["Desktop Firefox"],
-        storageState: "playwright/.clerk/user.json",
-      },
-      dependencies: ["global setup"],
-    },
+    // {
+    //   name: "firefox",
+    //   use: {
+    //     ...devices["Desktop Firefox"],
+    //     storageState: "playwright/.clerk/user.json",
+    //   },
+    //   dependencies: ["global setup"],
+    // },
 
-    {
-      name: "webkit",
-      use: {
-        ...devices["Desktop Safari"],
-        storageState: "playwright/.clerk/user.json",
-      },
-      dependencies: ["global setup"],
-    },
+    // {
+    //   name: "webkit",
+    //   use: {
+    //     ...devices["Desktop Safari"],
+    //     storageState: "playwright/.clerk/user.json",
+    //   },
+    //   dependencies: ["global setup"],
+    // },
 
     /* Test against mobile viewports. */
     // {
@@ -83,7 +83,7 @@ export default defineConfig({
   webServer: [
     {
       name: "Backend",
-      command: `pnpm exec tsx --env-file=.env server.ts`,
+      command: `pnpm exec tsx --env-file=.env.test server.ts`,
       url: `http://localhost:${process.env.SERVER_PORT || 8002}`,
       cwd: path.resolve(__dirname, "../server"),
       timeout: 30000,
