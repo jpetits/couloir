@@ -16,6 +16,7 @@ export default async function Activities({
 
   return (
     <>
+      <h1 className="text-2xl font-bold mb-4">Mes activités</h1>
       <UploadButton />
       <ActivityList initialActivityList={data} />
     </>

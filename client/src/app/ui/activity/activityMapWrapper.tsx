@@ -3,7 +3,7 @@
 import dynamic from "next/dynamic";
 import type { Point } from "@/lib/schema";
 
-const ActivityMap = dynamic(() => import("./activityMap"), { ssr: false });
+const ActivityMap = dynamic(() => import("./ActivityMap"), { ssr: false });
 
 export default function ActivityMapWrapper({
   points,

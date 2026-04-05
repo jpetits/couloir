@@ -5,9 +5,9 @@
   "main": "index.js",
   "scripts": {
     "dev": "next dev",
+    "test": "pnpm exec playwright test --headed",
     "build": "next build",
     "start": "next start",
-    "test": "jest",
     "typecheck": "tsc --noEmit"
   },
   "keywords": [],
@@ -43,6 +43,7 @@
     "zustand": "^5.0.12"
   },
   "devDependencies": {
+    "@clerk/testing": "^2.0.8",
     "@playwright/test": "^1.59.1",
     "@tailwindcss/postcss": "^4.2.2",
     "@testing-library/dom": "^10.4.1",
@@ -52,6 +53,7 @@
     "@types/leaflet": "^1.9.21",
     "@types/node": "^25.5.0",
     "@types/react": "^19.2.14",
+    "dotenv": "^17.4.0",
     "jest": "^30.3.0",
     "jest-environment-jsdom": "^30.3.0",
     "ts-node": "^10.9.2",

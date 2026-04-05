@@ -15,13 +15,13 @@ export default function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
   return (
     <QueryClientProvider client={queryClient}>
-      <ClerkProvider>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="dark"
-          enableSystem
-          disableTransitionOnChange
-        >
+      <ThemeProvider
+        attribute="class"
+        defaultTheme="dark"
+        enableSystem
+        disableTransitionOnChange
+      >
+        <ClerkProvider>
           <header className="flex justify-end items-center p-4 gap-4 h-16">
             <ThemeButton />
             <Show when="signed-out">
@@ -37,8 +37,8 @@ export default function Providers({ children }: { children: React.ReactNode }) {
             </Show>
           </header>
           {children}
-        </ThemeProvider>
-      </ClerkProvider>
+        </ClerkProvider>
+      </ThemeProvider>
     </QueryClientProvider>
   );
 }
