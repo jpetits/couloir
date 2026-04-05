@@ -27,16 +27,18 @@ setup("global setup", async () => {
 const authFile = path.join(__dirname, "../playwright/.clerk/user.json");
 
 setup("authenticate and save state to storage", async ({ page }) => {
-  await page.goto("/");
+  await page.goto("/sign-in");
 
-  await clerk.signIn({
-    page,
-    signInParams: {
-      strategy: "password",
-      identifier: process.env.CLERK_TEST_USER_EMAIL!,
-      password: process.env.CLERK_TEST_USER_PASSWORD!,
-    },
-  });
+  await page
+    .getByLabel("Email address", { exact: true })
+    .fill(process.env.CLERK_TEST_USER_EMAIL!);
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+  await page
+    .getByLabel("Password", { exact: true })
+    .fill(process.env.CLERK_TEST_USER_PASSWORD!);
+  await page.getByRole("button", { name: "Continue", exact: true }).click();
+
+  await page.waitForTimeout(1000);
 
   await page.goto("/activities");
   // Ensure the user has successfully accessed the protected page
