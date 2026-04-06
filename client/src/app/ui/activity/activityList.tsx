@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { columns } from "./Columns";
 import { usePaginatedScroll } from "../../hooks/usePaginatedScroll";
 import { RowSkeleton } from "../skeletons";
@@ -9,6 +9,8 @@ import { Activity } from "@/lib/schema";
 import { useMutationState } from "@tanstack/react-query";
 import { DataTable } from "./DataTable";
 import BulkActionBar from "./BulkActionBar";
+import { useActivitySelectionStore } from "@/store/activitySelection";
+import { useShallow } from "zustand/react/shallow";
 
 export default function ActivityList({
   initialActivityList,
@@ -19,6 +21,12 @@ export default function ActivityList({
 
   const { allItems, isFetchingNextPage, error, isLoading } =
     usePaginatedScroll<Activity>(initialActivityList, loadMoreRef);
+
+  const retainOnly = useActivitySelectionStore((state) => state.retainOnly);
+
+  useEffect(() => {
+    retainOnly(allItems.map((a) => a.id));
+  }, [allItems, retainOnly]);
 
   const isPendingUpload =
     useMutationState({
