@@ -20,19 +20,27 @@ export function usePaginatedScroll<T>(
     error,
     isLoading,
   } = useInfiniteQuery({
-    queryKey: [fetchMorePath],
+    queryKey: ["activities", filters],
     queryFn: async ({ pageParam }) => {
-      const url = new URL(fetchMorePath);
-      url.searchParams.set("page", String(pageParam));
-      return apiFetch(url.toString());
+      const [base, query] = fetchMorePath.split("?");
+      const params = new URLSearchParams(query);
+      params.set("page", String(pageParam));
+      return apiFetch(`${base}?${params}`);
     },
     initialPageParam: 1,
     getNextPageParam: (lastPage, _, lastPageParam) =>
-      lastPage.length > 0 ? lastPageParam + 1 : undefined,
+      (
+        filters.limit
+          ? lastPage.length === Number(filters.limit)
+          : lastPage.length > 0
+      )
+        ? lastPageParam + 1
+        : undefined,
     initialData: {
       pages: [initialMovieList],
       pageParams: [1],
     },
+    placeholderData: keepPreviousData,
   });
 
   useEffect(() => {

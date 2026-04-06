@@ -27,18 +27,21 @@ import {
   useRouter,
   useSearchParams,
 } from "next/dist/client/components/navigation";
-
-interface DataTableProps<TData, TValue> {
-  columns: ColumnDef<TData, TValue>[];
-  data: TData[];
-  isPendingUpload?: boolean;
-}
+import { RowSkeleton } from "../skeletons";
 
 export function DataTable<TData, TValue>({
   columns,
   data,
   isPendingUpload,
-}: DataTableProps<TData, TValue>) {
+  isLoading,
+  isFetchingNextPage,
+}: {
+  columns: ColumnDef<TData, TValue>[];
+  data: TData[];
+  isPendingUpload?: boolean;
+  isLoading?: boolean;
+  isFetchingNextPage?: boolean;
+}) {
   const searchParms = useSearchParams();
   const router = useRouter();
 
@@ -133,14 +136,9 @@ export function DataTable<TData, TValue>({
                 </TableCell>
               </TableRow>
             )}
-            {isPendingUpload && (
-              <TableRow>
-                {columns.map((_, i) => (
-                  <TableCell key={i}>
-                    <div className="h-4 rounded bg-muted animate-pulse" />
-                  </TableCell>
-                ))}
-              </TableRow>
+            {isPendingUpload && <RowSkeleton rows={1} cells={columns.length} />}
+            {(isLoading || isFetchingNextPage) && (
+              <RowSkeleton rows={5} cells={columns.length} />
             )}
           </TableBody>
         </Table>

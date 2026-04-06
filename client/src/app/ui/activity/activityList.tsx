@@ -3,7 +3,7 @@
 import { useRef } from "react";
 import { columns } from "./Columns";
 import { usePaginatedScroll } from "../../hooks/usePaginatedScroll";
-import { ActivityListSkeleton } from "../skeletons";
+import { RowSkeleton } from "../skeletons";
 import ActivityFilters from "./ActivityFilters";
 import { Activity } from "@/lib/schema";
 import { useMutationState } from "@tanstack/react-query";
@@ -35,11 +35,11 @@ export default function ActivityList({
           columns={columns}
           data={allItems}
           isPendingUpload={isPendingUpload}
+          isLoading={isLoading}
+          isFetchingNextPage={isFetchingNextPage}
         />
 
         <div ref={loadMoreRef} />
-        {isFetchingNextPage && !error && <ActivityListSkeleton />}
-        {isLoading && !isFetchingNextPage && !error && <ActivityListSkeleton />}
       </div>
     </>
   );
