@@ -11,9 +11,10 @@ import { z } from "zod";
 const getActivities: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const activitiesList = await activityService.getActivities(
-      req.userId,
+      req.user.id,
       req.validatedQuery as ActivityFilters,
     );
+
     return res.status(200).json(activitiesList);
   },
 );
@@ -25,7 +26,7 @@ const findActivity: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id as string;
 
-    const activity = await activityService.getActivity(id, req.userId);
+    const activity = await activityService.getActivity(id, req.user.id);
     res.status(200).json(activity);
   },
 );
@@ -44,7 +45,7 @@ const postActivity: RequestHandler = asyncHandler(
 
     const activity = await activityService.postActivity(
       file.buffer,
-      req.userId,
+      req.user.id,
     );
 
     res.status(201).json(activity);
@@ -59,7 +60,7 @@ const patchActivity: RequestHandler = asyncHandler(
     const id = req.params.id as string;
     const { name } = req.validatedBody as z.infer<typeof patchActivitiesSchema>;
 
-    const activity = await activityService.patchActivity(id, req.userId, {
+    const activity = await activityService.patchActivity(id, req.user.id, {
       name: name as string,
     });
 
@@ -74,7 +75,7 @@ const deleteActivity: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id as string;
 
-    await activityService.deleteActivity(id, req.userId);
+    await activityService.deleteActivity(id, req.user.id);
     res.status(200).json({ id });
   },
 );
@@ -84,7 +85,7 @@ const deleteActivity: RequestHandler = asyncHandler(
 // @access Public
 const getActivitiesStats: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const stats = await activityService.getActivitiesStats(req.userId);
+    const stats = await activityService.getActivitiesStats(req.user.id);
 
     res.status(200).json(stats);
   },

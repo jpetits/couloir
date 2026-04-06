@@ -3,6 +3,7 @@ import cors from "cors";
 import helmet from "helmet";
 import { clerkMiddleware } from "@clerk/express";
 import activityRouter from "./routes/activities";
+import stravaRouter from "./routes/strava";
 import errorHandler from "./middleware/error";
 import notFoundHandler from "./middleware/notFound";
 
@@ -15,6 +16,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 
 app.use("/api/activities", activityRouter);
+app.use("/api/strava", stravaRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

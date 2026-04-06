@@ -13,9 +13,7 @@ import {
 import { db } from "../db/index";
 import type { ActivityFilters } from "../schema/query";
 
-type Db = typeof db;
-
-export const activityRepository = (db: Db) => ({
+export const activityRepository = {
   list: async (userId: string, filters: ActivityFilters) => {
     const conditions = [eq(activities.userId, userId)];
 
@@ -100,4 +98,13 @@ export const activityRepository = (db: Db) => ({
       activityList,
     };
   },
-});
+  findByStravaId: async (stravaActivityId: string, userId: string) => {
+    return db.query.activities.findFirst({
+      where: (activities, { eq }) =>
+        and(
+          eq(activities.stravaActivityId, stravaActivityId),
+          eq(activities.userId, userId),
+        ),
+    });
+  },
+};

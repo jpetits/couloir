@@ -1,35 +1,35 @@
 import { db } from "../db/index";
 import { activityRepository } from "../repositories/activity";
 import { pointRepository } from "../repositories/point";
-import type { NewPoint } from "../db/schema";
+import { type NewPoint } from "../types/types";
 import { AppError } from "../types/appError";
 import { parseFitFile } from "./fitParser";
 import type { ActivityFilters } from "../schema/query";
+import { userRepository } from "../repositories/user";
 
 export const getActivities = async (
   userId: string,
   filters: ActivityFilters,
 ) => {
-  const activitiesList = await activityRepository(db).list(userId, filters);
-  return activitiesList;
+  return await activityRepository.list(userId, filters);
 };
 
 export const getActivitiesStats = async (userId: string) => {
-  return await activityRepository(db).getStats(userId);
+  return await activityRepository.getStats(userId);
 };
 
 export const getActivity = async (id: string, userId: string) => {
-  const activity = await activityRepository(db).findById(id);
+  const activity = await activityRepository.findById(id);
   if (!activity) throw new AppError("Activity not found", 404);
   if (userId !== activity.userId) throw new AppError("Unauthorized", 401);
   return activity;
 };
 
 export const deleteActivity = async (id: string, userId: string) => {
-  const activity = await activityRepository(db).findById(id);
+  const activity = await activityRepository.findById(id);
   if (!activity) throw new AppError("Activity not found", 404);
   if (userId !== activity.userId) throw new AppError("Unauthorized", 401);
-  await activityRepository(db).delete(id);
+  await activityRepository.delete(id);
 };
 
 export const patchActivity = async (
@@ -37,7 +37,7 @@ export const patchActivity = async (
   userId: string,
   fields: { name?: string },
 ) => {
-  const activity = await activityRepository(db).update(id, userId, fields);
+  const activity = await activityRepository.update(id, userId, fields);
   if (!activity) throw new AppError("Activity not found", 404);
   return activity;
 };
@@ -46,7 +46,7 @@ export const postActivity = async (buffer: Buffer, userId: string) => {
   const { points: parsedPoints, ...activityFields } =
     await parseFitFile(buffer);
 
-  const [activity] = await activityRepository(db).create({
+  const [activity] = await activityRepository.create({
     ...activityFields,
     userId,
   });
@@ -58,7 +58,7 @@ export const postActivity = async (buffer: Buffer, userId: string) => {
     activityId: activity.id,
   }));
 
-  await pointRepository(db).create(newPoints);
+  await pointRepository.create(newPoints);
 
   return activity;
 };

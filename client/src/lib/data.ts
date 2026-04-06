@@ -30,3 +30,4 @@ export async function fetchStats(): Promise<ActivityStats> {
   );
   return stats;
 }
+

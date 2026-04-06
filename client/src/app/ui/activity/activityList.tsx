@@ -3,14 +3,18 @@
 import { useEffect, useRef } from "react";
 import { columns } from "./Columns";
 import { usePaginatedScroll } from "../../hooks/usePaginatedScroll";
-import { RowSkeleton } from "../skeletons";
 import ActivityFilters from "./ActivityFilters";
 import { Activity } from "@/lib/schema";
 import { useMutationState } from "@tanstack/react-query";
 import { DataTable } from "./DataTable";
 import BulkActionBar from "./BulkActionBar";
 import { useActivitySelectionStore } from "@/store/activitySelection";
-import { useShallow } from "zustand/react/shallow";
+import {
+  useRouter,
+  useSearchParams,
+} from "next/dist/client/components/navigation";
+import { stravaConnect } from "@/lib/dataClient";
+import { useApi } from "../../hooks/useApi";
 
 export default function ActivityList({
   initialActivityList,
@@ -18,6 +22,9 @@ export default function ActivityList({
   initialActivityList: Activity[];
 }) {
   const loadMoreRef = useRef<HTMLDivElement>(null);
+  const searchParams = useSearchParams();
+  const apiFetch = useApi();
+  const router = useRouter();
 
   const { allItems, isFetchingNextPage, error, isLoading } =
     usePaginatedScroll<Activity>(initialActivityList, loadMoreRef);
@@ -27,6 +34,20 @@ export default function ActivityList({
   useEffect(() => {
     retainOnly(allItems.map((a) => a.id));
   }, [allItems, retainOnly]);
+
+  useEffect(() => {
+    const code = searchParams.get("code");
+    if (!code) return;
+
+    stravaConnect(apiFetch, code).then(() => {
+      // Clear the code param from the URL after handling it
+      const params = new URLSearchParams(searchParams);
+      params.delete("code");
+      params.delete("scope");
+      params.delete("state");
+      router.replace(`?${params.toString()}`);
+    });
+  }, [searchParams]);
 
   const isPendingUpload =
     useMutationState({

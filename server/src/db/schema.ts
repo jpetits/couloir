@@ -1,9 +1,18 @@
-import { pgTable, uuid, text, real, date, numeric } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  uuid,
+  text,
+  real,
+  date,
+  numeric,
+  timestamp,
+} from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
 export const activities = pgTable("activities", {
   id: uuid("id").primaryKey().defaultRandom(),
   name: text("name").notNull().default("Activity"),
+  stravaActivityId: numeric("strava_activity_id").unique(),
   userId: text("user_id").notNull(),
   date: date("date").notNull(),
   duration: real("duration").notNull(), // in seconds
@@ -36,5 +45,19 @@ export const pointsRelations = relations(points, ({ one }) => ({
   activity: one(activities, {
     fields: [points.activityId],
     references: [activities.id],
+  }),
+}));
+
+export const users = pgTable("users", {
+  id: text("id").primaryKey(),
+  stravaAccessToken: text("strava_access_token"),
+  stravaRefreshToken: text("strava_refresh_token"),
+  stravaTokenExpiresAt: timestamp("strava_token_expires_at"),
+});
+
+export const usersRelations = relations(users, ({ one }) => ({
+  activities: one(activities, {
+    fields: [users.id],
+    references: [activities.userId],
   }),
 }));

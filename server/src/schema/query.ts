@@ -25,3 +25,9 @@ export type ActivityFilters = z.infer<typeof activityFiltersSchema>;
 export const patchActivitiesSchema = z.object({
   name: z.string().optional(),
 });
+
+export const callBackStravaSchema = z.object({
+  code: z.string(),
+});
+
+export type CallBackStravaQuery = z.infer<typeof callBackStravaSchema>;

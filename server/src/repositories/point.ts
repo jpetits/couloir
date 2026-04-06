@@ -2,9 +2,7 @@ import { points } from "../db/schema";
 import { eq } from "drizzle-orm";
 import { db } from "../db/index";
 
-type Db = typeof db;
-
-export const pointRepository = (db: Db) => ({
+export const pointRepository = {
   list: async (limit: number) => {
     return db.select().from(points).limit(limit);
   },
@@ -14,4 +12,4 @@ export const pointRepository = (db: Db) => ({
   create: async (data: any) => {
     return db.insert(points).values(data).returning();
   },
-});
+};

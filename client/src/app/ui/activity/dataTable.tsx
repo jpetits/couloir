@@ -123,6 +123,7 @@ export function DataTable<TData extends { id: string }, TValue>({
                   onClick={() => {
                     toggle(row.original.id);
                   }}
+                  className="cursor-pointer"
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>
