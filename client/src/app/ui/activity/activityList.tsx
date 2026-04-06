@@ -8,6 +8,7 @@ import ActivityFilters from "./ActivityFilters";
 import { Activity } from "@/lib/schema";
 import { useMutationState } from "@tanstack/react-query";
 import { DataTable } from "./DataTable";
+import BulkActionBar from "./BulkActionBar";
 
 export default function ActivityList({
   initialActivityList,
@@ -30,6 +31,7 @@ export default function ActivityList({
   return (
     <>
       <ActivityFilters />
+      <BulkActionBar />
       <div className="w-full">
         <DataTable
           columns={columns}

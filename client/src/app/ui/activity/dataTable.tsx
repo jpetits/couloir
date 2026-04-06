@@ -28,8 +28,10 @@ import {
   useSearchParams,
 } from "next/dist/client/components/navigation";
 import { RowSkeleton } from "../skeletons";
+import { useActivitySelectionStore } from "@/store/activitySelection";
+import { useShallow } from "zustand/react/shallow";
 
-export function DataTable<TData, TValue>({
+export function DataTable<TData extends { id: string }, TValue>({
   columns,
   data,
   isPendingUpload,
@@ -86,6 +88,9 @@ export function DataTable<TData, TValue>({
   });
 
   const { mutate: deleteActivity } = useDeleteActivity();
+  const [toggle, selected] = useActivitySelectionStore(
+    useShallow((state) => [state.toggle, state.selected]),
+  );
 
   return (
     <div className="w-full mt-5">
@@ -114,7 +119,10 @@ export function DataTable<TData, TValue>({
               table.getRowModel().rows.map((row) => (
                 <TableRow
                   key={row.id}
-                  data-state={row.getIsSelected() && "selected"}
+                  data-state={selected.includes(row.original.id) && "selected"}
+                  onClick={() => {
+                    toggle(row.original.id);
+                  }}
                 >
                   {row.getVisibleCells().map((cell) => (
                     <TableCell key={cell.id}>

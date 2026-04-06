@@ -1,6 +1,6 @@
 import { CardSkeleton } from "@/app/ui/skeletons";
-import ActivityStats from "@/app/ui/stats/activityStats";
-import StatsCard from "@/app/ui/stats/card";
+import ActivityStats from "@/app/ui/stats/ActivityStats";
+import StatsCard from "@/app/ui/stats/Card";
 import { fetchStats } from "@/lib/data";
 import { formatDuration } from "@/lib/utils";
 import { Suspense } from "react";

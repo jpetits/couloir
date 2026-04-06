@@ -1,5 +1,5 @@
-import React from "react";
 import { Activity } from "@/lib/schema";
+import { useShallow } from "zustand/react/shallow";
 import { Column, ColumnDef, TableMeta } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
 import { formatDate, formatDuration } from "@/lib/utils";
@@ -9,6 +9,9 @@ import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import ChevronUpIcon from "@heroicons/react/24/outline/ChevronUpIcon";
 import ChevronDownIcon from "@heroicons/react/24/outline/ChevronDownIcon";
 import ChevronUpDownIcon from "@heroicons/react/24/outline/ChevronUpDownIcon";
+import CheckIcon from "@heroicons/react/24/outline/CheckIcon";
+import StopIcon from "@heroicons/react/24/outline/StopIcon";
+import { useActivitySelectionStore } from "@/store/activitySelection";
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData> {
@@ -123,10 +126,26 @@ export const columns: ColumnDef<Activity>[] = [
       const activity = row.original;
       const { onDelete } = table.options.meta as TableMeta<Activity>;
 
+      const [toggle, selected] = useActivitySelectionStore(
+        useShallow((state) => [
+          state.toggle,
+          state.selected.includes(activity.id),
+        ]),
+      );
+
       return (
-        <Button onClick={() => onDelete(activity)} variant="outline">
-          <TrashIcon className="h-5 w-5 hover:cursor-pointer text-red-500" />
-        </Button>
+        <div className="flex gap-2 justify-end">
+          <Button onClick={() => toggle(activity.id)} variant="outline">
+            {selected ? (
+              <CheckIcon className="h-5 w-5 text-green-500" />
+            ) : (
+              <StopIcon className="h-5 w-5 text-gray-400" />
+            )}
+          </Button>
+          <Button onClick={() => onDelete(activity)} variant="outline">
+            <TrashIcon className="h-5 w-5 hover:cursor-pointer text-red-500" />
+          </Button>
+        </div>
       );
     },
   },
