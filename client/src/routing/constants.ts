@@ -4,6 +4,7 @@ export const ROUTES = {
   home: "/",
   activities: "/activities",
   activity: (id: string) => `/activities/${id}`,
+  signIn: "/sign-in",
   api: {
     activities: (filters: ActivityFilters) =>
       `/api/activities?${new URLSearchParams(JSON.parse(JSON.stringify(ActivityApiParamsSchema.parse(filters))))}`,
