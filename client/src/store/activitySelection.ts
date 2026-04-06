@@ -6,6 +6,7 @@ export interface SelectionStore {
   toggle: (id: string) => void;
   clear: () => void;
   retainOnly: (ids: string[]) => void;
+  toggleAll: (ids: string[]) => void;
 }
 
 export const useActivitySelectionStore = create<SelectionStore>()(
@@ -21,6 +22,10 @@ export const useActivitySelectionStore = create<SelectionStore>()(
       clear: () => set({ selected: [] }),
       retainOnly: (ids) =>
         set((s) => ({ selected: s.selected.filter((id) => ids.includes(id)) })),
+      toggleAll: (ids) =>
+        set((s) => ({
+          selected: s.selected.length === ids.length ? [] : ids,
+        })),
     }),
     { name: "activity-selection" },
   ),

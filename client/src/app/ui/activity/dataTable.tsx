@@ -73,11 +73,16 @@ export function DataTable<TData extends { id: string }, TValue>({
     router.push(`?${params}`);
   };
 
+  const [toggle, selected, toggleAll] = useActivitySelectionStore(
+    useShallow((state) => [state.toggle, state.selected, state.toggleAll]),
+  );
+
   const table = useReactTable({
     data,
     columns: React.useMemo(() => columns, [columns]),
     meta: {
       onDelete: (activity: Activity) => setSelectedActivityToDelete(activity),
+      activityList: data,
     },
     getCoreRowModel: getCoreRowModel(),
     getSortedRowModel: getSortedRowModel(),
@@ -88,9 +93,6 @@ export function DataTable<TData extends { id: string }, TValue>({
   });
 
   const { mutate: deleteActivity } = useDeleteActivity();
-  const [toggle, selected] = useActivitySelectionStore(
-    useShallow((state) => [state.toggle, state.selected]),
-  );
 
   return (
     <div className="w-full mt-5">

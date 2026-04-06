@@ -9,6 +9,7 @@ import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
 import ChevronUpIcon from "@heroicons/react/24/outline/ChevronUpIcon";
 import ChevronDownIcon from "@heroicons/react/24/outline/ChevronDownIcon";
 import ChevronUpDownIcon from "@heroicons/react/24/outline/ChevronUpDownIcon";
+import MinusIcon from "@heroicons/react/24/outline/MinusIcon";
 import CheckIcon from "@heroicons/react/24/outline/CheckIcon";
 import StopIcon from "@heroicons/react/24/outline/StopIcon";
 import { useActivitySelectionStore } from "@/store/activitySelection";
@@ -16,6 +17,7 @@ import { useActivitySelectionStore } from "@/store/activitySelection";
 declare module "@tanstack/react-table" {
   interface TableMeta<TData> {
     onDelete: (activity: Activity) => void;
+    activityList: TData[];
   }
 }
 
@@ -121,7 +123,35 @@ export const columns: ColumnDef<Activity>[] = [
   {
     id: "actions",
     enableSorting: false,
-    header: () => <span className="sr-only">Actions</span>,
+    header: ({ table }) => {
+      const { selected, toggleAll, clear } = useActivitySelectionStore(
+        useShallow((s) => ({
+          selected: s.selected,
+          toggleAll: s.toggleAll,
+          clear: s.clear,
+        })),
+      );
+      const allIds = table.options.meta!.activityList.map((a) => a.id);
+      const allSelected =
+        allIds.length > 0 && allIds.every((id) => selected.includes(id));
+      const someSelected =
+        !allSelected && allIds.some((id) => selected.includes(id));
+      return (
+        <div className="flex gap-2 justify-end">
+          <Button
+            onClick={() => (allSelected ? clear() : toggleAll(allIds))}
+            variant="outline"
+          >
+            {allSelected && <CheckIcon className="h-5 w-5 text-green-500" />}
+            {someSelected && <MinusIcon className="h-5 w-5 text-gray-400" />}
+            {!allSelected && !someSelected && (
+              <StopIcon className="h-5 w-5 text-gray-400" />
+            )}
+          </Button>
+          <span className="sr-only">Actions</span>
+        </div>
+      );
+    },
     cell: ({ row, table }) => {
       const activity = row.original;
       const { onDelete } = table.options.meta as TableMeta<Activity>;
@@ -135,13 +165,6 @@ export const columns: ColumnDef<Activity>[] = [
 
       return (
         <div className="flex gap-2 justify-end">
-          <Button onClick={() => toggle(activity.id)} variant="outline">
-            {selected ? (
-              <CheckIcon className="h-5 w-5 text-green-500" />
-            ) : (
-              <StopIcon className="h-5 w-5 text-gray-400" />
-            )}
-          </Button>
           <Button onClick={() => onDelete(activity)} variant="outline">
             <TrashIcon className="h-5 w-5 hover:cursor-pointer text-red-500" />
           </Button>
