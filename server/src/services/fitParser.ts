@@ -3,15 +3,9 @@ import { lineString, point, distance, simplify } from "@turf/turf";
 import turfLength from "@turf/length";
 import {
   type FitRecord,
-  type NewActivity,
-  type NewPoint,
+  type ParsedPoint,
+  type ParsedActivity,
 } from "../types/types";
-
-type ParsedActivity = Omit<NewActivity, "id" | "userId"> & {
-  points: ParsedPoint[];
-};
-
-type ParsedPoint = Omit<NewPoint, "id" | "activityId">;
 
 const fitParser = new FitParser({
   force: true,

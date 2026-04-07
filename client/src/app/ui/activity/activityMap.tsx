@@ -49,6 +49,8 @@ export default function ActivityMap({
     [onHover, points],
   );
 
+  console.log("Rendering map with points:", points);
+
   return (
     <MapContainer
       style={{ height: 600, width: "100%" }}
@@ -60,23 +62,25 @@ export default function ActivityMap({
         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
       />
       {points.length > 0 &&
-        points.map((pos, i) => (
-          <div key={i}>
-            <Polyline
-              positions={pos}
-              color={activityColor(pos[0].activityId)}
-              weight={3}
-            />
-            <Polyline
-              positions={pos}
-              color="transparent"
-              weight={20}
-              eventHandlers={{
-                mousemove: handleMouseMove,
-              }}
-            />
-          </div>
-        ))}
+        points
+          .filter((pos) => pos.length > 0)
+          .map((pos, i) => (
+            <div key={i}>
+              <Polyline
+                positions={pos}
+                color={activityColor(pos[0].activityId)}
+                weight={3}
+              />
+              <Polyline
+                positions={pos}
+                color="transparent"
+                weight={20}
+                eventHandlers={{
+                  mousemove: handleMouseMove,
+                }}
+              />
+            </div>
+          ))}
       <FitBounds positions={points} />
       {hoveredPoint && (
         <CircleMarker

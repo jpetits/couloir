@@ -19,7 +19,7 @@ const callBackStrava = async (req: Request, res: Response) => {
 };
 
 const syncStravaActivities = async (req: Request, res: Response) => {
-  await stravaService.syncStravaActivities(req.user);
+  stravaService.syncStravaActivities(req.user);
   res.status(200).json({ message: "Strava activities synced successfully" });
 };
 

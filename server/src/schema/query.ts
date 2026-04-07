@@ -16,7 +16,7 @@ export const activityFiltersSchema = z.object({
   limit: z.coerce
     .number()
     .gt(0, { message: "errors.amountRequired" })
-    .default(10),
+    .default(100),
   page: z.coerce.number().gt(0).default(1),
 });
 

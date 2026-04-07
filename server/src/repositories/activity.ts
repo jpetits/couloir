@@ -56,16 +56,20 @@ export const activityRepository = {
       with: { points: true },
     });
   },
-  create: async (data: any) => {
+  create: async (data: typeof activities.$inferInsert) => {
     return db.insert(activities).values(data).returning();
   },
   delete: async (id: string) => {
     return db.delete(activities).where(eq(activities.id, id));
   },
-  update: async (id: string, userId: string, fields: { name?: string }) => {
+  update: async (
+    id: string,
+    userId: string,
+    activity: Partial<typeof activities.$inferInsert>,
+  ) => {
     const result = await db
       .update(activities)
-      .set(fields)
+      .set(activity)
       .where(and(eq(activities.id, id), eq(activities.userId, userId)))
       .returning();
 
@@ -106,5 +110,14 @@ export const activityRepository = {
           eq(activities.userId, userId),
         ),
     });
+  },
+  findStravaIdsByUser: async (userId: string) => {
+    return db.query.activities.findMany({
+      where: (activities, { eq }) => eq(activities.userId, userId),
+      columns: { stravaActivityId: true },
+    });
+  },
+  createMany: async (activitiesData: (typeof activities.$inferInsert)[]) => {
+    return db.insert(activities).values(activitiesData).returning();
   },
 };
