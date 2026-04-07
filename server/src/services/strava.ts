@@ -4,6 +4,7 @@ import { pointRepository } from "../repositories/point";
 import { parseStravaActivity, parseStravaStream } from "./stravaParser";
 import type { users, activities } from "../db/schema";
 import { processQueue } from "./queue";
+import { sendMessage } from "./websocket";
 
 export const handleStravaCallback = async (code: string, userId: string) => {
   const response = await fetch("https://www.strava.com/oauth/token", {
@@ -151,17 +152,11 @@ const fetchStreamsForActivity = async (
   return await streamsResponse.json();
 };
 
-export const syncStravaActivities = async (user: typeof users.$inferSelect) => {
-  const accessToken = await getOrRefreshStravaAccessToken(user);
-
-  const allStravaActivities = await batchFetchStravaActivities(accessToken);
-
-  const allInserted = await createOrUpdateActivities(
-    allStravaActivities,
-    user.id,
-  );
-
-  await processQueue(allInserted, async (stravaActivity) => {
+const queueActivitiesForProcessing = async (
+  activityList: (typeof activities.$inferSelect)[],
+  user: typeof users.$inferSelect,
+) => {
+  await processQueue(activityList, async (stravaActivity, index) => {
     if (!stravaActivity.stravaActivityId) {
       console.warn(
         `Skipping activity ${stravaActivity.id} because it has no Strava ID`,
@@ -184,5 +179,52 @@ export const syncStravaActivities = async (user: typeof users.$inferSelect) => {
     }
 
     await pointRepository.create(points);
+    sendMessage(user.id, {
+      type: "sync:progress",
+      progress: Math.round(((index + 1) / activityList.length) * 100),
+    });
+  });
+};
+
+export const syncStravaActivities = async (user: typeof users.$inferSelect) => {
+  sendMessage(user.id, {
+    type: "sync:start",
+  });
+
+  let allInserted = [];
+
+  try {
+    const accessToken = await getOrRefreshStravaAccessToken(user);
+
+    const allStravaActivities = await batchFetchStravaActivities(accessToken);
+
+    if (allStravaActivities.length === 0) {
+      console.warn(`No Strava activities found for user ${user.id}`);
+      sendMessage(user.id, {
+        type: "sync:done",
+        count: 0,
+      });
+      return;
+    }
+
+    allInserted = await createOrUpdateActivities(allStravaActivities, user.id);
+
+    await queueActivitiesForProcessing(allInserted, user);
+  } catch (error) {
+    console.error("Error syncing Strava activities:", error);
+    sendMessage(user.id, {
+      type: "sync:error",
+      message: (error as Error).message,
+    });
+    return;
+  }
+
+  console.warn(
+    `Finished syncing Strava activities for user ${user.id}. Total activities processed: ${allInserted.length}`,
+  );
+
+  sendMessage(user.id, {
+    type: "sync:done",
+    count: allInserted.length,
   });
 };

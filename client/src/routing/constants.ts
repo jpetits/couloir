@@ -3,6 +3,7 @@ import { ActivityFilters, ActivityApiParamsSchema } from "@/lib/schema";
 export const ROUTES = {
   home: "/",
   activities: "/activities",
+  stats: "/stats",
   activity: (id: string) => `/activities/${id}`,
   signIn: "/sign-in",
   api: {

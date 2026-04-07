@@ -47,15 +47,3 @@ export const stravaConnect = (apiFetch: ApiFetch, code: string) => {
       ),
     );
 };
-
-export const stravaSync = (apiFetch: ApiFetch) => {
-  return apiFetch(ROUTES.api.stravaSync, {
-    method: "POST",
-  })
-    .then(() => toast("Strava activities synced!"))
-    .catch(() =>
-      toast(
-        "Failed to sync Strava activities. Please try again or contact support.",
-      ),
-    );
-};

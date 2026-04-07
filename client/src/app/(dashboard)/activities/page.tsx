@@ -1,9 +1,11 @@
 import { fetchActivities } from "@/lib/data";
 import ActivityList from "@/app/ui/activity/ActivityList";
-import UploadButton from "@/app/ui/activity/UploadButton";
+import UploadButton from "@/app/ui/dashboard/UploadButton";
 import { ActivityFiltersSchema } from "@/lib/schema";
-import StravaSyncButton from "@/app/ui/activity/StravaSyncButton";
-import StravaConnectButton from "@/app/ui/activity/StravaConnectButton";
+import StravaSyncButton from "@/app/ui/dashboard/StravaSyncButton";
+import StravaConnectButton from "@/app/ui/dashboard/StravaConnectButton";
+import StatsButton from "@/app/ui/dashboard/StatsButton";
+import BackButton from "@/app/ui/dashboard/BackButton";
 
 export default async function Activities({
   searchParams,
@@ -18,11 +20,13 @@ export default async function Activities({
 
   return (
     <>
+      <BackButton />
       <h1 className="text-2xl font-bold mb-4">Mes activités</h1>
       <div className="flex gap-2 mb-4">
         <UploadButton />
         <StravaConnectButton />
         <StravaSyncButton />
+        <StatsButton />
       </div>
       <ActivityList initialActivityList={data} />
     </>

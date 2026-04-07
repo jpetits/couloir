@@ -2,8 +2,17 @@
 
 import ErrorDisplay from "@/app/ui/error";
 
-export default function Error() {
+export default function Error({
+  error,
+  reset,
+}: {
+  error: Error & { digest?: string };
+  reset: () => void;
+}) {
   return (
-    <ErrorDisplay message={"Something went wrong while loading the stats."} />
+    <ErrorDisplay
+      message={error.message || "Something went wrong while loading the stats."}
+      onRetry={reset}
+    />
   );
 }
