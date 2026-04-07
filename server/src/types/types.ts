@@ -16,7 +16,7 @@ export interface HttpError extends Error {
 export type NewPoint = typeof points.$inferInsert;
 export type NewActivity = typeof activities.$inferInsert;
 
-type ParsedActivity = Omit<NewActivity, "id" | "userId"> & {
+export type ParsedActivity = Omit<NewActivity, "id" | "userId"> & {
   points: ParsedPoint[];
 };
-type ParsedPoint = Omit<NewPoint, "id" | "activityId">;
+export type ParsedPoint = Omit<NewPoint, "id" | "activityId">;

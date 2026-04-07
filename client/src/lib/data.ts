@@ -37,3 +37,7 @@ export async function fetchActivitiesWithPoints(): Promise<Activity[]> {
   );
 }
 
+export async function userIsStravaConnected(): Promise<boolean> {
+  const res = await apiFetch<{ stravaConnected: boolean }>(ROUTES.api.userMe);
+  return res.stravaConnected;
+}

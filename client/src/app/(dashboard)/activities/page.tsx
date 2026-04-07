@@ -1,4 +1,4 @@
-import { fetchActivities } from "@/lib/data";
+import { fetchActivities, userIsStravaConnected } from "@/lib/data";
 import ActivityList from "@/app/ui/activity/ActivityList";
 import UploadButton from "@/app/ui/dashboard/UploadButton";
 import { ActivityFiltersSchema } from "@/lib/schema";
@@ -17,6 +17,7 @@ export default async function Activities({
   const parsedFilters = ActivityFiltersSchema.parse(filters || {});
 
   const data = await fetchActivities(parsedFilters);
+  const isStravaConnected = await userIsStravaConnected();
 
   return (
     <>
@@ -24,8 +25,8 @@ export default async function Activities({
       <h1 className="text-2xl font-bold mb-4">Mes activités</h1>
       <div className="flex gap-2 mb-4">
         <UploadButton />
-        <StravaConnectButton />
-        <StravaSyncButton />
+        {!isStravaConnected && <StravaConnectButton />}
+        {isStravaConnected && <StravaSyncButton />}
         <StatsButton />
       </div>
       <ActivityList initialActivityList={data} />

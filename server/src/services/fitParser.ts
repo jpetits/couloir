@@ -1,11 +1,7 @@
 import FitParser from "fit-file-parser";
 import { lineString, point, distance, simplify } from "@turf/turf";
 import turfLength from "@turf/length";
-import {
-  type FitRecord,
-  type ParsedPoint,
-  type ParsedActivity,
-} from "../types/types";
+import type { FitRecord, ParsedPoint, ParsedActivity } from "../types/types";
 
 const fitParser = new FitParser({
   force: true,

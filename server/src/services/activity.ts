@@ -1,11 +1,9 @@
-import { db } from "../db/index";
 import { activityRepository } from "../repositories/activity";
 import { pointRepository } from "../repositories/point";
-import { type NewPoint } from "../types/types";
+import type { NewPoint, ParsedPoint } from "../types/types";
 import { AppError } from "../types/appError";
 import { parseFitFile } from "./fitParser";
 import type { ActivityFilters } from "../schema/query";
-import { userRepository } from "../repositories/user";
 
 export const getActivities = async (
   userId: string,
@@ -57,7 +55,7 @@ export const postActivity = async (buffer: Buffer, userId: string) => {
 
   if (!activity) throw new AppError("Failed to create activity", 500);
 
-  const newPoints: NewPoint[] = parsedPoints.map((p) => ({
+  const newPoints: NewPoint[] = parsedPoints.map((p: ParsedPoint) => ({
     ...p,
     activityId: activity.id,
   }));

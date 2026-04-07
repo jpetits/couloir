@@ -17,6 +17,7 @@ export const ROUTES = {
     postActivity: `/api/activities`,
     stravaSync: `/api/strava/sync`,
     stravaConnect: `/api/strava/callback`,
+    userMe: `/api/user/me`,
   },
   external: {
     stravaAuth: (redirect: string) =>
