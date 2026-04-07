@@ -38,7 +38,6 @@ export const ActivityStatsSchema = z.object({
   totalDuration: z.coerce.number(),
   totalElevationLoss: z.coerce.number(),
   count: z.number(),
-  activityList: z.array(ActivitySchema),
 });
 
 export type ActivityStats = z.infer<typeof ActivityStatsSchema>;

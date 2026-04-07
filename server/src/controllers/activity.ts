@@ -81,13 +81,22 @@ const deleteActivity: RequestHandler = asyncHandler(
 );
 
 // @route GET /activities/stats
-// @desc Get activities stats
+// @desc Get activities stats (aggregate only)
 // @access Public
 const getActivitiesStats: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const stats = await activityService.getActivitiesStats(req.user.id);
-
     res.status(200).json(stats);
+  },
+);
+
+// @route GET /activities/map
+// @desc Get all activities with points for map display
+// @access Public
+const getActivitiesMap: RequestHandler = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const activities = await activityService.getActivitiesWithPoints(req.user.id);
+    res.status(200).json(activities);
   },
 );
 
@@ -98,4 +107,5 @@ export {
   patchActivity,
   deleteActivity,
   getActivitiesStats,
+  getActivitiesMap,
 };

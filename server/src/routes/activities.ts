@@ -6,6 +6,7 @@ import {
   deleteActivity,
   findActivity,
   getActivitiesStats,
+  getActivitiesMap,
   patchActivity,
 } from "../controllers/activity";
 import { validateBody, validateQuery } from "../middleware/validate.js";
@@ -24,6 +25,7 @@ router.get(
   getActivities,
 );
 router.get("/stats", requireAuth(), attachUser, getActivitiesStats);
+router.get("/map", requireAuth(), attachUser, getActivitiesMap);
 router.get("/:id", requireAuth(), attachUser, findActivity);
 router.patch(
   "/:id",

@@ -18,6 +18,10 @@ export const getActivitiesStats = async (userId: string) => {
   return await activityRepository.getStats(userId);
 };
 
+export const getActivitiesWithPoints = async (userId: string) => {
+  return await activityRepository.listWithPoints(userId);
+};
+
 export const getActivity = async (id: string, userId: string) => {
   const activity = await activityRepository.findById(id);
   if (!activity) throw new AppError("Activity not found", 404);

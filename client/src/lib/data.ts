@@ -31,3 +31,9 @@ export async function fetchStats(): Promise<ActivityStats> {
   return stats;
 }
 
+export async function fetchActivitiesWithPoints(): Promise<Activity[]> {
+  return await apiFetch<Activity[]>(ROUTES.api.map).then((data) =>
+    ActivityListSchema.parse(data),
+  );
+}
+

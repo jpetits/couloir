@@ -10,6 +10,7 @@ export const ROUTES = {
       `/api/activities?${new URLSearchParams(JSON.parse(JSON.stringify(ActivityApiParamsSchema.parse(filters))))}`,
     activity: (id: string) => `/api/activities/${id}`,
     stats: `/api/activities/stats`,
+    map: `/api/activities/map`,
     patchActivity: (id: string) => `/api/activities/${id}`,
     deleteActivity: (id: string) => `/api/activities/${id}`,
     postActivity: `/api/activities`,

@@ -7,7 +7,11 @@ import DataChart from "../activity/DataChart";
 import ActivityName from "../activity/ActivityName";
 import { formatDuration } from "@/lib/utils";
 
-export default function ActivityStats({ stats }: { stats: any }) {
+export default function ActivityStats({
+  activityList,
+}: {
+  activityList: Activity[];
+}) {
   const [hoveredPoint, setHoveredPoint] = useState<Point | null>(null);
   const handleHover = useCallback(
     (point: Point | null) => setHoveredPoint(point),
@@ -16,7 +20,7 @@ export default function ActivityStats({ stats }: { stats: any }) {
 
   const data = useMemo(
     () =>
-      stats.activityList.map((a: Activity) =>
+      activityList.map((a: Activity) =>
         (a.points ?? []).map((p: Point, i: number) => ({
           ...p,
           cumDist: parseFloat((p.cumDist / 1000).toFixed(2)),
@@ -27,29 +31,27 @@ export default function ActivityStats({ stats }: { stats: any }) {
           index: i,
         })),
       ),
-    [stats.activityList],
+    [activityList],
   );
 
   const hoveredActivityPoints = useMemo(
     () =>
       hoveredPoint
-        ? data.find(
+        ? (data.find(
             (points: Point[]) =>
               points.length > 0 &&
               points[0].activityId === hoveredPoint.activityId,
-          )
+          ) ?? [])
         : [],
     [hoveredPoint, data],
   );
 
-  const hoveredActivity = stats.activityList.find(
+  const hoveredActivity = activityList.find(
     (a: Activity) => a.id === hoveredPoint?.activityId,
   );
 
-  console.log("hoveredActivity", hoveredActivity);
-
   return (
-    <>
+    <div className="flex flex-col gap-1 mt-3">
       <ActivityMapWrapper
         points={data}
         onHover={handleHover}
@@ -83,6 +85,6 @@ export default function ActivityStats({ stats }: { stats: any }) {
         dataKey="speed"
         unit="km/h"
       />
-    </>
+    </div>
   );
 }

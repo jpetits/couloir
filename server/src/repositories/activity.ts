@@ -76,31 +76,28 @@ export const activityRepository = {
     return result[0];
   },
   getStats: async (userId: string) => {
-    const [statsResult, activityList] = await Promise.all([
-      db
-        .select({
-          totalDistance: sum(activities.distance),
-          totalDuration: sum(activities.duration),
-          totalElevationLoss: sum(activities.elevLoss),
-          count: count(),
-        })
-        .from(activities)
-        .where(eq(activities.userId, userId)),
-      db.query.activities.findMany({
-        where: (activities, { eq }) => eq(activities.userId, userId),
-        with: { points: true },
-      }),
-    ]);
+    const result = await db
+      .select({
+        totalDistance: sum(activities.distance),
+        totalDuration: sum(activities.duration),
+        totalElevationLoss: sum(activities.elevLoss),
+        count: count(),
+      })
+      .from(activities)
+      .where(eq(activities.userId, userId));
 
-    return {
-      ...(statsResult[0] || {
-        totalDistance: 0,
-        totalDuration: 0,
-        totalElevationLoss: 0,
-        count: 0,
-      }),
-      activityList,
+    return result[0] || {
+      totalDistance: 0,
+      totalDuration: 0,
+      totalElevationLoss: 0,
+      count: 0,
     };
+  },
+  listWithPoints: async (userId: string) => {
+    return db.query.activities.findMany({
+      where: (activities, { eq }) => eq(activities.userId, userId),
+      with: { points: true },
+    });
   },
   findByStravaId: async (stravaActivityId: string, userId: string) => {
     return db.query.activities.findFirst({
