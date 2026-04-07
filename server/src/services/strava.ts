@@ -48,6 +48,10 @@ const createOrUpdateActivities = async (
       stravaActivityId: String(a.id),
     }));
 
+  if (activitiesToInsert.length === 0) {
+    return [];
+  }
+
   return await activityRepository.createMany(activitiesToInsert);
 };
 
@@ -197,15 +201,6 @@ export const syncStravaActivities = async (user: typeof users.$inferSelect) => {
     const accessToken = await getOrRefreshStravaAccessToken(user);
 
     const allStravaActivities = await batchFetchStravaActivities(accessToken);
-
-    if (allStravaActivities.length === 0) {
-      console.warn(`No Strava activities found for user ${user.id}`);
-      sendMessage(user.id, {
-        type: "sync:done",
-        count: 0,
-      });
-      return;
-    }
 
     allInserted = await createOrUpdateActivities(allStravaActivities, user.id);
 

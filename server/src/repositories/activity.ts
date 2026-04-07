@@ -86,12 +86,14 @@ export const activityRepository = {
       .from(activities)
       .where(eq(activities.userId, userId));
 
-    return result[0] || {
-      totalDistance: 0,
-      totalDuration: 0,
-      totalElevationLoss: 0,
-      count: 0,
-    };
+    return (
+      result[0] || {
+        totalDistance: 0,
+        totalDuration: 0,
+        totalElevationLoss: 0,
+        count: 0,
+      }
+    );
   },
   listWithPoints: async (userId: string) => {
     return db.query.activities.findMany({
@@ -115,6 +117,8 @@ export const activityRepository = {
     });
   },
   createMany: async (activitiesData: (typeof activities.$inferInsert)[]) => {
+    if (activitiesData.length === 0) return [];
+
     return db.insert(activities).values(activitiesData).returning();
   },
 };
