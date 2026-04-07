@@ -4,7 +4,8 @@ import ActivityMapWrapper from "@/app/ui/activity/ActivityMapWrapper";
 import { Activity, Point } from "@/lib/schema";
 import { useCallback, useMemo, useState } from "react";
 import DataChart from "../activity/DataChart";
-import { stat } from "node:fs";
+import ActivityName from "../activity/ActivityName";
+import { formatDuration } from "@/lib/utils";
 
 export default function ActivityStats({ stats }: { stats: any }) {
   const [hoveredPoint, setHoveredPoint] = useState<Point | null>(null);
@@ -41,6 +42,12 @@ export default function ActivityStats({ stats }: { stats: any }) {
     [hoveredPoint, data],
   );
 
+  const hoveredActivity = stats.activityList.find(
+    (a: Activity) => a.id === hoveredPoint?.activityId,
+  );
+
+  console.log("hoveredActivity", hoveredActivity);
+
   return (
     <>
       <ActivityMapWrapper
@@ -48,6 +55,20 @@ export default function ActivityStats({ stats }: { stats: any }) {
         onHover={handleHover}
         hoveredPoint={hoveredPoint}
       />
+
+      {hoveredActivity && (
+        <>
+          <ActivityName activity={hoveredActivity} />
+          <div className="flex gap-4">
+            <div>
+              {hoveredActivity.date} {hoveredActivity.distance / 1000} km{" "}
+            </div>
+            <div>{hoveredActivity.elevGain} d+ </div>
+            <div>{formatDuration(hoveredActivity.duration, false)}</div>
+          </div>
+        </>
+      )}
+
       <DataChart
         data={hoveredActivityPoints}
         onHover={handleHover}

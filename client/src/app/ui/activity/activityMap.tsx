@@ -49,8 +49,6 @@ export default function ActivityMap({
     [onHover, points],
   );
 
-  console.log("Rendering map with points:", points);
-
   return (
     <MapContainer
       style={{ height: 600, width: "100%" }}
