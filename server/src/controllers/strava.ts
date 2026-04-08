@@ -36,7 +36,7 @@ const getStravaWebhook = async (req: Request, res: Response) => {
   }
 
   if (challenge) {
-    return res.status(200).send(challenge);
+    return res.status(200).json({ "hub.challenge": challenge });
   }
 
   res.status(400).json({ error: "Missing hub.challenge query parameter" });
