@@ -8,6 +8,7 @@ A personal activity tracker for outdoor sports — skiing, surfing, trekking, an
 
 - Upload `.fit` files from GPS devices
 - Sync activities from Strava (OAuth + background sync with real-time WebSocket progress)
+- Strava webhook — new activities appear automatically when recorded
 - Interactive map with multi-activity overlay and hover to explore each track
 - Elevation and speed charts synced with the map cursor
 - Activity list with filtering, sorting, and infinite scroll
@@ -56,6 +57,8 @@ couloir/
 Authentication is handled by Clerk. The client sends requests to the Express API with a JWT, verified server-side via `@clerk/express`. WebSocket connections authenticate the same way using a token passed as a query parameter.
 
 GPS streams are simplified using the [Ramer-Douglas-Peucker algorithm](https://en.wikipedia.org/wiki/Ramer%E2%80%93Douglas%E2%80%93Peucker_algorithm) via `@turf/turf` before storage to reduce point count while preserving track shape.
+
+Strava sync runs as a background job on the server, streaming progress back to the client over a WebSocket connection authenticated with a Clerk JWT. A Strava webhook subscription pushes new activity events to the server in real time, so activities appear without manual sync.
 
 ## Local Development
 
