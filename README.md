@@ -4,6 +4,8 @@
 
 A personal activity tracker for outdoor sports — skiing, surfing, trekking, and more. Upload GPS files from any device or sync directly from Strava, and visualize all your activities on an interactive map with elevation and speed charts.
 
+![Couloir map](client/public/map.webp)
+
 ## Features
 
 - Upload `.fit` files from GPS devices
@@ -73,7 +75,7 @@ cd couloir
 cd server
 cp .env.example .env   # fill in DATABASE_URL, CLERK_SECRET_KEY, STRAVA_*
 pnpm install
-pnpm db:migrate
+pnpm db:push
 pnpm dev
 
 # Client (separate terminal)

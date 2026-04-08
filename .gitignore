@@ -12,6 +12,8 @@ node_modules
 
 # testing
 /coverage
+client/coverage/
+server/coverage/
 
 # next.js
 .next/
@@ -33,6 +35,7 @@ yarn-error.log*
 
 # env files (can opt-in for committing if needed)
 .env*
+!.env.example
 
 # vercel
 .vercel
@@ -43,3 +46,13 @@ next-env.d.ts
 
 playwright/.clerk
 /.clerk/
+client/.clerk/
+server/.clerk/
+
+# Playwright
+client/test-results/
+client/playwright-report/
+client/blob-report/
+client/playwright/.cache/
+client/playwright/.auth/
+client/playwright/.clerk
