@@ -10,6 +10,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
 import { useState } from "react";
 import ThemeButton from "./ui/dashboard/ThemeButton";
+import Link from "next/dist/client/link";
+import { ROUTES } from "@/routing/constants";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
@@ -25,11 +27,16 @@ export default function Providers({ children }: { children: React.ReactNode }) {
           <header className="flex justify-end items-center p-4 gap-4 h-16">
             <ThemeButton />
             <Show when="signed-out">
-              <SignInButton />
+              <SignInButton>
+                <Link href={ROUTES.signIn}>Sign In</Link>
+              </SignInButton>
               <SignUpButton>
-                <button className="bg-[#6c47ff] text-white rounded-full font-medium text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 cursor-pointer">
+                <Link
+                  href={ROUTES.signUp}
+                  className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity"
+                >
                   Sign Up
-                </button>
+                </Link>
               </SignUpButton>
             </Show>
             <Show when="signed-in">
