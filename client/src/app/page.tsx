@@ -1,6 +1,98 @@
-import { redirect } from "next/navigation";
+"use client";
+
+import Link from "next/link";
+import Image from "next/image";
 import { ROUTES } from "@/routing/constants";
+import { SignInButton, SignUpButton, Show } from "@clerk/nextjs";
 
 export default function Home() {
-  return <></>;
+  return (
+    <main className="min-h-screen bg-background">
+      {/* Hero */}
+      <section className="flex flex-col items-center justify-center text-center px-6 pt-24 pb-16">
+        <h1 className="text-5xl font-bold tracking-tight mb-4">
+          All your adventures,
+          <br />
+          in one place.
+        </h1>
+        <p className="text-lg text-muted-foreground max-w-md mb-8">
+          Upload GPS files or sync from Strava. Visualize every ski run, surf
+          session, and trek on an interactive map.
+        </p>
+        <div className="flex gap-3">
+          <Show when="signed-out">
+            <SignInButton>
+              <Link
+                href={ROUTES.signIn}
+                className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity"
+              >
+                Sign In
+              </Link>
+            </SignInButton>
+            <SignUpButton>
+              <Link
+                href={ROUTES.signUp}
+                className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity"
+              >
+                Sign Up
+              </Link>
+            </SignUpButton>
+          </Show>
+          <Show when="signed-in">
+            <Link
+              href={ROUTES.activities}
+              className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity"
+            >
+              View my activities
+            </Link>
+          </Show>
+        </div>
+      </section>
+
+      {/* Screenshot */}
+      <section className="px-6 max-w-5xl mx-auto">
+        <div className="rounded-xl overflow-hidden border shadow-2xl">
+          <Image
+            src="/map.png"
+            alt="Couloir activity map"
+            width={1200}
+            height={700}
+            className="w-full object-cover"
+            priority
+          />
+        </div>
+      </section>
+
+      {/* Features */}
+      <section className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-4xl mx-auto px-6 py-24">
+        <Feature
+          title="Upload FIT files"
+          description="Import directly from your GPS device or sports watch."
+        />
+        <Feature
+          title="Sync with Strava"
+          description="Connect once and your activities sync automatically."
+        />
+        <Feature
+          title="Explore your tracks"
+          description="Interactive map with elevation and speed charts for every activity."
+        />
+      </section>
+    </main>
+  );
+}
+
+function Feature({
+  title,
+  description,
+}: {
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="flex flex-col gap-2">
+      <h3 className="font-semibold text-lg">{title}</h3>
+      <p className="text-muted-foreground text-sm">{description}</p>
+    </div>
+  );
 }

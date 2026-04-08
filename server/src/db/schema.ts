@@ -53,7 +53,7 @@ export const users = pgTable("users", {
   stravaAccessToken: text("strava_access_token"),
   stravaRefreshToken: text("strava_refresh_token"),
   stravaTokenExpiresAt: timestamp("strava_token_expires_at"),
-  stravaAthleteId: numeric("athlete_id").unique(),
+  stravaAthleteId: numeric("strava_athlete_id").unique(),
 });
 
 export const usersRelations = relations(users, ({ one }) => ({

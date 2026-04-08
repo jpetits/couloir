@@ -6,6 +6,7 @@ export const ROUTES = {
   stats: "/stats",
   activity: (id: string) => `/activities/${id}`,
   signIn: "/sign-in",
+  signUp: "/sign-up",
   api: {
     activities: (filters: ActivityFilters) =>
       `/api/activities?${new URLSearchParams(JSON.parse(JSON.stringify(ActivityApiParamsSchema.parse(filters))))}`,
