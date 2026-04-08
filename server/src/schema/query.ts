@@ -31,6 +31,7 @@ export const callBackStravaSchema = z.object({
 });
 
 export const getStravaWebhookSchema = z.object({
+  "hub.mode": z.string(),
   "hub.challenge": z.string(),
   "hub.verify_token": z.string(),
 });
