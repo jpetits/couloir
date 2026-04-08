@@ -8,7 +8,9 @@
     "dev": "tsx watch --no-cache --env-file=.env server.ts",
     "db:push": "drizzle-kit push",
     "test": "jest",
-    "typecheck": "tsc --noEmit"
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint . --ext .ts",
+    "start": "tsx server.ts"
   },
   "keywords": [],
   "author": "",
