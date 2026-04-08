@@ -30,6 +30,7 @@ export const handleStravaCallback = async (code: string, userId: string) => {
     stravaAccessToken: data.access_token,
     stravaRefreshToken: data.refresh_token,
     stravaTokenExpiresAt: new Date(Date.now() + data.expires_in * 1000),
+    stravaAthleteId: data.athlete.id,
   });
 };
 
@@ -222,4 +223,38 @@ export const syncStravaActivities = async (user: typeof users.$inferSelect) => {
     type: "sync:done",
     count: allInserted.length,
   });
+};
+
+export const handleStravaWebhook = async (
+  stravaActivityId: string,
+  stravaAthleteId: string,
+) => {
+  const user = await userRepository.findByStravaAthleteId(stravaAthleteId);
+  if (!user) {
+    console.warn(
+      `Received Strava webhook for activity ID ${stravaActivityId} but no matching user found`,
+    );
+    return;
+  }
+  const accessToken = await getOrRefreshStravaAccessToken(user);
+  const activityResponse = await fetch(
+    `https://www.strava.com/api/v3/activities/${stravaActivityId}`,
+    {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    },
+  );
+
+  if (!activityResponse.ok) {
+    throw new Error(
+      `Failed to fetch Strava activity with ID ${stravaActivityId}`,
+    );
+  }
+
+  const stravaActivity = await activityResponse.json();
+
+  const allInserted = await createOrUpdateActivities([stravaActivity], user.id);
+
+  await queueActivitiesForProcessing(allInserted, user);
 };

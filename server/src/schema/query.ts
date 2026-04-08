@@ -30,4 +30,21 @@ export const callBackStravaSchema = z.object({
   code: z.string(),
 });
 
+export const getStravaWebhookSchema = z.object({
+  "hub.mode": z.string(),
+  "hub.challenge": z.string(),
+  "hub.verify_token": z.string(),
+});
+
+export const postStravaWebhookSchema = z.object({
+  aspect_type: z.string(),
+  event_time: z.coerce.number(),
+  object_id: z.coerce.number(),
+  object_type: z.string(),
+  owner_id: z.coerce.number(),
+  subscription_id: z.coerce.number(),
+});
+
 export type CallBackStravaQuery = z.infer<typeof callBackStravaSchema>;
+export type GetStravaWebhookQuery = z.infer<typeof getStravaWebhookSchema>;
+export type PostStravaWebhookBody = z.infer<typeof postStravaWebhookSchema>;
