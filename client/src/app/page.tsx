@@ -53,7 +53,7 @@ export default function Home() {
       <section className="px-6 max-w-5xl mx-auto">
         <div className="rounded-xl overflow-hidden border shadow-2xl">
           <Image
-            src="/map.png"
+            src="/map.webp"
             alt="Couloir activity map"
             width={1200}
             height={700}
