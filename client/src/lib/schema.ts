@@ -26,7 +26,7 @@ export const ActivitySchema = z.object({
   maxSpeed: z.number(),
   maxSlope: z.number(),
   points: z.array(PointSchema).optional(),
-  stravaActivityId: z.string().optional(),
+  stravaActivityId: z.string().nullable().optional(),
 });
 
 export type Activity = z.infer<typeof ActivitySchema>;

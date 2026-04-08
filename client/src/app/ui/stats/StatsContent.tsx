@@ -13,27 +13,27 @@ export default async function StatsContent() {
   const stats = await fetchStats();
   return (
     <>
-      <h1 className="text-2xl font-bold flex-warp">Stats</h1>
+      <h1 className="text-2xl font-bold flex-warp">Statistiques</h1>
       <div className="flex flex-col md:flex-row gap-4 mt-2">
         <StatsCard title="Nombre d'activités">
           <p className="text-3xl font-bold">{stats.count}</p>
-          <p className="text-sm text-muted-foreground">ce mois-ci</p>
+          <p className="text-sm text-muted-foreground">cette année</p>
         </StatsCard>
         <StatsCard title="Distance totale">
           <p className="text-3xl font-bold">
             {(stats.totalDistance / 1000).toFixed(1)} km
           </p>
-          <p className="text-sm text-muted-foreground">ce mois-ci</p>
+          <p className="text-sm text-muted-foreground">cette année</p>
         </StatsCard>
         <StatsCard title="Dénivelé total">
           <p className="text-3xl font-bold">{stats.totalElevationLoss} m</p>
-          <p className="text-sm text-muted-foreground">ce mois-ci</p>
+          <p className="text-sm text-muted-foreground">cette année</p>
         </StatsCard>
         <StatsCard title="Durée totale">
           <p className="text-3xl font-bold">
             {formatDuration(stats.totalDuration, false)}
           </p>
-          <p className="text-sm text-muted-foreground">ce mois-ci</p>
+          <p className="text-sm text-muted-foreground">cette année</p>
         </StatsCard>
       </div>
       <Suspense
