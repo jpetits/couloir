@@ -1,6 +1,8 @@
+import { PointStats } from "@/types/activity";
 import { point, distance, Units } from "@turf/turf";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+import { Point } from "./schema";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -65,3 +67,12 @@ export const colorInterpolate = (
   const hue = Math.round(baseColor - ratio * (baseColor - toColor)); //
   return `hsl(${hue}, 90%, 50%)`;
 };
+
+export function smoothSpeeds(points: Point[], window = 5): number[] {
+  return points.map((_, i) => {
+    const start = Math.max(0, i - window);
+    const end = Math.min(points.length - 1, i + window);
+    const slice = points.slice(start, end + 1);
+    return slice.reduce((s, p) => s + p.speed, 0) / slice.length;
+  });
+}

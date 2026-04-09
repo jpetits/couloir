@@ -5,7 +5,7 @@ import type { Point } from "@/lib/schema";
 import type { PointStats } from "@/types/activity";
 import ActivityMapWrapper from "./ActivityMapWrapper";
 import DataChart from "./DataChart";
-import { colorInterpolate } from "@/lib/utils";
+import { colorInterpolate, smoothSpeeds } from "@/lib/utils";
 
 export default function ActivityDetailClient({ points }: { points: Point[] }) {
   const [hoveredPoint, setHoveredPoint] = useState<PointStats | null>(null);
@@ -21,20 +21,19 @@ export default function ActivityDetailClient({ points }: { points: Point[] }) {
     };
   }, [points]);
 
-  const data = useMemo(
-    () =>
-      points.map((p, i) => {
-        return {
-          ...p,
-          cumDist: parseFloat((p.cumDist / 1000).toFixed(2)),
-          speed: Math.round(p.speed),
-          ele: Math.round(p.ele * 1000),
-          index: i,
-          speedColor: colorInterpolate(p.speed, minSpeed, maxSpeed),
-        };
-      }),
-    [points, minSpeed, maxSpeed],
-  );
+  const data = useMemo(() => {
+    const smoothedSpeeds = smoothSpeeds(points);
+    return points.map((p, i) => {
+      return {
+        ...p,
+        cumDist: parseFloat((p.cumDist / 1000).toFixed(2)),
+        speed: Math.round(p.speed),
+        ele: Math.round(p.ele * 1000),
+        index: i,
+        speedColor: colorInterpolate(smoothedSpeeds[i], minSpeed, maxSpeed),
+      };
+    });
+  }, [points, minSpeed, maxSpeed]);
 
   return (
     <>
