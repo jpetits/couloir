@@ -7,7 +7,7 @@ import {
   numeric,
   timestamp,
 } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
+import { min, relations } from "drizzle-orm";
 
 export const activities = pgTable("activities", {
   id: uuid("id").primaryKey().defaultRandom(),

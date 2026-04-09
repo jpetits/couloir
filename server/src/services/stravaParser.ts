@@ -1,5 +1,4 @@
-import { lineString, point, distance, simplify } from "@turf/turf";
-import { type ParsedPoint } from "../types/types";
+import { point, distance } from "@turf/turf";
 
 export const parseStravaActivity = (stravaActivity: any) => ({
   name: stravaActivity.name,
@@ -30,13 +29,23 @@ export const parseStravaStream = (activityId: string, stravaStream: any) => {
     cumDist: stravaStream.distance?.data[index] ?? 0, // meters
   }));
 
-  const line = lineString(points.map((p: ParsedPoint) => [p.lng, p.lat]));
-  const simplified = simplify(line, { tolerance: 0.0001, highQuality: false });
-  const simplifiedCoords = new Set(
-    simplified.geometry.coordinates.map(([lng, lat]) => `${lng},${lat}`),
-  );
-
-  return points.filter((r: ParsedPoint) =>
-    simplifiedCoords.has(`${r.lng},${r.lat}`),
-  );
+  return simplifyByMaxDistance(points);
 };
+
+export function simplifyByMaxDistance<T extends { lat: number; lng: number }>(
+  points: T[],
+  maxDistanceKm = 0.02,
+): T[] {
+  if (points.length === 0) return [];
+  const result = [points[0]!];
+  for (const p of points.slice(1)) {
+    const last = result[result.length - 1]!;
+    const dist = distance(point([last.lng, last.lat]), point([p.lng, p.lat]), {
+      units: "kilometers",
+    });
+    if (dist >= maxDistanceKm || p === points[points.length - 1]) {
+      result.push(p);
+    }
+  }
+  return result;
+}

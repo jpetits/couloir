@@ -8,12 +8,11 @@ import {
   useMap,
   CircleMarker,
 } from "react-leaflet";
-import type { Point } from "@/lib/schema";
+import type { PointStats } from "@/types/activity";
 import "leaflet/dist/leaflet.css";
 import { LeafletMouseEvent } from "leaflet";
-import { activityColor } from "@/lib/utils";
 
-function FitBounds({ positions }: { positions: Point[][] }) {
+function FitBounds({ positions }: { positions: PointStats[][] }) {
   const map = useMap();
   useEffect(() => {
     if (positions.length > 0) {
@@ -22,7 +21,7 @@ function FitBounds({ positions }: { positions: Point[][] }) {
         .map((p) => [p.lat, p.lng] as [number, number]);
       map.fitBounds(bounds);
     }
-  }, [map, positions]);
+  }, []);
   return null;
 }
 
@@ -31,9 +30,9 @@ export default function ActivityMap({
   points,
   hoveredPoint,
 }: {
-  onHover: (point: Point | null) => void;
-  points: Point[][];
-  hoveredPoint?: Point | null;
+  onHover: (point: PointStats | null) => void;
+  points: PointStats[][];
+  hoveredPoint?: PointStats | null;
 }) {
   const handleMouseMove = useCallback(
     (e: LeafletMouseEvent) => {
@@ -42,7 +41,7 @@ export default function ActivityMap({
           const d = e.latlng.distanceTo([p.lat, p.lng]);
           return d < best.d ? { d, p } : best;
         },
-        { d: Infinity, p: null as Point | null },
+        { d: Infinity, p: null as PointStats | null },
       );
       onHover(closest.p);
     },
@@ -64,11 +63,21 @@ export default function ActivityMap({
           .filter((pos) => pos.length > 0)
           .map((pos, i) => (
             <div key={i}>
-              <Polyline
-                positions={pos}
-                color={activityColor(pos[0].activityId)}
-                weight={3}
-              />
+              {pos.map((p, j) => {
+                if (j === 0) {
+                  return null; // skip first point to avoid zero-length segment
+                }
+
+                return (
+                  <Polyline
+                    key={p.id}
+                    positions={[pos[j - 1], p]}
+                    color={p.speedColor}
+                    weight={3}
+                  />
+                );
+              })}
+
               <Polyline
                 positions={pos}
                 color="transparent"

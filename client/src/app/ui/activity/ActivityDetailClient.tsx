@@ -2,15 +2,25 @@
 
 import { useState, useCallback, useMemo } from "react";
 import type { Point } from "@/lib/schema";
+import type { PointStats } from "@/types/activity";
 import ActivityMapWrapper from "./ActivityMapWrapper";
 import DataChart from "./DataChart";
+import { colorInterpolate } from "@/lib/utils";
 
 export default function ActivityDetailClient({ points }: { points: Point[] }) {
-  const [hoveredPoint, setHoveredPoint] = useState<Point | null>(null);
+  const [hoveredPoint, setHoveredPoint] = useState<PointStats | null>(null);
   const handleHover = useCallback(
-    (point: Point | null) => setHoveredPoint(point),
+    (point: PointStats | null) => setHoveredPoint(point),
     [],
   );
+
+  const { maxSpeed, minSpeed } = useMemo(() => {
+    return {
+      maxSpeed: Math.max(...points.map((p) => p.speed)),
+      minSpeed: Math.min(...points.map((p) => p.speed)),
+    };
+  }, [points]);
+
   const data = useMemo(
     () =>
       points.map((p, i) => {
@@ -20,9 +30,10 @@ export default function ActivityDetailClient({ points }: { points: Point[] }) {
           speed: Math.round(p.speed),
           ele: Math.round(p.ele * 1000),
           index: i,
+          speedColor: colorInterpolate(p.speed, minSpeed, maxSpeed),
         };
       }),
-    [points],
+    [points, minSpeed, maxSpeed],
   );
 
   return (

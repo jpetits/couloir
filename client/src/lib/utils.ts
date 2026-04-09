@@ -52,3 +52,16 @@ export function activityColor(id: string): string {
   const hue = Math.abs(hash) % 360;
   return `hsl(${hue}, 70%, 55%)`;
 }
+
+export const colorInterpolate = (
+  current: number,
+  min: number,
+  max: number,
+  baseColor: number = 240,
+  toColor: number = 0,
+) => {
+  if (max === min) return `hsl(${baseColor}, 90%, 50%)`;
+  const ratio = (current - min) / (max - min);
+  const hue = Math.round(baseColor - ratio * (baseColor - toColor)); //
+  return `hsl(${hue}, 90%, 50%)`;
+};

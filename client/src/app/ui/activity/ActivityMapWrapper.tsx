@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import type { Point } from "@/lib/schema";
+import type { PointStats } from "@/types/activity";
 
 const ActivityMap = dynamic(() => import("./ActivityMap"), { ssr: false });
 
@@ -10,9 +10,9 @@ export default function ActivityMapWrapper({
   hoveredPoint,
   onHover,
 }: {
-  points: Point[][];
-  hoveredPoint?: Point | null;
-  onHover: (point: Point | null) => void;
+  points: PointStats[][];
+  hoveredPoint?: PointStats | null;
+  onHover: (point: PointStats | null) => void;
 }) {
   return (
     <ActivityMap

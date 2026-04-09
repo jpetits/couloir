@@ -11,8 +11,8 @@ import {
   Tooltip,
 } from "recharts";
 import type { MouseHandlerDataParam, TooltipIndex } from "recharts";
-import type { Point } from "@/lib/schema";
 import { useCallback } from "react";
+import { PointStats } from "@/types/activity";
 
 export default function DataChart({
   data,
@@ -21,15 +21,10 @@ export default function DataChart({
   dataKey,
   unit,
 }: {
-  data: (Point & {
-    cumDist: number;
-    speed: number;
-    ele: number;
-    index: number;
-  })[];
-  onHover: (point: Point | null) => void;
-  hoveredPoint?: Point | null;
-  dataKey: keyof Point;
+  data: PointStats[];
+  onHover: (point: PointStats | null) => void;
+  hoveredPoint?: PointStats | null;
+  dataKey: keyof PointStats;
   unit?: string;
 }) {
   const handleMouseMove = useCallback(
@@ -60,7 +55,7 @@ export default function DataChart({
               x2="0"
               y2="1"
             >
-              <stop offset="5%" stopColor="#3b82f6" stopOpacity={0.4} />
+              <stop offset="5%" stopColor="#3b82f0" stopOpacity={0.4} />
               <stop offset="95%" stopColor="#3b82f6" stopOpacity={0} />
             </linearGradient>
           </defs>
