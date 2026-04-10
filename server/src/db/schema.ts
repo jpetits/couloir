@@ -21,6 +21,8 @@ export const activities = pgTable("activities", {
   elevLoss: real("elev_loss").notNull(),
   maxSpeed: real("max_speed").notNull(), // km/h
   maxSlope: real("max_slope").notNull(), // in degrees
+  startLat: real("start_lat").notNull(),
+  startLng: real("start_lng").notNull(),
 });
 
 export const activitiesRelations = relations(activities, ({ many }) => ({

@@ -3,7 +3,7 @@ import { pointRepository } from "../repositories/point";
 import type { NewPoint, ParsedPoint } from "../types/types";
 import { AppError } from "../types/appError";
 import { parseFitFile } from "./fitParser";
-import type { ActivityFilters } from "../schema/query";
+import type { ActivityFilters, MapBounds } from "../schema/query";
 
 export const getActivities = async (
   userId: string,
@@ -16,8 +16,13 @@ export const getActivitiesStats = async (userId: string) => {
   return await activityRepository.getStats(userId);
 };
 
-export const getActivitiesWithPoints = async (userId: string) => {
-  return await activityRepository.listWithPoints(userId);
+export const getActivitiesWithPoints = async (
+  userId: string,
+  bounds: MapBounds,
+) => {
+  return (
+    await activityRepository.listWithPointsInBounds(userId, bounds)
+  ).filter((a) => a.points.length > 0);
 };
 
 export const getActivity = async (id: string, userId: string) => {

@@ -6,17 +6,17 @@ import type { PointStats } from "@/types/activity";
 const ActivityMap = dynamic(() => import("./ActivityMap"), { ssr: false });
 
 export default function ActivityMapWrapper({
-  points,
+  pointList,
   hoveredPoint,
   onHover,
 }: {
-  points: PointStats[][];
+  pointList: PointStats[];
   hoveredPoint?: PointStats | null;
   onHover: (point: PointStats | null) => void;
 }) {
   return (
     <ActivityMap
-      points={points}
+      pointList={pointList}
       hoveredPoint={hoveredPoint}
       onHover={onHover}
     />

@@ -15,13 +15,13 @@ import { useCallback } from "react";
 import { PointStats } from "@/types/activity";
 
 export default function DataChart({
-  data,
+  pointList,
   onHover,
   hoveredPoint,
   dataKey,
   unit,
 }: {
-  data: PointStats[];
+  pointList: PointStats[];
   onHover: (point: PointStats | null) => void;
   hoveredPoint?: PointStats | null;
   dataKey: keyof PointStats;
@@ -31,10 +31,10 @@ export default function DataChart({
     (e: MouseHandlerDataParam) => {
       const activeIndex = e?.activeIndex as TooltipIndex | undefined;
       if (activeIndex != null && parseInt(activeIndex) >= 0) {
-        onHover(data[parseInt(activeIndex)]);
+        onHover(pointList[parseInt(activeIndex)]);
       }
     },
-    [onHover, data],
+    [onHover, pointList],
   );
 
   const handleMouseLeave = useCallback(() => onHover(null), [onHover]);
@@ -43,7 +43,7 @@ export default function DataChart({
     <div className="w-full h-48 mt-5">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart
-          data={data}
+          data={pointList}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
         >

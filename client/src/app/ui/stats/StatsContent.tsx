@@ -1,12 +1,12 @@
-import ActivityStats from "@/app/ui/stats/ActivityStats";
 import StatsCard from "@/app/ui/stats/Card";
-import { fetchStats, fetchActivitiesWithPoints } from "@/lib/data";
+import { fetchStats, fetchActivities } from "@/lib/data";
 import { formatDuration } from "@/lib/utils";
 import { Suspense } from "react";
+import ActivityStatsWrapper from "./ActivityStatsWrapper";
 
 async function StatsMap() {
-  const activityList = await fetchActivitiesWithPoints();
-  return <ActivityStats activityList={activityList} />;
+  const activityList = await fetchActivities({ limit: "10000" });
+  return <ActivityStatsWrapper activityList={activityList} />;
 }
 
 export default async function StatsContent() {

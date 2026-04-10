@@ -23,8 +23,8 @@ export default function ActivityList({
 }) {
   const loadMoreRef = useRef<HTMLDivElement>(null);
   const searchParams = useSearchParams();
-  const apiFetch = useApi();
   const router = useRouter();
+  const apiFetch = useApi();
 
   const { allItems, isFetchingNextPage, error, isLoading } =
     usePaginatedScroll<Activity>(initialActivityList, loadMoreRef);

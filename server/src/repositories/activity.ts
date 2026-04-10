@@ -11,7 +11,7 @@ import {
   getTableColumns,
 } from "drizzle-orm";
 import { db } from "../db/index";
-import type { ActivityFilters } from "../schema/query";
+import type { ActivityFilters, MapBounds } from "../schema/query";
 
 export const activityRepository = {
   list: async (userId: string, filters: ActivityFilters) => {
@@ -120,5 +120,19 @@ export const activityRepository = {
     if (activitiesData.length === 0) return [];
 
     return db.insert(activities).values(activitiesData).returning();
+  },
+  listWithPointsInBounds: async (userId: string, bounds: MapBounds) => {
+    return db.query.activities.findMany({
+      where: (activities, { eq, between }) => eq(activities.userId, userId),
+      with: {
+        points: {
+          where: (points, { between, and }) =>
+            and(
+              between(points.lat, bounds.south, bounds.north),
+              between(points.lng, bounds.west, bounds.east),
+            ),
+        },
+      },
+    });
   },
 };

@@ -1,4 +1,9 @@
-import { ActivityFilters, ActivityApiParamsSchema } from "@/lib/schema";
+import {
+  ActivityFilters,
+  ActivityApiParamsSchema,
+  MapBounds,
+  MapBoundsSchema,
+} from "@/lib/schema";
 
 export const ROUTES = {
   home: "/",
@@ -12,7 +17,8 @@ export const ROUTES = {
       `/api/activities?${new URLSearchParams(JSON.parse(JSON.stringify(ActivityApiParamsSchema.parse(filters))))}`,
     activity: (id: string) => `/api/activities/${id}`,
     stats: `/api/activities/stats`,
-    map: `/api/activities/map`,
+    map: (bounds: MapBounds) =>
+      `/api/activities/map?${new URLSearchParams(JSON.parse(JSON.stringify(MapBoundsSchema.parse(bounds))))}`,
     patchActivity: (id: string) => `/api/activities/${id}`,
     deleteActivity: (id: string) => `/api/activities/${id}`,
     postActivity: `/api/activities`,

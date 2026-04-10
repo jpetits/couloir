@@ -7,10 +7,11 @@ import {
   ActivitySchema,
   ActivityStats,
   ActivityStatsSchema,
+  MapBounds,
 } from "./schema";
 
 export async function fetchActivities(
-  filters: ActivityFilters,
+  filters: ActivityFilters = {},
 ): Promise<Activity[]> {
   return await apiFetch<Activity[]>(ROUTES.api.activities(filters)).then(
     (data) => ActivityListSchema.parse(data),
@@ -29,12 +30,6 @@ export async function fetchStats(): Promise<ActivityStats> {
     ActivityStatsSchema.parse(data),
   );
   return stats;
-}
-
-export async function fetchActivitiesWithPoints(): Promise<Activity[]> {
-  return await apiFetch<Activity[]>(ROUTES.api.map).then((data) =>
-    ActivityListSchema.parse(data),
-  );
 }
 
 export async function userIsStravaConnected(): Promise<boolean> {

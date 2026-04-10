@@ -27,6 +27,8 @@ export const ActivitySchema = z.object({
   maxSlope: z.number(),
   points: z.array(PointSchema).optional(),
   stravaActivityId: z.string().nullable().optional(),
+  startLat: z.number(),
+  startLng: z.number(),
 });
 
 export type Activity = z.infer<typeof ActivitySchema>;
@@ -51,10 +53,10 @@ export const ActivityFiltersSchema = z.object({
   maxDistance: z.coerce.string().optional(),
   minDuration: z.coerce.string().optional(),
   maxDuration: z.coerce.string().optional(),
-  sortBy: z.enum(activityColumns).default("date"),
-  sortOrder: z.enum(["asc", "desc"]).default("desc"),
-  page: z.coerce.string().default("1"),
-  limit: z.coerce.string().default("100"),
+  sortBy: z.enum(activityColumns).default("date").optional(),
+  sortOrder: z.enum(["asc", "desc"]).default("desc").optional(),
+  page: z.coerce.string().default("1").optional(),
+  limit: z.coerce.string().default("100").optional(),
 });
 
 export type ActivityFilters = z.infer<typeof ActivityFiltersSchema>;
@@ -64,3 +66,12 @@ export const ActivityApiParamsSchema = ActivityFiltersSchema.transform((f) => ({
   minDistance: f.minDistance ? String(Number(f.minDistance) * 1000) : undefined,
   maxDistance: f.maxDistance ? String(Number(f.maxDistance) * 1000) : undefined,
 }));
+
+export const MapBoundsSchema = z.object({
+  north: z.coerce.number(),
+  south: z.coerce.number(),
+  east: z.coerce.number(),
+  west: z.coerce.number(),
+});
+
+export type MapBounds = z.infer<typeof MapBoundsSchema>;

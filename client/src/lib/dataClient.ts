@@ -1,12 +1,17 @@
 import { ROUTES } from "@/routing/constants";
-import type { Activity } from "./schema";
-import { ActivitySchema } from "./schema";
+import type { Activity, MapBounds } from "./schema";
+import { ActivityListSchema, ActivitySchema } from "./schema";
 import { toast } from "sonner";
+import { useApi } from "@/app/hooks/useApi";
 
 export type ApiFetch = <T>(path: string, options?: RequestInit) => Promise<T>;
 
-export const deleteActivity = (apiFetch: ApiFetch, id: string): Promise<void> =>
-  apiFetch(ROUTES.api.deleteActivity(id), { method: "DELETE" });
+export const deleteActivity = (
+  apiFetch: ApiFetch,
+  id: string,
+): Promise<void> => {
+  return apiFetch(ROUTES.api.deleteActivity(id), { method: "DELETE" });
+};
 
 export const postActivity = (
   apiFetch: ApiFetch,
@@ -14,6 +19,7 @@ export const postActivity = (
 ): Promise<Activity> => {
   const formData = new FormData();
   formData.append("file", file);
+
   return apiFetch<Activity>(ROUTES.api.postActivity, {
     method: "POST",
     body: formData,
@@ -24,12 +30,13 @@ export const patchActivity = (
   apiFetch: ApiFetch,
   id: string,
   fields: Partial<Activity>,
-): Promise<Activity> =>
-  apiFetch<Activity>(ROUTES.api.patchActivity(id), {
+): Promise<Activity> => {
+  return apiFetch<Activity>(ROUTES.api.patchActivity(id), {
     method: "PATCH",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(fields),
   }).then((data) => ActivitySchema.parse(data));
+};
 
 export const stravaConnect = (apiFetch: ApiFetch, code: string) => {
   return apiFetch(ROUTES.api.stravaConnect, {
@@ -47,3 +54,12 @@ export const stravaConnect = (apiFetch: ApiFetch, code: string) => {
       ),
     );
 };
+
+export async function fetchActivitiesWithPointsInBounds(
+  apiFetch: ApiFetch,
+  bounds: MapBounds,
+): Promise<Activity[]> {
+  return await apiFetch<Activity[]>(ROUTES.api.map(bounds)).then((data) =>
+    ActivityListSchema.parse(data),
+  );
+}

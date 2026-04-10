@@ -2,7 +2,11 @@ import type { Request, Response, NextFunction, RequestHandler } from "express";
 import * as activityService from "../services/activity";
 import asyncHandler from "../middleware/asyncHandler";
 import { AppError } from "../types/appError";
-import type { ActivityFilters, patchActivitiesSchema } from "../schema/query";
+import type {
+  ActivityFilters,
+  MapBounds,
+  patchActivitiesSchema,
+} from "../schema/query";
 import { z } from "zod";
 
 //@route GET /activities
@@ -95,7 +99,10 @@ const getActivitiesStats: RequestHandler = asyncHandler(
 // @access Public
 const getActivitiesMap: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const activities = await activityService.getActivitiesWithPoints(req.user.id);
+    const activities = await activityService.getActivitiesWithPoints(
+      req.user.id,
+      req.validatedQuery as MapBounds,
+    );
     res.status(200).json(activities);
   },
 );

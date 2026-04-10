@@ -1,62 +1,202 @@
 "use client";
 
-import ActivityMapWrapper from "@/app/ui/activity/ActivityMapWrapper";
 import { Activity, Point } from "@/lib/schema";
-import { useCallback, useMemo, useState } from "react";
+import { memo, use, useCallback, useEffect, useMemo, useState } from "react";
 import DataChart from "../activity/DataChart";
+import {
+  formatDuration,
+  enrichedPointList,
+  getClosestPoint,
+} from "@/lib/utils";
+import { MapContainer } from "react-leaflet/MapContainer";
+import { Marker } from "react-leaflet/Marker";
+import { TileLayer } from "react-leaflet/TileLayer";
+import { CircleMarker, Polyline, ScaleControl } from "react-leaflet";
+import MarkerClusterGroup from "react-leaflet-cluster";
+import { useBounds, useFitBounds, useZoom } from "@/app/hooks/useLeaflet";
+import { PointStats } from "@/types/activity";
+import { fetchActivitiesWithPointsInBounds } from "@/lib/dataClient";
+import { LeafletMouseEvent } from "leaflet";
+import { useApi } from "@/app/hooks/useApi";
+import { useThrottle } from "@/app/hooks/useThrottle";
 import ActivityName from "../activity/ActivityName";
-import { formatDuration } from "@/lib/utils";
+
+const ZOOM_THRESHOLD = 10;
+type EnrichedActivity = Omit<Activity, "points"> & { points: PointStats[] };
+type HoverStatus = "hovered" | "dimmed" | "idle";
+
+function FitBounds({ points }: { points: { lat: number; lng: number }[] }) {
+  useFitBounds(points);
+  return null;
+}
+
+const ActivityPolylines = memo(
+  ({ points, status }: { points: PointStats[]; status: HoverStatus }) => {
+    return (
+      <>
+        {points.map((point, i) =>
+          i > 0 ? (
+            <Polyline
+              key={point.id}
+              positions={[
+                [points[i - 1]!.lat, points[i - 1]!.lng],
+                [point.lat, point.lng],
+              ]}
+              weight={status === "dimmed" ? 2 : 4}
+              pathOptions={{
+                opacity: status === "dimmed" ? 0.1 : 1,
+                color: status === "dimmed" ? "gray" : point.speedColor,
+              }}
+            />
+          ) : null,
+        )}
+      </>
+    );
+  },
+);
+
+function MapContent({
+  activityList,
+  handleHover,
+  hoveredActivity,
+}: {
+  activityList: Activity[];
+  handleHover: (point: PointStats | null, activity?: Activity | null) => void;
+  hoveredActivity: Activity | null;
+}) {
+  const [activityListInBounds, setActivityListInBounds] = useState<
+    EnrichedActivity[]
+  >([]);
+  const apiFetch = useApi();
+  const zoom = useZoom();
+  const bounds = useBounds();
+
+  useEffect(() => {
+    if (zoom >= ZOOM_THRESHOLD) {
+      fetchActivitiesWithPointsInBounds(apiFetch, {
+        north: bounds.getNorth(),
+        south: bounds.getSouth(),
+        east: bounds.getEast(),
+        west: bounds.getWest(),
+      }).then((activities) =>
+        setActivityListInBounds(
+          activities.map((activity) => ({
+            ...activity,
+            points: enrichedPointList(activity.points!),
+          })),
+        ),
+      );
+    }
+  }, [zoom, bounds]);
+
+  return (
+    <>
+      {zoom < ZOOM_THRESHOLD ? (
+        <MarkerClusterGroup showCoverageOnHover={false}>
+          {activityList.map(
+            (a) =>
+              a.startLat &&
+              a.startLng && (
+                <Marker key={a.id} position={[a.startLat, a.startLng]} />
+              ),
+          )}
+        </MarkerClusterGroup>
+      ) : (
+        activityListInBounds.length &&
+        activityListInBounds.map((activity) => (
+          <div key={activity.id}>
+            <ActivityPolylines
+              points={activity.points}
+              status={
+                hoveredActivity === null
+                  ? "idle"
+                  : hoveredActivity.id === activity.id
+                    ? "hovered"
+                    : "dimmed"
+              }
+            />
+            <Polyline
+              positions={activity.points}
+              color="transparent"
+              weight={20}
+              eventHandlers={{
+                mousemove: (e) => {
+                  handleHover(
+                    getClosestPoint(
+                      e.latlng.lat,
+                      e.latlng.lng,
+                      activity.points,
+                    ),
+                    activity,
+                  );
+                },
+              }}
+            />
+          </div>
+        ))
+      )}
+    </>
+  );
+}
 
 export default function ActivityStats({
   activityList,
 }: {
   activityList: Activity[];
 }) {
-  const [hoveredPoint, setHoveredPoint] = useState<Point | null>(null);
+  const [hoveredPoint, setHoveredPoint] = useState<PointStats | null>(null);
+  const [hoveredActivity, setHoveredActivity] = useState<Activity | null>(null);
   const handleHover = useCallback(
-    (point: Point | null) => setHoveredPoint(point),
+    (point: PointStats | null, activity?: Activity | null) => {
+      setHoveredPoint(point);
+      if (activity) {
+        setHoveredActivity(activity);
+      }
+    },
     [],
-  );
-
-  const data = useMemo(
-    () =>
-      activityList.map((a: Activity) =>
-        (a.points ?? []).map((p: Point, i: number) => ({
-          ...p,
-          cumDist: parseFloat((p.cumDist / 1000).toFixed(2)),
-          speed: Math.round(p.speed),
-          ele: Math.round(p.ele * 1000),
-          lat: p.lat,
-          lng: p.lng,
-          index: i,
-        })),
-      ),
-    [activityList],
-  );
-
-  const hoveredActivityPoints = useMemo(
-    () =>
-      hoveredPoint
-        ? (data.find(
-            (points: Point[]) =>
-              points.length > 0 &&
-              points[0].activityId === hoveredPoint.activityId,
-          ) ?? [])
-        : [],
-    [hoveredPoint, data],
-  );
-
-  const hoveredActivity = activityList.find(
-    (a: Activity) => a.id === hoveredPoint?.activityId,
   );
 
   return (
     <div className="flex flex-col gap-1 mt-3">
-      <ActivityMapWrapper
-        points={data}
-        onHover={handleHover}
-        hoveredPoint={hoveredPoint}
-      />
+      <MapContainer
+        className="markercluster-map"
+        center={[51.0, 19.0]}
+        zoom={4}
+        maxZoom={18}
+        style={{ height: "600px", width: "100%" }}
+      >
+        <TileLayer
+          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+        />
+
+        <FitBounds
+          points={activityList.flatMap((a) => [
+            { lat: a.startLat, lng: a.startLng },
+          ])}
+        />
+
+        <MapContent
+          activityList={activityList}
+          handleHover={handleHover}
+          hoveredActivity={hoveredActivity}
+        />
+
+        {hoveredPoint && (
+          <CircleMarker
+            center={[hoveredPoint.lat, hoveredPoint.lng]}
+            radius={8}
+            pathOptions={{
+              color: "#fff",
+              fillColor: "#3b82f6",
+              fillOpacity: 1,
+              weight: 2,
+            }}
+          />
+        )}
+
+        <ScaleControl position="bottomleft" imperial={false} />
+      </MapContainer>
 
       {hoveredActivity && (
         <>
@@ -70,16 +210,15 @@ export default function ActivityStats({
           </div>
         </>
       )}
-
       <DataChart
-        data={hoveredActivityPoints}
+        pointList={(hoveredActivity?.points ?? []) as PointStats[]}
         onHover={handleHover}
         hoveredPoint={hoveredPoint}
         dataKey="ele"
         unit="m"
       />
       <DataChart
-        data={hoveredActivityPoints}
+        pointList={(hoveredActivity?.points ?? []) as PointStats[]}
         onHover={handleHover}
         hoveredPoint={hoveredPoint}
         dataKey="speed"

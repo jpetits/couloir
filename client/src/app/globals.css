@@ -1,12 +1,18 @@
 @import "tailwindcss";
 @import "tw-animate-css";
+@import 'leaflet/dist/leaflet.css'; 
+@import 'react-leaflet-markercluster/styles'; 
+
 @source "../../src";
+
+
 
 @custom-variant dark (&:is(.dark *));
 
 body {
   font-family: system-ui, sans-serif;
 }
+
 
 @theme inline {
   --font-heading: var(--font-sans);

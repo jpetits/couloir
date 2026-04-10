@@ -11,7 +11,6 @@ import { toast } from "sonner";
 export function useDeleteActivity() {
   const deleteTimeout = 5000;
   const queryClient = useQueryClient();
-  const apiFetch = useApi();
   const queryKey = ["activities"];
   const pendingDeletes = useRef<Map<string, ReturnType<typeof setTimeout>>>(
     new Map(),
@@ -39,6 +38,7 @@ export function useDeleteActivity() {
       new Promise((resolve, reject) => {
         const timer = setTimeout(() => {
           pendingDeletes.current.delete(id);
+          const apiFetch = useApi();
           deleteActivity(apiFetch, id).then(resolve).catch(reject);
         }, deleteTimeout);
         pendingDeletes.current.set(id, timer);

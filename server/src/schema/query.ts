@@ -48,3 +48,12 @@ export const postStravaWebhookSchema = z.object({
 export type CallBackStravaQuery = z.infer<typeof callBackStravaSchema>;
 export type GetStravaWebhookQuery = z.infer<typeof getStravaWebhookSchema>;
 export type PostStravaWebhookBody = z.infer<typeof postStravaWebhookSchema>;
+
+export const mapBoundsSchema = z.object({
+  north: z.coerce.number(),
+  south: z.coerce.number(),
+  east: z.coerce.number(),
+  west: z.coerce.number(),
+});
+
+export type MapBounds = z.infer<typeof mapBoundsSchema>;

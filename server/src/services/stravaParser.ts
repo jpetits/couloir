@@ -9,6 +9,8 @@ export const parseStravaActivity = (stravaActivity: any) => ({
   elevLoss: stravaActivity.total_elevation_gain ?? 0, // Strava doesn't provide elev loss
   maxSpeed: (stravaActivity.max_speed ?? 0) * 3.6, // m/s → km/h
   maxSlope: 0, // not available from Strava summary
+  startLat: stravaActivity.start_latlng?.[0] ?? 0,
+  startLng: stravaActivity.start_latlng?.[1] ?? 0,
 });
 
 export const parseStravaStream = (activityId: string, stravaStream: any) => {

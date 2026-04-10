@@ -76,3 +76,32 @@ export function smoothSpeeds(points: Point[], window = 5): number[] {
     return slice.reduce((s, p) => s + p.speed, 0) / slice.length;
   });
 }
+
+export const enrichedPointList = (points: Point[]): PointStats[] => {
+  const maxSpeed = Math.max(...points.map((p) => p.speed));
+  const minSpeed = Math.min(...points.map((p) => p.speed));
+
+  const smoothedSpeeds = smoothSpeeds(points);
+  return points.map((p, i) => ({
+    ...p,
+    cumDist: parseFloat((p.cumDist / 1000).toFixed(2)),
+    speed: Math.round(p.speed),
+    ele: Math.round(p.ele * 1000),
+    index: i,
+    speedColor: colorInterpolate(smoothedSpeeds[i], minSpeed, maxSpeed),
+  }));
+};
+
+export const getClosestPoint = (
+  lat: number,
+  lng: number,
+  points: PointStats[],
+): PointStats | null => {
+  return points.reduce(
+    (best, p) => {
+      const d = Math.pow(lat - p.lat, 2) + Math.pow(lng - p.lng, 2);
+      return d < best.d ? { d, p } : best;
+    },
+    { d: Infinity, p: null as PointStats | null },
+  ).p;
+};
