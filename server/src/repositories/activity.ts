@@ -80,7 +80,7 @@ export const activityRepository = {
       .select({
         totalDistance: sum(activities.distance),
         totalDuration: sum(activities.duration),
-        totalElevationLoss: sum(activities.elevLoss),
+        totalElevationLoss: sum(activities.elevationLoss),
         count: count(),
       })
       .from(activities)

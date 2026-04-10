@@ -20,10 +20,22 @@ import { LeafletMouseEvent } from "leaflet";
 import { useApi } from "@/app/hooks/useApi";
 import { useThrottle } from "@/app/hooks/useThrottle";
 import ActivityName from "../activity/ActivityName";
+import { Button } from "@/components/ui/button";
 
 const ZOOM_THRESHOLD = 10;
 type EnrichedActivity = Omit<Activity, "points"> & { points: PointStats[] };
 type HoverStatus = "hovered" | "dimmed" | "idle";
+
+type HeatMapField = {
+  field: keyof Pick<PointStats, "speed" | "elevation" | "heartrate">;
+  unit: string;
+};
+
+const HEATMAP_OPTIONS: HeatMapField[] = [
+  { field: "speed", unit: "km/h" },
+  { field: "elevation", unit: "m" },
+  { field: "heartrate", unit: "bpm" },
+];
 
 function FitBounds({ points }: { points: { lat: number; lng: number }[] }) {
   useFitBounds(points);
@@ -31,7 +43,15 @@ function FitBounds({ points }: { points: { lat: number; lng: number }[] }) {
 }
 
 const ActivityPolylines = memo(
-  ({ points, status }: { points: PointStats[]; status: HoverStatus }) => {
+  ({
+    points,
+    status,
+    heatMapField,
+  }: {
+    points: PointStats[];
+    status: HoverStatus;
+    heatMapField: { field: keyof PointStats; unit: string };
+  }) => {
     return (
       <>
         {points.map((point, i) =>
@@ -45,7 +65,14 @@ const ActivityPolylines = memo(
               weight={status === "dimmed" ? 2 : 4}
               pathOptions={{
                 opacity: status === "dimmed" ? 0.1 : 1,
-                color: status === "dimmed" ? "gray" : point.speedColor,
+                color:
+                  status === "dimmed"
+                    ? "gray"
+                    : String(
+                        point[
+                          (heatMapField.field + "Color") as keyof PointStats
+                        ],
+                      ),
               }}
             />
           ) : null,
@@ -59,10 +86,12 @@ function MapContent({
   activityList,
   handleHover,
   hoveredActivity,
+  heatMapField,
 }: {
   activityList: Activity[];
   handleHover: (point: PointStats | null, activity?: Activity | null) => void;
   hoveredActivity: Activity | null;
+  heatMapField: { field: keyof PointStats; unit: string };
 }) {
   const [activityListInBounds, setActivityListInBounds] = useState<
     EnrichedActivity[]
@@ -107,6 +136,7 @@ function MapContent({
           <div key={activity.id}>
             <ActivityPolylines
               points={activity.points}
+              heatMapField={heatMapField}
               status={
                 hoveredActivity === null
                   ? "idle"
@@ -144,6 +174,10 @@ export default function ActivityStats({
 }: {
   activityList: Activity[];
 }) {
+  const [heatMapField, setHeatMapField] = useState<{
+    field: keyof PointStats;
+    unit: string;
+  }>({ field: "speed", unit: "km/h" });
   const [hoveredPoint, setHoveredPoint] = useState<PointStats | null>(null);
   const [hoveredActivity, setHoveredActivity] = useState<Activity | null>(null);
   const handleHover = useCallback(
@@ -158,6 +192,20 @@ export default function ActivityStats({
 
   return (
     <div className="flex flex-col gap-1 mt-3">
+      <div className="flex gap-2">
+        {HEATMAP_OPTIONS.map(({ field, unit }) => (
+          <Button
+            key={field}
+            variant={heatMapField.field === field ? "default" : "outline"}
+            className="cursor-pointer"
+            size="sm"
+            onClick={() => setHeatMapField({ field, unit })}
+          >
+            {field.charAt(0).toUpperCase() + field.slice(1)}
+          </Button>
+        ))}
+      </div>
+
       <MapContainer
         className="markercluster-map"
         center={[51.0, 19.0]}
@@ -180,6 +228,7 @@ export default function ActivityStats({
           activityList={activityList}
           handleHover={handleHover}
           hoveredActivity={hoveredActivity}
+          heatMapField={heatMapField}
         />
 
         {hoveredPoint && (
@@ -205,7 +254,7 @@ export default function ActivityStats({
             <div>
               {hoveredActivity.date} {hoveredActivity.distance / 1000} km{" "}
             </div>
-            <div>{hoveredActivity.elevGain} d+ </div>
+            <div>{hoveredActivity.elevationGain} d+ </div>
             <div>{formatDuration(hoveredActivity.duration, false)}</div>
           </div>
         </>
@@ -214,15 +263,8 @@ export default function ActivityStats({
         pointList={(hoveredActivity?.points ?? []) as PointStats[]}
         onHover={handleHover}
         hoveredPoint={hoveredPoint}
-        dataKey="ele"
+        dataKey="elevation"
         unit="m"
-      />
-      <DataChart
-        pointList={(hoveredActivity?.points ?? []) as PointStats[]}
-        onHover={handleHover}
-        hoveredPoint={hoveredPoint}
-        dataKey="speed"
-        unit="km/h"
       />
     </div>
   );

@@ -80,15 +80,27 @@ export function smoothSpeeds(points: Point[], window = 5): number[] {
 export const enrichedPointList = (points: Point[]): PointStats[] => {
   const maxSpeed = Math.max(...points.map((p) => p.speed));
   const minSpeed = Math.min(...points.map((p) => p.speed));
+  const maxElevation = Math.max(...points.map((p) => p.elevation));
+  const minElevation = Math.min(...points.map((p) => p.elevation));
+  const maxHeartrate = Math.max(...points.map((p) => p.heartrate ?? 0));
+  const minHeartrate = Math.min(
+    ...points.map((p) => (p.heartrate !== undefined ? p.heartrate : Infinity)),
+  );
 
   const smoothedSpeeds = smoothSpeeds(points);
   return points.map((p, i) => ({
     ...p,
-    cumDist: parseFloat((p.cumDist / 1000).toFixed(2)),
+    cumDistance: parseFloat((p.cumDistance / 1000).toFixed(2)),
     speed: Math.round(p.speed),
-    ele: Math.round(p.ele * 1000),
+    elevation: Math.round(p.elevation * 1000),
     index: i,
     speedColor: colorInterpolate(smoothedSpeeds[i], minSpeed, maxSpeed),
+    elevationColor: colorInterpolate(p.elevation, minElevation, maxElevation),
+    heartrateColor: colorInterpolate(
+      p.heartrate ?? 0,
+      minHeartrate,
+      maxHeartrate,
+    ),
   }));
 };
 

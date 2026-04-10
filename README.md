@@ -20,6 +20,11 @@ A personal activity tracker for outdoor sports — skiing, surfing, trekking, an
 - Stats page with distance per month chart and personal records
 - Dark/light mode
 
+## Roadmap
+
+- [ ] Activity context tooltip on stats map (name, distance, elevation on hover)
+- [ ] Self-hosted image server on Rock5B via Coolify — upload photos from iPhone, display on map at GPS location
+
 ## Tech Stack
 
 **Frontend**

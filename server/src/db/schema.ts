@@ -7,7 +7,7 @@ import {
   numeric,
   timestamp,
 } from "drizzle-orm/pg-core";
-import { min, relations } from "drizzle-orm";
+import { max, min, relations } from "drizzle-orm";
 
 export const activities = pgTable("activities", {
   id: uuid("id").primaryKey().defaultRandom(),
@@ -17,9 +17,14 @@ export const activities = pgTable("activities", {
   date: date("date").notNull(),
   duration: real("duration").notNull(), // in seconds
   distance: real("distance").notNull(), // in meters
-  elevGain: real("elev_gain").notNull(),
-  elevLoss: real("elev_loss").notNull(),
+  elevationGain: real("elevation_gain").notNull(),
+  elevationLoss: real("elevation_loss").notNull(),
   maxSpeed: real("max_speed").notNull(), // km/h
+  minSpeed: real("min_speed").notNull(), // km/h
+  maxElevation: real("max_elevation").notNull(), // in meters
+  minElevation: real("min_elevation").notNull(), // in meters
+  maxHeartrate: real("max_heartrate").notNull(), // in bpm
+  minHeartrate: real("min_heartrate").notNull(), // in bpm
   maxSlope: real("max_slope").notNull(), // in degrees
   startLat: real("start_lat").notNull(),
   startLng: real("start_lng").notNull(),
@@ -36,11 +41,12 @@ export const points = pgTable("points", {
     .references(() => activities.id, { onDelete: "cascade" }),
   lat: real("lat").notNull(),
   lng: real("lng").notNull(),
-  ele: real("ele").notNull(),
+  elevation: real("elevation").notNull(),
   speed: real("speed").notNull(), // km/h
   time: date("time").notNull(),
-  dist: real("dist").notNull(), // distance from previous point in meters
-  cumDist: real("cum_dist").notNull(), // cumulative distance from start in meters
+  distance: real("distance").notNull(), // distance from previous point in meters
+  cumDistance: real("cum_distance").notNull(), // cumulative distance from start in meters
+  heartrate: real("heartrate").notNull(), // in bpm
 });
 
 export const pointsRelations = relations(points, ({ one }) => ({

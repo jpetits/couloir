@@ -140,7 +140,7 @@ const fetchStreamsForActivity = async (
 ) => {
   const accessToken = await getOrRefreshStravaAccessToken(user);
   const streamsResponse = await fetch(
-    `https://www.strava.com/api/v3/activities/${activityId}/streams?keys=latlng,altitude,time,velocity_smooth&key_by_type=true`,
+    `https://www.strava.com/api/v3/activities/${activityId}/streams?keys=latlng,altitude,time,velocity_smooth,distance,heartrate&key_by_type=true`,
     {
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -184,6 +184,21 @@ const queueActivitiesForProcessing = async (
     }
 
     await pointRepository.create(points);
+
+    const minSpeed = Math.min(...points.map((p) => p.speed));
+    const minElevation = Math.min(...points.map((p) => p.elevation));
+    const maxElevation = Math.max(...points.map((p) => p.elevation));
+    const maxHeartrate = Math.max(...points.map((p) => p.heartrate));
+    const minHeartrate = Math.min(...points.map((p) => p.heartrate));
+
+    await activityRepository.update(stravaActivity.id, user.id, {
+      minSpeed,
+      minElevation,
+      maxElevation,
+      maxHeartrate,
+      minHeartrate,
+    });
+
     sendMessage(user.id, {
       type: "sync:progress",
       progress: Math.round(((index + 1) / activityList.length) * 100),

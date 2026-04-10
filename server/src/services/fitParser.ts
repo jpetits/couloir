@@ -18,17 +18,17 @@ const getStatsFromPoints = (points: ParsedPoint[]) => {
   const totalDistance = turfLength(line, { units: "meters" });
 
   // Dénivelé + pente max
-  let elevGain = 0;
-  let elevLoss = 0;
+  let elevationGain = 0;
+  let elevationLoss = 0;
   let maxSlope = 0;
 
   for (let i = 1; i < points.length; i++) {
     const prev = points[i - 1];
     const curr = points[i];
     if (!prev || !curr) continue;
-    const diff = curr.ele - prev.ele;
-    if (diff > 0) elevGain += diff;
-    else elevLoss += Math.abs(diff);
+    const diff = curr.elevation - prev.elevation;
+    if (diff > 0) elevationGain += diff;
+    else elevationLoss += Math.abs(diff);
 
     // Pente avec Turf pour la distance
     const from = point([prev.lng, prev.lat]);
@@ -41,7 +41,7 @@ const getStatsFromPoints = (points: ParsedPoint[]) => {
     }
   }
 
-  return { totalDistance, elevGain, elevLoss, maxSlope };
+  return { totalDistance, elevationGain, elevationLoss, maxSlope };
 };
 
 const getPointsFromRecords = (records: FitRecord[]) => {
@@ -66,11 +66,12 @@ const getPointsFromRecords = (records: FitRecord[]) => {
     return {
       lat: r.lat,
       lng: r.lng,
-      ele: r.enhanced_altitude ?? 0,
+      elevation: r.enhanced_altitude ?? 0,
       speed: r.enhanced_speed ?? 0,
       time: r.timestamp ? new Date(r.timestamp).toISOString() : "",
-      dist,
-      cumDist,
+      distance: dist,
+      cumDistance: cumDist,
+      heartrate: r.heart_rate ?? 0,
     };
   });
 };
@@ -87,7 +88,7 @@ export const parseFitFile = (fileBuffer: Buffer): Promise<ParsedActivity> => {
       if (!points || points.length === 0)
         return reject(new Error("No GPS data found"));
 
-      const { totalDistance, elevGain, elevLoss, maxSlope } =
+      const { totalDistance, elevationGain, elevationLoss, maxSlope } =
         getStatsFromPoints(points);
 
       const session = data?.sessions?.[0];
@@ -102,9 +103,20 @@ export const parseFitFile = (fileBuffer: Buffer): Promise<ParsedActivity> => {
           : new Date().toISOString(),
         duration: session?.total_timer_time ?? 0,
         distance: totalDistance,
-        elevGain: session?.total_ascent ?? elevGain,
-        elevLoss: session?.total_descent ?? elevLoss,
+        elevationGain: session?.total_ascent ?? elevationGain,
+        elevationLoss: session?.total_descent ?? elevationLoss,
         maxSpeed: session?.max_speed ?? Math.max(...points.map((p) => p.speed)),
+        minSpeed: session?.max_speed ?? Math.min(...points.map((p) => p.speed)),
+        maxElevation:
+          session?.max_altitude ?? Math.max(...points.map((p) => p.elevation)),
+        minElevation:
+          session?.min_altitude ?? Math.min(...points.map((p) => p.elevation)),
+        maxHeartrate:
+          session?.max_heart_rate ??
+          Math.max(...points.map((p) => p.heartrate)),
+        minHeartrate:
+          session?.min_heart_rate ??
+          Math.min(...points.map((p) => p.heartrate)),
         maxSlope,
         points,
         name: name,

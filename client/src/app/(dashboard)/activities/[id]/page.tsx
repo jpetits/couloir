@@ -28,7 +28,7 @@ export default async function ActivityPage({
         </li>
       </ul>
       {activity.points && activity.points.length > 0 && (
-        <ActivityDetailClient points={activity.points} />
+        <ActivityDetailClient pointList={activity.points} />
       )}
     </main>
   );

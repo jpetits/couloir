@@ -7,6 +7,7 @@ export interface FitRecord {
   enhanced_speed?: number;
   timestamp?: string;
   enhanced_altitude?: number;
+  heart_rate?: number;
 }
 
 export interface HttpError extends Error {

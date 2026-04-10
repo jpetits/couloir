@@ -31,7 +31,7 @@ export default function ActivityDetailClient({
         pointList={enrichedPoints}
         onHover={handleHover}
         hoveredPoint={hoveredPoint}
-        dataKey="ele"
+        dataKey="elevation"
         unit="m"
       />
       <DataChart

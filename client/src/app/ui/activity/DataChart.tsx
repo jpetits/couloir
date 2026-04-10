@@ -61,7 +61,7 @@ export default function DataChart({
           </defs>
           <CartesianGrid strokeDasharray="3 3" stroke="#374151" />
           <XAxis
-            dataKey="cumDist"
+            dataKey="cumDistance"
             type="number"
             domain={["dataMin", "dataMax"]}
             unit=" km"
@@ -85,7 +85,7 @@ export default function DataChart({
           />
           {hoveredPoint != null && (
             <ReferenceLine
-              x={hoveredPoint.cumDist}
+              x={hoveredPoint.cumDistance}
               stroke="#3b82f6"
               strokeDasharray="3 3"
               label={{
