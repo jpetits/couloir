@@ -7,7 +7,6 @@ import {
   ActivitySchema,
   ActivityStats,
   ActivityStatsSchema,
-  MapBounds,
 } from "./schema";
 
 export async function fetchActivities(

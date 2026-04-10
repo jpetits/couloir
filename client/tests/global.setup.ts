@@ -1,8 +1,4 @@
-import {
-  clerk,
-  clerkSetup,
-  setupClerkTestingToken,
-} from "@clerk/testing/playwright";
+import { clerkSetup } from "@clerk/testing/playwright";
 import { test as setup } from "@playwright/test";
 import path from "path";
 

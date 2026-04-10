@@ -1,13 +1,9 @@
 "use client";
 
-import { Activity, Point } from "@/lib/schema";
-import { memo, use, useCallback, useEffect, useMemo, useState } from "react";
+import { Activity } from "@/lib/schema";
+import { memo, useCallback, useEffect, useState } from "react";
 import DataChart from "../activity/DataChart";
-import {
-  formatDuration,
-  enrichedPointList,
-  getClosestPoint,
-} from "@/lib/utils";
+import { enrichedPointList, getClosestPoint } from "@/lib/utils";
 import { MapContainer } from "react-leaflet/MapContainer";
 import { Marker } from "react-leaflet/Marker";
 import { TileLayer } from "react-leaflet/TileLayer";
@@ -16,11 +12,9 @@ import MarkerClusterGroup from "react-leaflet-cluster";
 import { useBounds, useFitBounds, useZoom } from "@/app/hooks/useLeaflet";
 import { PointStats } from "@/types/activity";
 import { fetchActivitiesWithPointsInBounds } from "@/lib/dataClient";
-import { LeafletMouseEvent } from "leaflet";
 import { useApi } from "@/app/hooks/useApi";
-import { useThrottle } from "@/app/hooks/useThrottle";
-import ActivityName from "../activity/ActivityName";
 import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 const ZOOM_THRESHOLD = 10;
 type EnrichedActivity = Omit<Activity, "points"> & { points: PointStats[] };
@@ -118,6 +112,8 @@ function MapContent({
     }
   }, [zoom, bounds]);
 
+  console.log("Activities in bounds:", activityListInBounds);
+
   return (
     <>
       {zoom < ZOOM_THRESHOLD ? (
@@ -206,59 +202,61 @@ export default function ActivityStats({
         ))}
       </div>
 
-      <MapContainer
-        className="markercluster-map"
-        center={[51.0, 19.0]}
-        zoom={4}
-        maxZoom={18}
-        style={{ height: "600px", width: "100%" }}
-      >
-        <TileLayer
-          url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-          attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-        />
-
-        <FitBounds
-          points={activityList.flatMap((a) => [
-            { lat: a.startLat, lng: a.startLng },
-          ])}
-        />
-
-        <MapContent
-          activityList={activityList}
-          handleHover={handleHover}
-          hoveredActivity={hoveredActivity}
-          heatMapField={heatMapField}
-        />
-
-        {hoveredPoint && (
-          <CircleMarker
-            center={[hoveredPoint.lat, hoveredPoint.lng]}
-            radius={8}
-            pathOptions={{
-              color: "#fff",
-              fillColor: "#3b82f6",
-              fillOpacity: 1,
-              weight: 2,
-            }}
-          />
-        )}
-
-        <ScaleControl position="bottomleft" imperial={false} />
-      </MapContainer>
-
-      {hoveredActivity && (
-        <>
-          <ActivityName activity={hoveredActivity} />
-          <div className="flex gap-4">
-            <div>
-              {hoveredActivity.date} {hoveredActivity.distance / 1000} km{" "}
-            </div>
-            <div>{hoveredActivity.elevationGain} d+ </div>
-            <div>{formatDuration(hoveredActivity.duration, false)}</div>
+      <div className="relative">
+        {hoveredActivity && (
+          <div className="absolute bottom-8 left-2 z-[1000] pointer-events-none">
+            <Card className="p-3 shadow-lg text-sm min-w-48">
+              <p className="font-semibold">{hoveredActivity.name}</p>
+              <p className="text-muted-foreground text-xs mt-1">
+                {hoveredActivity.date} ·{" "}
+                {(hoveredActivity.distance / 1000).toFixed(1)} km ·{" "}
+                {hoveredActivity.elevationGain} m d+
+              </p>
+            </Card>
           </div>
-        </>
-      )}
+        )}
+        <MapContainer
+          className="markercluster-map"
+          center={[51.0, 19.0]}
+          zoom={4}
+          maxZoom={18}
+          style={{ height: "600px", width: "100%" }}
+        >
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+          />
+
+          <FitBounds
+            points={activityList.flatMap((a) => [
+              { lat: a.startLat, lng: a.startLng },
+            ])}
+          />
+
+          <MapContent
+            activityList={activityList}
+            handleHover={handleHover}
+            hoveredActivity={hoveredActivity}
+            heatMapField={heatMapField}
+          />
+
+          {hoveredPoint && (
+            <CircleMarker
+              center={[hoveredPoint.lat, hoveredPoint.lng]}
+              radius={8}
+              pathOptions={{
+                color: "#fff",
+                fillColor: "#3b82f6",
+                fillOpacity: 1,
+                weight: 2,
+              }}
+            />
+          )}
+
+          <ScaleControl position="bottomleft" imperial={false} />
+        </MapContainer>
+      </div>
+
       <DataChart
         pointList={(hoveredActivity?.points ?? []) as PointStats[]}
         onHover={handleHover}

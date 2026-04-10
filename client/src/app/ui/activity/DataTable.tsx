@@ -73,8 +73,8 @@ export function DataTable<TData extends { id: string }, TValue>({
     router.push(`?${params}`);
   };
 
-  const [toggle, selected, toggleAll] = useActivitySelectionStore(
-    useShallow((state) => [state.toggle, state.selected, state.toggleAll]),
+  const [toggle, selected] = useActivitySelectionStore(
+    useShallow((state) => [state.toggle, state.selected]),
   );
 
   const table = useReactTable({

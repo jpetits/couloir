@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 
 import { useMap, useMapEvents } from "react-leaflet";
-import { PointStats } from "@/types/activity";
 
 export function useZoom() {
   const map = useMap();

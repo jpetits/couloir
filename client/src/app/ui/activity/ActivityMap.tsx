@@ -1,13 +1,7 @@
 "use client";
 
 import { useCallback } from "react";
-import {
-  MapContainer,
-  TileLayer,
-  Polyline,
-  useMap,
-  CircleMarker,
-} from "react-leaflet";
+import { MapContainer, TileLayer, Polyline, CircleMarker } from "react-leaflet";
 import type { PointStats } from "@/types/activity";
 import "leaflet/dist/leaflet.css";
 import { LeafletMouseEvent } from "leaflet";

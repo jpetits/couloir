@@ -26,7 +26,7 @@ export default function ActivityList({
   const router = useRouter();
   const apiFetch = useApi();
 
-  const { allItems, isFetchingNextPage, error, isLoading } =
+  const { allItems, isFetchingNextPage, isLoading } =
     usePaginatedScroll<Activity>(initialActivityList, loadMoreRef);
 
   const retainOnly = useActivitySelectionStore((state) => state.retainOnly);

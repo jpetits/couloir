@@ -92,7 +92,7 @@ export const enrichedPointList = (points: Point[]): PointStats[] => {
     ...p,
     cumDistance: parseFloat((p.cumDistance / 1000).toFixed(2)),
     speed: Math.round(p.speed),
-    elevation: Math.round(p.elevation * 1000),
+    elevation: Math.round(p.elevation),
     index: i,
     speedColor: colorInterpolate(smoothedSpeeds[i], minSpeed, maxSpeed),
     elevationColor: colorInterpolate(p.elevation, minElevation, maxElevation),

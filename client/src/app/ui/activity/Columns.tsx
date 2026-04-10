@@ -156,13 +156,6 @@ export const columns: ColumnDef<Activity>[] = [
       const activity = row.original;
       const { onDelete } = table.options.meta as TableMeta<Activity>;
 
-      const [toggle, selected] = useActivitySelectionStore(
-        useShallow((state) => [
-          state.toggle,
-          state.selected.includes(activity.id),
-        ]),
-      );
-
       return (
         <div className="flex gap-2 justify-end">
           <Button onClick={() => onDelete(activity)} variant="outline">
