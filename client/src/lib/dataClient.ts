@@ -1,10 +1,6 @@
 import { ROUTES } from "@/routing/constants";
 import type { Activity, MapBounds, MapPointsResponse } from "./schema";
-import {
-  ActivityListSchema,
-  ActivitySchema,
-  MapPointsResponseSchema,
-} from "./schema";
+import { ActivitySchema } from "./schema";
 import { toast } from "sonner";
 
 export type ApiFetch = <T>(path: string, options?: RequestInit) => Promise<T>;
