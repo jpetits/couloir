@@ -2,7 +2,7 @@ import { PointStats } from "@/types/activity";
 import { point, distance, Units } from "@turf/turf";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { Point } from "./schema";
+import { Activity, Point } from "./schema";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -77,29 +77,31 @@ export function smoothSpeeds(points: Point[], window = 5): number[] {
   });
 }
 
-export const enrichedPointList = (points: Point[]): PointStats[] => {
-  const maxSpeed = Math.max(...points.map((p) => p.speed));
-  const minSpeed = Math.min(...points.map((p) => p.speed));
-  const maxElevation = Math.max(...points.map((p) => p.elevation));
-  const minElevation = Math.min(...points.map((p) => p.elevation));
-  const maxHeartrate = Math.max(...points.map((p) => p.heartrate ?? 0));
-  const minHeartrate = Math.min(
-    ...points.map((p) => (p.heartrate !== undefined ? p.heartrate : Infinity)),
-  );
-
+export const enrichPointList = (
+  points: Point[],
+  activity: Activity,
+): PointStats[] => {
   const smoothedSpeeds = smoothSpeeds(points);
-  return points.map((p, i) => ({
-    ...p,
-    cumDistance: parseFloat((p.cumDistance / 1000).toFixed(2)),
-    speed: Math.round(p.speed),
-    elevation: Math.round(p.elevation),
+  return points.map((point, i) => ({
+    ...point,
+    cumDistance: parseFloat((point.cumDistance / 1000).toFixed(2)),
+    speed: Math.round(point.speed),
+    elevation: Math.round(point.elevation),
     index: i,
-    speedColor: colorInterpolate(smoothedSpeeds[i], minSpeed, maxSpeed),
-    elevationColor: colorInterpolate(p.elevation, minElevation, maxElevation),
+    speedColor: colorInterpolate(
+      smoothedSpeeds[i],
+      activity.minSpeed,
+      activity.maxSpeed,
+    ),
+    elevationColor: colorInterpolate(
+      point.elevation,
+      activity.minElevation,
+      activity.maxElevation,
+    ),
     heartrateColor: colorInterpolate(
-      p.heartrate ?? 0,
-      minHeartrate,
-      maxHeartrate,
+      point.heartrate ?? 0,
+      activity.minHeartrate,
+      activity.maxHeartrate,
     ),
   }));
 };

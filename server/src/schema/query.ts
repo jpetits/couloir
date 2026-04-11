@@ -54,6 +54,8 @@ export const mapBoundsSchema = z.object({
   south: z.coerce.number(),
   east: z.coerce.number(),
   west: z.coerce.number(),
+  excludeActivityIds: z.string().optional(), // comma-separated list of activity IDs to exclude
+  zoom: z.coerce.number().optional(),
 });
 
 export type MapBounds = z.infer<typeof mapBoundsSchema>;

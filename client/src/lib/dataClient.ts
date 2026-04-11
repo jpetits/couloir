@@ -1,6 +1,10 @@
 import { ROUTES } from "@/routing/constants";
-import type { Activity, MapBounds } from "./schema";
-import { ActivityListSchema, ActivitySchema } from "./schema";
+import type { Activity, MapBounds, MapPointsResponse } from "./schema";
+import {
+  ActivityListSchema,
+  ActivitySchema,
+  MapPointsResponseSchema,
+} from "./schema";
 import { toast } from "sonner";
 
 export type ApiFetch = <T>(path: string, options?: RequestInit) => Promise<T>;
@@ -57,8 +61,11 @@ export const stravaConnect = (apiFetch: ApiFetch, code: string) => {
 export async function fetchActivitiesWithPointsInBounds(
   apiFetch: ApiFetch,
   bounds: MapBounds,
-): Promise<Activity[]> {
-  return await apiFetch<Activity[]>(ROUTES.api.map(bounds)).then((data) =>
-    ActivityListSchema.parse(data),
-  );
+  excludeActivityIds: string[] = [],
+  zoom: number,
+): Promise<MapPointsResponse> {
+  return await apiFetch<MapPointsResponse>(
+    ROUTES.api.map(bounds, excludeActivityIds, zoom),
+    // ).then((data) => MapPointsResponseSchema.parse(data));
+  ).then((data) => data);
 }

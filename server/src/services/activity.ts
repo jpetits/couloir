@@ -4,6 +4,7 @@ import type { NewPoint, ParsedPoint } from "../types/types";
 import { AppError } from "../types/appError";
 import { parseFitFile } from "./fitParser";
 import type { ActivityFilters, MapBounds } from "../schema/query";
+import { simplifyByMaxDistance } from "./stravaParser";
 
 export const getActivities = async (
   userId: string,
@@ -20,9 +21,37 @@ export const getActivitiesWithPoints = async (
   userId: string,
   bounds: MapBounds,
 ) => {
-  return (
-    await activityRepository.listWithPointsInBounds(userId, bounds)
-  ).filter((a) => a.points.length > 0);
+  const zoom = bounds.zoom || 0;
+  const pointList = (
+    await pointRepository.listPointsInBounds(userId, bounds)
+  ).map((p: any) => ({
+    id: p.id,
+    activityId: p.activity_id,
+    lat: p.lat,
+    lng: p.lng,
+    elevation: p.elevation,
+    speed: p.speed,
+    time: p.time,
+    distance: p.distance,
+    cumDistance: p.cum_distance,
+    heartrate: p.heartrate,
+  }));
+
+  if (!zoom) {
+    return pointList;
+  }
+
+  const maxDistance = zoom < 11 ? 0.5 : zoom < 15 ? 0.05 : 0.01;
+
+  const grouped = Object.groupBy(pointList, (p) => p.activityId);
+
+  for (const activityId in grouped) {
+    grouped[activityId] = simplifyByMaxDistance(
+      grouped[activityId]!,
+      maxDistance,
+    );
+  }
+  return grouped;
 };
 
 export const getActivity = async (id: string, userId: string) => {

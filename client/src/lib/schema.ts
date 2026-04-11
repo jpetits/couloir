@@ -81,3 +81,10 @@ export const MapBoundsSchema = z.object({
 });
 
 export type MapBounds = z.infer<typeof MapBoundsSchema>;
+
+export const MapPointsResponseSchema = z.record(
+  z.string(),
+  z.array(PointSchema),
+);
+
+export type MapPointsResponse = z.infer<typeof MapPointsResponseSchema>;

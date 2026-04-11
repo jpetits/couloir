@@ -1,16 +1,16 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import type { Point } from "@/lib/schema";
+import type { Activity, Point } from "@/lib/schema";
 import type { PointStats } from "@/types/activity";
 import ActivityMapWrapper from "./ActivityMapWrapper";
 import DataChart from "./DataChart";
-import { enrichedPointList } from "@/lib/utils";
+import { enrichPointList } from "@/lib/utils";
 
 export default function ActivityDetailClient({
-  pointList,
+  activity,
 }: {
-  pointList: Point[];
+  activity: Activity & { points: Point[] };
 }) {
   const [hoveredPoint, setHoveredPoint] = useState<PointStats | null>(null);
   const handleHover = useCallback(
@@ -18,7 +18,7 @@ export default function ActivityDetailClient({
     [],
   );
 
-  const enrichedPoints = enrichedPointList(pointList);
+  const enrichedPoints = enrichPointList(activity.points, activity);
 
   return (
     <>

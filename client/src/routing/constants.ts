@@ -17,8 +17,12 @@ export const ROUTES = {
       `/api/activities?${new URLSearchParams(JSON.parse(JSON.stringify(ActivityApiParamsSchema.parse(filters))))}`,
     activity: (id: string) => `/api/activities/${id}`,
     stats: `/api/activities/stats`,
-    map: (bounds: MapBounds) =>
-      `/api/activities/map?${new URLSearchParams(JSON.parse(JSON.stringify(MapBoundsSchema.parse(bounds))))}`,
+    map: (bounds: MapBounds, excludeActivityIds: string[] = [], zoom: number) =>
+      `/api/activities/map?${new URLSearchParams({
+        ...JSON.parse(JSON.stringify(MapBoundsSchema.parse(bounds))),
+        excludeActivityIds: excludeActivityIds.join(","),
+        zoom: zoom.toString(),
+      })}`,
     patchActivity: (id: string) => `/api/activities/${id}`,
     deleteActivity: (id: string) => `/api/activities/${id}`,
     postActivity: `/api/activities`,
