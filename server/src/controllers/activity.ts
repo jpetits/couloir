@@ -12,7 +12,7 @@ import { z } from "zod";
 //@route GET /activities
 //@desc Get all activities
 //@access Public
-const getActivities: RequestHandler = asyncHandler(
+export const getActivities: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const activitiesList = await activityService.getActivities(
       req.user.id,
@@ -26,7 +26,7 @@ const getActivities: RequestHandler = asyncHandler(
 // @route GET /activities/:id
 // @desc Get an activity by id
 // @access Public
-const findActivity: RequestHandler = asyncHandler(
+export const findActivity: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id as string;
 
@@ -38,7 +38,7 @@ const findActivity: RequestHandler = asyncHandler(
 // @route POST /activities
 // @desc Create a new activity
 // @access Public
-const postActivity: RequestHandler = asyncHandler(
+export const postActivity: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const file = req.file;
 
@@ -59,7 +59,7 @@ const postActivity: RequestHandler = asyncHandler(
 // @route PATCH /activities/:id
 // @desc Update an activity by id
 // @access Public
-const patchActivity: RequestHandler = asyncHandler(
+export const patchActivity: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id as string;
     const { name } = req.validatedBody as z.infer<typeof patchActivitiesSchema>;
@@ -75,7 +75,7 @@ const patchActivity: RequestHandler = asyncHandler(
 // @route DELETE /activities/:id
 // @desc Delete an activity by id
 // @access Public
-const deleteActivity: RequestHandler = asyncHandler(
+export const deleteActivity: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const id = req.params.id as string;
 
@@ -87,7 +87,7 @@ const deleteActivity: RequestHandler = asyncHandler(
 // @route GET /activities/stats
 // @desc Get activities stats (aggregate only)
 // @access Public
-const getActivitiesStats: RequestHandler = asyncHandler(
+export const getActivitiesStats: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const stats = await activityService.getActivitiesStats(req.user.id);
     res.status(200).json(stats);
@@ -97,7 +97,7 @@ const getActivitiesStats: RequestHandler = asyncHandler(
 // @route GET /activities/map
 // @desc Get all activities with points for map display
 // @access Public
-const getActivitiesMap: RequestHandler = asyncHandler(
+export const getActivitiesMap: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
     const activities = await activityService.getActivitiesWithPoints(
       req.user.id,
@@ -106,13 +106,3 @@ const getActivitiesMap: RequestHandler = asyncHandler(
     res.status(200).json(activities);
   },
 );
-
-export {
-  getActivities,
-  findActivity,
-  postActivity,
-  patchActivity,
-  deleteActivity,
-  getActivitiesStats,
-  getActivitiesMap,
-};

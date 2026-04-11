@@ -116,6 +116,13 @@ export const activityRepository = {
       columns: { stravaActivityId: true },
     });
   },
+  listByUserId: async (userId: string) => {
+    return db
+      .select()
+      .from(activities)
+      .where(eq(activities.userId, userId))
+      .orderBy(desc(activities.date));
+  },
   createMany: async (activitiesData: (typeof activities.$inferInsert)[]) => {
     if (activitiesData.length === 0) return [];
 

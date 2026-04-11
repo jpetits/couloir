@@ -6,6 +6,7 @@ import {
   date,
   numeric,
   timestamp,
+  boolean,
   index,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
@@ -73,6 +74,8 @@ export const pointsRelations = relations(points, ({ one }) => ({
 
 export const users = pgTable("users", {
   id: text("id").primaryKey(),
+  username: text("username").unique(),
+  isPublic: boolean("is_public").default(false),
   stravaAccessToken: text("strava_access_token"),
   stravaRefreshToken: text("strava_refresh_token"),
   stravaTokenExpiresAt: timestamp("strava_token_expires_at"),

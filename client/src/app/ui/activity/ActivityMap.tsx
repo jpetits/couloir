@@ -5,12 +5,8 @@ import { MapContainer, TileLayer, Polyline, CircleMarker } from "react-leaflet";
 import type { PointStats } from "@/types/activity";
 import "leaflet/dist/leaflet.css";
 import { LeafletMouseEvent } from "leaflet";
-import { useFitBounds } from "@/app/hooks/useLeaflet";
-
-function FitBounds({ points }: { points: PointStats[] }) {
-  useFitBounds(points);
-  return null;
-}
+import L from "leaflet";
+const canvas = L.canvas({ padding: 0.5 });
 
 export default function ActivityMap({
   onHover,
@@ -35,11 +31,12 @@ export default function ActivityMap({
     [onHover, pointList],
   );
 
+  console.log(pointList.map((p) => [p.lat, p.lng]));
+
   return (
     <MapContainer
       style={{ height: 600, width: "100%" }}
-      center={pointList[0] ?? [0, 0]}
-      zoom={13}
+      bounds={pointList.map((p) => [p.lat, p.lng])}
     >
       <TileLayer
         attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
@@ -54,6 +51,7 @@ export default function ActivityMap({
           return (
             <Polyline
               key={p.id}
+              renderer={canvas}
               positions={[pointList[j - 1], p]}
               color={p.speedColor}
               weight={3}
@@ -69,7 +67,6 @@ export default function ActivityMap({
         }}
       />
 
-      <FitBounds points={pointList} />
       {hoveredPoint && (
         <CircleMarker
           center={[hoveredPoint.lat, hoveredPoint.lng]}

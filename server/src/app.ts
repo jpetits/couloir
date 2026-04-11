@@ -5,6 +5,7 @@ import { clerkMiddleware } from "@clerk/express";
 import activityRouter from "./routes/activities";
 import stravaRouter from "./routes/strava";
 import userRouter from "./routes/user";
+import publicRouter from "./routes/public";
 import errorHandler from "./middleware/error";
 import notFoundHandler from "./middleware/notFound";
 
@@ -19,6 +20,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/api/activities", activityRouter);
 app.use("/api/strava", stravaRouter);
 app.use("/api/user", userRouter);
+app.use("/api/public", publicRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

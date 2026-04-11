@@ -26,6 +26,12 @@ export const userRepository = {
 
     return result[0];
   },
+  findByUsername: async (username: string) => {
+    const user = await db.query.users.findFirst({
+      where: (users, { eq }) => eq(users.username, username),
+    });
+    return user || null;
+  },
   findByStravaAthleteId: async (athleteId: string) => {
     const user = await db.query.users.findFirst({
       where: (users, { eq }) => eq(users.stravaAthleteId, athleteId),

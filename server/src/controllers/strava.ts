@@ -6,7 +6,7 @@ import type {
   PostStravaWebhookBody,
 } from "../schema/query";
 
-const callBackStrava = async (req: Request, res: Response) => {
+export const callBackStrava = async (req: Request, res: Response) => {
   const { code } = req.validatedBody as CallBackStravaQuery;
 
   if (!code) {
@@ -22,12 +22,12 @@ const callBackStrava = async (req: Request, res: Response) => {
   }
 };
 
-const syncStravaActivities = async (req: Request, res: Response) => {
+export const syncStravaActivities = async (req: Request, res: Response) => {
   stravaService.syncStravaActivities(req.user);
   res.status(200).json({ message: "Strava activities synced successfully" });
 };
 
-const getStravaWebhook = async (req: Request, res: Response) => {
+export const getStravaWebhook = async (req: Request, res: Response) => {
   const { "hub.challenge": challenge, "hub.verify_token": verify_token } =
     req.validatedQuery as GetStravaWebhookQuery;
 
@@ -42,7 +42,7 @@ const getStravaWebhook = async (req: Request, res: Response) => {
   res.status(400).json({ error: "Missing hub.challenge query parameter" });
 };
 
-const postStravaWebhook = async (req: Request, res: Response) => {
+export const postStravaWebhook = async (req: Request, res: Response) => {
   const { aspect_type, object_id, object_type, owner_id } =
     req.validatedBody as PostStravaWebhookBody;
 
@@ -61,11 +61,4 @@ const postStravaWebhook = async (req: Request, res: Response) => {
   }
 
   res.status(200).json({ message: "Event received" });
-};
-
-export {
-  callBackStrava,
-  syncStravaActivities,
-  getStravaWebhook,
-  postStravaWebhook,
 };

@@ -2,11 +2,9 @@
 
 import { Activity } from "@/lib/schema";
 import { useCallback, useState } from "react";
-import DataChart from "../activity/DataChart";
 import { MapContainer } from "react-leaflet/MapContainer";
 import { TileLayer } from "react-leaflet/TileLayer";
 import { CircleMarker, ScaleControl } from "react-leaflet";
-import { useFitBounds } from "@/app/hooks/useLeaflet";
 import { PointStats } from "@/types/activity";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
@@ -22,11 +20,6 @@ const HEATMAP_OPTIONS: HeatMapField[] = [
   { field: "elevation", unit: "m" },
   { field: "heartrate", unit: "bpm" },
 ];
-
-function FitBounds({ points }: { points: { lat: number; lng: number }[] }) {
-  useFitBounds(points);
-  return null;
-}
 
 export default function ActivityStats({
   activityList,
@@ -81,20 +74,15 @@ export default function ActivityStats({
         )}
         <MapContainer
           className="markercluster-map"
-          center={[51.0, 19.0]}
-          zoom={4}
-          maxZoom={18}
-          style={{ height: "600px", width: "100%" }}
+          bounds={activityList
+            .filter((a) => a.startLat && a.startLng)
+            .map((a) => [a.startLat, a.startLng])}
+          maxZoom={22}
+          style={{ height: "700px", width: "100%" }}
         >
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
-          />
-
-          <FitBounds
-            points={activityList.flatMap((a) => [
-              { lat: a.startLat, lng: a.startLng },
-            ])}
           />
 
           <MapContent
@@ -120,14 +108,6 @@ export default function ActivityStats({
           <ScaleControl position="bottomleft" imperial={false} />
         </MapContainer>
       </div>
-
-      <DataChart
-        pointList={(hoveredActivity?.points ?? []) as PointStats[]}
-        onHover={handleHover}
-        hoveredPoint={hoveredPoint}
-        dataKey="elevation"
-        unit="m"
-      />
     </div>
   );
 }

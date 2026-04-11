@@ -35,3 +35,10 @@ export async function userIsStravaConnected(): Promise<boolean> {
   const res = await apiFetch<{ stravaConnected: boolean }>(ROUTES.api.userMe);
   return res.stravaConnected;
 }
+
+export async function fetchPublicActivities(
+  username: string,
+): Promise<Activity[]> {
+  const res = await apiFetch<Activity[]>(ROUTES.api.publicActivities(username));
+  return ActivityListSchema.parse(res);
+}
