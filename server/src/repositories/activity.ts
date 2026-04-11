@@ -9,10 +9,9 @@ import {
   desc,
   asc,
   getTableColumns,
-  notInArray,
 } from "drizzle-orm";
 import { db } from "../db/index";
-import type { ActivityFilters, MapBounds } from "../schema/query";
+import type { ActivityFilters } from "../schema/query";
 
 export const activityRepository = {
   list: async (userId: string, filters: ActivityFilters) => {

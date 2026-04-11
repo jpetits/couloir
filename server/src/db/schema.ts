@@ -8,7 +8,7 @@ import {
   timestamp,
   index,
 } from "drizzle-orm/pg-core";
-import { max, min, relations } from "drizzle-orm";
+import { relations } from "drizzle-orm";
 
 export const activities = pgTable(
   "activities",

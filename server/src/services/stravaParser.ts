@@ -1,5 +1,5 @@
 import { point, distance } from "@turf/turf";
-import type { NewPoint, ParsedPoint } from "../types/types";
+import type { NewPoint } from "../types/types";
 
 export const parseStravaActivity = (stravaActivity: any) => ({
   name: stravaActivity.name,

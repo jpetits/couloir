@@ -1,9 +1,7 @@
 import { points } from "../db/schema";
-import { between, eq, getTableColumns, notInArray, sql } from "drizzle-orm";
+import { eq, sql } from "drizzle-orm";
 import { db } from "../db/index";
 import type { NewPoint } from "../types/types";
-import { activities } from "../db/schema";
-import { and } from "drizzle-orm";
 import type { MapBounds } from "../schema/query";
 
 export const pointRepository = {
@@ -26,20 +24,5 @@ export const pointRepository = {
       AND p.lng BETWEEN ${bounds.west} AND ${bounds.east}
       
     `);
-    // return await db
-    //   .select(getTableColumns(points))
-    //   .from(points)
-    //   .innerJoin(activities, eq(points.activityId, activities.id))
-    //   .where(
-    //     and(
-    //       eq(activities.userId, userId),
-    //       notInArray(
-    //         points.activityId,
-    //         bounds.excludeActivityIds?.split(",").filter(Boolean) ?? [],
-    //       ),
-    //       between(points.lat, bounds.south, bounds.north),
-    //       between(points.lng, bounds.west, bounds.east),
-    //     ),
-    //   );
   },
 };

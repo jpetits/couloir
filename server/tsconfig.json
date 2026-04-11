@@ -6,6 +6,7 @@
     // See also https://aka.ms/tsconfig/module
     "module": "esnext",
     "target": "esnext",
+    "noUnusedLocals": true,
     // For nodejs:
     "lib": ["dom", "dom.iterable", "esnext"],
     "types": ["node"],
