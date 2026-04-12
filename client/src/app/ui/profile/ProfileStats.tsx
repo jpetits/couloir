@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from "react";
 import { Activity } from "@/lib/schema";
 import { ActivityCalendar } from "react-activity-calendar";
 import { useMapStore } from "@/store/mapStore";
-import { addDays, format, startOfWeek, subDays, subWeeks } from "date-fns";
+import { addDays, format, startOfWeek, subWeeks } from "date-fns";
 import { useTheme } from "next-themes";
 
 const MONTHS = [
