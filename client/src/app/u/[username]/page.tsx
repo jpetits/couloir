@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
-import ActivityStatsWrapper from "@/app/ui/stats/ActivityStatsWrapper";
 import { fetchPublicActivities } from "@/lib/data";
+import ProfileContent from "@/app/ui/profile/ProfileContent";
+
 export default async function PublicProfilePage({
   params,
 }: {
@@ -13,7 +14,7 @@ export default async function PublicProfilePage({
 
   return (
     <main className="mx-auto px-4 py-8">
-      <ActivityStatsWrapper activityList={activities} />
+      <ProfileContent activitiyList={activities} username={username} />
     </main>
   );
 }

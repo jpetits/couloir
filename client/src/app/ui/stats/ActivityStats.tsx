@@ -4,11 +4,12 @@ import { Activity } from "@/lib/schema";
 import { useCallback, useState } from "react";
 import { MapContainer } from "react-leaflet/MapContainer";
 import { TileLayer } from "react-leaflet/TileLayer";
-import { CircleMarker, ScaleControl } from "react-leaflet";
+import { CircleMarker, ScaleControl, useMap } from "react-leaflet";
 import { PointStats } from "@/types/activity";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import MapContent from "./MapContent";
+import { useMapStore } from "@/store/mapStore";
 
 type HeatMapField = {
   field: keyof Pick<PointStats, "speed" | "elevation" | "heartrate">;
@@ -32,11 +33,14 @@ export default function ActivityStats({
   }>({ field: "speed", unit: "km/h" });
   const [hoveredPoint, setHoveredPoint] = useState<PointStats | null>(null);
   const [hoveredActivity, setHoveredActivity] = useState<Activity | null>(null);
+  const setHoveredDate = useMapStore((state) => state.setHoveredDate);
   const handleHover = useCallback(
     (point: PointStats | null, activityId?: string | null) => {
       setHoveredPoint(point);
+
       if (activityId) {
         const activity = activityList.find((a) => a.id === activityId) || null;
+        setHoveredDate(activity?.date || null);
         setHoveredActivity(activity);
       }
     },
@@ -59,7 +63,13 @@ export default function ActivityStats({
         ))}
       </div>
 
-      <div className="relative">
+      <div
+        className="relative"
+        onMouseLeave={() => {
+          handleHover(null, null);
+          setHoveredDate(null);
+        }}
+      >
         {hoveredActivity && (
           <div className="absolute bottom-8 left-2 z-1000 pointer-events-none">
             <Card className="p-3 shadow-lg text-sm min-w-48">

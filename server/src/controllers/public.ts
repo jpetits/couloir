@@ -35,13 +35,3 @@ export const getPublicMap: RequestHandler = asyncHandler(
     res.status(200).json(activities);
   },
 );
-
-// @route GET /api/public/:userid/stats
-// @desc Get aggregate stats for a public profile (no auth)
-export const getPublicStats: RequestHandler = asyncHandler(
-  async (req: Request, res: Response, _next: NextFunction) => {
-    const user = await resolveUser(req.params.username as string);
-    const stats = await activityService.getActivitiesStats(user.id);
-    res.status(200).json(stats);
-  },
-);

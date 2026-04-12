@@ -5,14 +5,11 @@
 
 @source "../../src";
 
-
-
 @custom-variant dark (&:is(.dark *));
 
 body {
   font-family: system-ui, sans-serif;
 }
-
 
 @theme inline {
   --font-heading: var(--font-sans);
