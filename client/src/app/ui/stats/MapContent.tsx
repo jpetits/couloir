@@ -81,8 +81,7 @@ export default function MapContent({
         activityListInBounds.map((a) => a.id),
         zoom,
       ).then((activities) => {
-        setActivityListInBounds((prev) => {
-          const prev_map = new Map(prev.map((a) => [a.id, a]));
+        setActivityListInBounds(() => {
           const next = new Map<string, { id: string; points: PointStats[] }>();
 
           for (const [id, points] of Object.entries(activities)) {
