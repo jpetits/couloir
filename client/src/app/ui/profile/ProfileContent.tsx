@@ -15,6 +15,7 @@ export default function ProfileContent({
 }) {
   const yearSelection = useMapStore((state) => state.yearSelection);
   const setYearSelection = useMapStore((state) => state.setYearSelection);
+  const activityIdList = useMapStore((state) => state.activityIdList);
 
   const yearList = Array.from(
     new Set(activitiyList.map((a) => new Date(a.date).getFullYear())),
@@ -43,7 +44,17 @@ export default function ProfileContent({
         {yearList.map((year) => (
           <Button
             key={year}
-            variant={yearSelection === year ? "default" : "outline"}
+            variant={
+              yearSelection === year
+                ? "default"
+                : activitiyList.filter(
+                      (a) =>
+                        activityIdList.has(a.id) &&
+                        new Date(a.date).getFullYear() === year,
+                    ).length > 0
+                  ? "outline"
+                  : "ghost"
+            }
             className="cursor-pointer"
             size="sm"
             onClick={() => setYearSelection(year)}

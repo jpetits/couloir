@@ -88,7 +88,7 @@ export default function ActivityStats({
           bounds={activityList
             .filter((a) => a.startLat && a.startLng)
             .map((a) => [a.startLat, a.startLng])}
-          maxZoom={22}
+          maxZoom={15}
           style={{ height: "700px", width: "100%" }}
         >
           <TileLayer

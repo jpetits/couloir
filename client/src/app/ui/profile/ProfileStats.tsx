@@ -126,15 +126,12 @@ export default function ProfileStats({
           const clickedDate = new Date(start);
           clickedDate.setDate(clickedDate.getDate() + weekOffset * 7);
           const year = clickedDate.getFullYear();
-          setDateSelection({
-            start: format(new Date(year, monthIndex, 1), "yyyy-MM-dd"),
-            end: format(new Date(year, monthIndex + 1, 0), "yyyy-MM-dd"),
-          });
           if (
             selection &&
             selection.start.startsWith(
               `${year}-${String(monthIndex + 1).padStart(2, "0")}`,
-            )
+            ) &&
+            selection.end !== selection.start
           ) {
             setDateSelection(null);
             return;

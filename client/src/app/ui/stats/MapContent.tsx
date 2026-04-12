@@ -3,7 +3,7 @@
 import { Activity } from "@/lib/schema";
 import { useEffect, useState } from "react";
 import { enrichPointList, getClosestPoint } from "@/lib/utils";
-import { CircleMarker, Polyline } from "react-leaflet";
+import { CircleMarker, Polyline, useMap } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 import { useBounds, useZoom } from "@/app/hooks/useLeaflet";
 import { PointStats } from "@/types/activity";
@@ -35,6 +35,35 @@ export default function MapContent({
   const setActivityIdList = useMapStore((state) => state.setActivityIdList);
   const yearSelection = useMapStore((state) => state.yearSelection);
 
+  const map = useMap();
+
+  useEffect(() => {
+    if (!selection && !yearSelection) return;
+    const filtered = activityList.filter((a) => {
+      const date = a.date.split("T")[0];
+      const filterSelection = selection
+        ? date >= selection.start &&
+          date <= selection.end &&
+          a.startLat &&
+          a.startLng
+        : true;
+      const filterYear = yearSelection
+        ? new Date(a.date).getFullYear() === yearSelection
+        : true;
+      return filterSelection && filterYear;
+    });
+    if (filtered.length === 0) return;
+    const lats = filtered.map((a) => a.startLat as number);
+    const lngs = filtered.map((a) => a.startLng as number);
+    map.fitBounds(
+      [
+        [Math.min(...lats), Math.min(...lngs)],
+        [Math.max(...lats), Math.max(...lngs)],
+      ],
+      { padding: [100, 100], animate: true, duration: 0.5 },
+    );
+  }, [selection, yearSelection]);
+
   useEffect(() => {
     if (zoom < ZOOM_THRESHOLD) {
       setActivityIdList(activityList.map((a) => a.id));
@@ -57,16 +86,10 @@ export default function MapContent({
           const next = new Map<string, { id: string; points: PointStats[] }>();
 
           for (const [id, points] of Object.entries(activities)) {
-            const existing = prev_map.get(id);
-            if (!existing || points.length > existing.points.length) {
-              const enriched = enrichPointList(
-                points,
-                activityList.find((a) => a.id === id)!,
-              );
-              next.set(id, { id, points: enriched });
-            } else {
-              next.set(id, existing);
-            }
+            const activity = activityList.find((a) => a.id === id);
+            if (!activity) continue;
+            const enriched = enrichPointList(points, activity);
+            next.set(id, { id, points: enriched });
           }
 
           return [...next.values()];
