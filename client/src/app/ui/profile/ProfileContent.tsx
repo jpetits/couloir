@@ -5,7 +5,6 @@ import ProfileStats from "./ProfileStats";
 import ActivityStatsWrapper from "../stats/ActivityStatsWrapper";
 import { Button } from "@/components/ui/button";
 import { useMapStore } from "@/store/mapStore";
-import { useEffect } from "react";
 
 export default function ProfileContent({
   activitiyList,

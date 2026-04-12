@@ -94,8 +94,6 @@ export default function ProfileStats({
     [activityListFiltered],
   );
 
-  const startMonth = new Date(start).getMonth();
-  let startYear = new Date(start).getFullYear();
   const labels = useMemo(() => {
     const [yearStr, monthStr] = start.split("-");
     const startYear = parseInt(yearStr);
