@@ -31,8 +31,6 @@ export default function ActivityMap({
     [onHover, pointList],
   );
 
-  console.log(pointList.map((p) => [p.lat, p.lng]));
-
   return (
     <MapContainer
       style={{ height: 600, width: "100%" }}

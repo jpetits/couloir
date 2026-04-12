@@ -68,6 +68,7 @@ export default function ActivityStats({
         onMouseLeave={() => {
           handleHover(null, null);
           setHoveredDate(null);
+          setHoveredActivity(null);
         }}
       >
         {hoveredActivity && (

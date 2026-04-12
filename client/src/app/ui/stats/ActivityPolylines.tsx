@@ -19,30 +19,48 @@ const ActivityPolylines = memo(
     status: HoverStatus;
     heatMapField: { field: keyof PointStats; unit: string };
   }) => {
+    const segments = points.map((point, i) =>
+      i > 0
+        ? ([
+            [points[i - 1]!.lat, points[i - 1]!.lng],
+            [point.lat, point.lng],
+          ] as [[number, number], [number, number]])
+        : null,
+    );
+
     return (
       <>
-        {points.map((point, i) =>
-          i > 0 ? (
-            <Polyline
-              key={point.id}
-              renderer={canvas}
-              positions={[
-                [points[i - 1]!.lat, points[i - 1]!.lng],
-                [point.lat, point.lng],
-              ]}
-              weight={status === "dimmed" ? 2 : 4}
-              pathOptions={{
-                opacity: status === "dimmed" ? 0.1 : 1,
-                color:
-                  status === "dimmed"
-                    ? "gray"
-                    : String(
-                        point[
-                          (heatMapField.field + "Color") as keyof PointStats
-                        ],
-                      ),
-              }}
-            />
+        <Polyline
+          key={`border-${points[0]!.id}`}
+          renderer={canvas}
+          positions={segments.flatMap((s) => s || [])}
+          weight={status === "dimmed" ? 3 : 6}
+          pathOptions={{
+            color: "gray",
+            opacity: status === "dimmed" ? 0.3 : 1,
+          }}
+        />
+        {segments.map((pos, i) =>
+          pos ? (
+            <span key={points[i]!.id}>
+              <Polyline
+                key={`highlight-${points[i]!.id}`}
+                renderer={canvas}
+                positions={pos}
+                weight={status === "dimmed" ? 2 : 5}
+                pathOptions={{
+                  opacity: status === "dimmed" ? 0.3 : 1,
+                  color:
+                    status === "dimmed"
+                      ? "white"
+                      : String(
+                          points[i][
+                            (heatMapField.field + "Color") as keyof PointStats
+                          ],
+                        ),
+                }}
+              />
+            </span>
           ) : null,
         )}
       </>

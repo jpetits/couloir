@@ -33,6 +33,7 @@ export default function MapContent({
   const bounds = useBounds();
   const selection = useMapStore((state) => state.dateSelection);
   const setActivityIdList = useMapStore((state) => state.setActivityIdList);
+  const yearSelection = useMapStore((state) => state.yearSelection);
 
   useEffect(() => {
     if (zoom < ZOOM_THRESHOLD) {
@@ -108,10 +109,18 @@ export default function MapContent({
       ) : (
         activityListInBounds
           .filter(({ id }) => {
+            if (!yearSelection) return true;
+            const activity = activityList.find((a) => a.id === id);
+            if (!activity) return false;
+            const activityYear = new Date(activity.date).getFullYear();
+            return activityYear === yearSelection;
+          })
+          .filter(({ id }) => {
             if (!selection) return true;
             const activity = activityList.find((a) => a.id === id);
             if (!activity) return false;
             const activityDate = activity.date.split("T")[0];
+
             return (
               activityDate >= selection.start && activityDate <= selection.end
             );

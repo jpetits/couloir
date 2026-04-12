@@ -13,7 +13,7 @@ export default async function PublicProfilePage({
   if (!activities) notFound();
 
   return (
-    <main className="mx-auto px-4 py-8">
+    <main className="mx-auto px-4">
       <ProfileContent activitiyList={activities} username={username} />
     </main>
   );

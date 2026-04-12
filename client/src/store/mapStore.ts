@@ -9,11 +9,14 @@ export interface MapStore {
   setHoveredDate: (hoveredDate: string | null) => void;
   activityIdList: Set<string>;
   setActivityIdList: (activityIdList: string[]) => void;
+  yearSelection: number | null;
+  setYearSelection: (yearSelection: number | null) => void;
 }
 
 export const useMapStore = create<MapStore>((set) => ({
   dateSelection: null,
   hoveredDate: null,
+  yearSelection: null,
   activityIdList: new Set(),
   setActivityIdList: (activityIdList) =>
     set({ activityIdList: new Set(activityIdList) }),
@@ -22,4 +25,5 @@ export const useMapStore = create<MapStore>((set) => ({
     set({
       dateSelection,
     }),
+  setYearSelection: (yearSelection) => set({ yearSelection }),
 }));
