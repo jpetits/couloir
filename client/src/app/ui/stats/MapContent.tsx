@@ -35,6 +35,10 @@ export default function MapContent({
   const setActivityIdList = useMapStore((state) => state.setActivityIdList);
 
   useEffect(() => {
+    if (zoom < ZOOM_THRESHOLD) {
+      setActivityIdList(activityList.map((a) => a.id));
+      return;
+    }
     if (zoom >= ZOOM_THRESHOLD) {
       fetchActivitiesWithPointsInBounds(
         apiFetch,
