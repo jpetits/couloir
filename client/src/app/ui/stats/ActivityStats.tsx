@@ -4,7 +4,7 @@ import { Activity } from "@/lib/schema";
 import { useCallback, useState } from "react";
 import { MapContainer } from "react-leaflet/MapContainer";
 import { TileLayer } from "react-leaflet/TileLayer";
-import { CircleMarker, ScaleControl, useMap } from "react-leaflet";
+import { CircleMarker, ScaleControl } from "react-leaflet";
 import { PointStats } from "@/types/activity";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";

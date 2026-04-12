@@ -18,6 +18,7 @@ A personal activity tracker for outdoor sports — skiing, surfing, trekking, an
 - Activity list with filtering, sorting, and infinite scroll
 - Bulk selection and delete
 - Stats page with distance per month chart and personal records
+- Public profile at `couloir.work/u/[username]` — shareable activity map with activity heatmap calendar, date range selection, and map↔calendar sync
 - Dark/light mode
 
 ## Roadmap
@@ -32,7 +33,8 @@ A personal activity tracker for outdoor sports — skiing, surfing, trekking, an
 - [Tailwind CSS](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/)
 - [TanStack Query](https://tanstack.com/query) — infinite scroll, optimistic updates
 - [TanStack Table](https://tanstack.com/table) — sortable, filterable activity list
-- [Zustand](https://zustand-demo.pmnd.rs/) — bulk selection state with persistence
+- [Zustand](https://zustand-demo.pmnd.rs/) — cross-component state (selection, hover, visible activity IDs)
+- [react-activity-calendar](https://grubersjoe.github.io/react-activity-calendar/) — activity heatmap calendar
 - [Recharts](https://recharts.org/) — elevation and speed charts
 - [React Leaflet](https://react-leaflet.js.org/) — GPS track map
 - [Clerk](https://clerk.com/) — authentication

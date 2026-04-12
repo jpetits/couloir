@@ -1,11 +1,8 @@
 "use client";
 
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Activity } from "@/lib/schema";
-import {
-  ActivityCalendar,
-  type Activity as CalendarActivity,
-} from "react-activity-calendar";
+import { ActivityCalendar } from "react-activity-calendar";
 import { useMapStore } from "@/store/mapStore";
 import { format, startOfWeek, subDays, subWeeks } from "date-fns";
 import { useTheme } from "next-themes";
