@@ -1,5 +1,4 @@
 import { PointStats } from "@/types/activity";
-import { point, distance, Units } from "@turf/turf";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { Activity, Point } from "./schema";
