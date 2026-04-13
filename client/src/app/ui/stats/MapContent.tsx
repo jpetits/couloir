@@ -38,7 +38,7 @@ export default function MapContent({
   const map = useMap();
 
   useEffect(() => {
-    if (!selection && !yearSelection) return;
+    if ((!selection && !yearSelection) || zoom >= ZOOM_THRESHOLD) return;
     const filtered = activityList.filter((a) => {
       const date = a.date.split("T")[0];
       const filterSelection = selection

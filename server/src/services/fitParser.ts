@@ -98,6 +98,8 @@ export const parseFitFile = (fileBuffer: Buffer): Promise<ParsedActivity> => {
       resolve({
         startLat: firstPoint?.lat ?? 0,
         startLng: firstPoint?.lng ?? 0,
+        endLat: points[points.length - 1]?.lat ?? 0,
+        endLng: points[points.length - 1]?.lng ?? 0,
         date: firstPoint?.time
           ? new Date(firstPoint.time).toISOString()
           : new Date().toISOString(),

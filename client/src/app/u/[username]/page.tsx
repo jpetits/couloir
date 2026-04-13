@@ -8,13 +8,13 @@ export default async function PublicProfilePage({
   params: Promise<{ username: string }>;
 }) {
   const { username } = await params;
-  const activities = await fetchPublicActivities(username);
+  const activityList = await fetchPublicActivities(username);
 
-  if (!activities) notFound();
+  if (!activityList) notFound();
 
   return (
     <main className="mx-auto px-4">
-      <ProfileContent activitiyList={activities} username={username} />
+      <ProfileContent activityList={activityList} username={username} />
     </main>
   );
 }

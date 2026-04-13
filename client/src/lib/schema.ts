@@ -35,6 +35,8 @@ export const ActivitySchema = z.object({
   stravaActivityId: z.string().nullable().optional(),
   startLat: z.number(),
   startLng: z.number(),
+  endLat: z.number(),
+  endLng: z.number(),
 });
 
 export type Activity = z.infer<typeof ActivitySchema>;

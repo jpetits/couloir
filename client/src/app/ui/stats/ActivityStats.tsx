@@ -4,12 +4,13 @@ import { Activity } from "@/lib/schema";
 import { useCallback, useState } from "react";
 import { MapContainer } from "react-leaflet/MapContainer";
 import { TileLayer } from "react-leaflet/TileLayer";
-import { CircleMarker, ScaleControl } from "react-leaflet";
+import { CircleMarker, Marker, ScaleControl } from "react-leaflet";
 import { PointStats } from "@/types/activity";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import MapContent from "./MapContent";
 import { useMapStore } from "@/store/mapStore";
+import L from "leaflet";
 
 type HeatMapField = {
   field: keyof Pick<PointStats, "speed" | "elevation" | "heartrate">;
@@ -88,7 +89,7 @@ export default function ActivityStats({
           bounds={activityList
             .filter((a) => a.startLat && a.startLng)
             .map((a) => [a.startLat, a.startLng])}
-          maxZoom={15}
+          maxZoom={18}
           style={{ height: "700px", width: "100%" }}
         >
           <TileLayer
@@ -102,6 +103,39 @@ export default function ActivityStats({
             hoveredActivity={hoveredActivity}
             heatMapField={heatMapField}
           />
+
+          {hoveredActivity && (
+            <>
+              <Marker
+                key={hoveredActivity.id + "-end"}
+                position={[hoveredActivity.endLat, hoveredActivity.endLng]}
+                icon={L.divIcon({
+                  html: `<svg width="24" height="24" viewBox="0 0 24 24" 
+  xmlns="http://www.w3.org/2000/svg">                    
+    <circle cx="12" cy="12" r="12" fill="red"/>      
+    <rect x="8" y="8" width="8" height="8" fill="white"/>    
+  </svg>`,
+                  className: "",
+                  iconSize: [20, 20],
+                  iconAnchor: [10, 10],
+                })}
+              />
+              <Marker
+                key={hoveredActivity.id + "-start"}
+                position={[hoveredActivity.startLat, hoveredActivity.startLng]}
+                icon={L.divIcon({
+                  html: `<svg width="24" height="24" viewBox="0 0 24 24" 
+  xmlns="http://www.w3.org/2000/svg">                    
+    <circle cx="12" cy="12" r="12" fill="#3b82f6"/>      
+    <polygon points="8.5,7 18.5,12 8.5,17" fill="white"/>    
+  </svg>`,
+                  className: "",
+                  iconSize: [24, 24],
+                  iconAnchor: [12, 12],
+                })}
+              />
+            </>
+          )}
 
           {hoveredPoint && (
             <CircleMarker

@@ -6,31 +6,17 @@ import { ActivityCalendar } from "react-activity-calendar";
 import { useMapStore } from "@/store/mapStore";
 import { addDays, format, startOfWeek, subWeeks } from "date-fns";
 import { useTheme } from "next-themes";
-
-const MONTHS = [
-  "Jan",
-  "Fév",
-  "Mar",
-  "Avr",
-  "Mai",
-  "Juin",
-  "Juil",
-  "Aoû",
-  "Sep",
-  "Oct",
-  "Nov",
-  "Déc",
-];
-const BLOCK_SIZE = 12;
-const BLOCK_MARGIN = 4;
-const BLOCK_TOTAL_SIZE = BLOCK_SIZE + BLOCK_MARGIN;
+import {
+  MONTHS,
+  BLOCK_MARGIN,
+  BLOCK_SIZE,
+  BLOCK_TOTAL_SIZE,
+} from "@/lib/constants";
 
 export default function ProfileStats({
   activitiyList,
-  username,
 }: {
   activitiyList: Activity[];
-  username: string;
 }) {
   const { resolvedTheme } = useTheme();
   const selection = useMapStore((state) => state.dateSelection);

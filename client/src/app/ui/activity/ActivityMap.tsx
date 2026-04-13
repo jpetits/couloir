@@ -20,7 +20,7 @@ export default function ActivityMap({
   const handleMouseMove = useCallback(
     (e: LeafletMouseEvent) => {
       const closest = pointList.reduce(
-        (best, p, i) => {
+        (best, p) => {
           const d = e.latlng.distanceTo([p.lat, p.lng]);
           return d < best.d ? { d, p } : best;
         },

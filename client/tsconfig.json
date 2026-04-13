@@ -9,6 +9,7 @@
     "noUnusedLocals": true,
     "allowJs": true,
     "skipLibCheck": true,
+    "noUnusedParameters": true,
     "strict": true,
     "noEmit": true,
     "esModuleInterop": true,

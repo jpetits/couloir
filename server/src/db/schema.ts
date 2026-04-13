@@ -32,6 +32,8 @@ export const activities = pgTable(
     maxSlope: real("max_slope").notNull(), // in degrees
     startLat: real("start_lat").notNull(),
     startLng: real("start_lng").notNull(),
+    endLat: real("end_lat").notNull(),
+    endLng: real("end_lng").notNull(),
   },
   (table) => [
     index("activities_user_id_idx").on(table.userId),

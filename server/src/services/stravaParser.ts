@@ -17,6 +17,8 @@ export const parseStravaActivity = (stravaActivity: any) => ({
   maxSlope: 0, // not available from Strava summary
   startLat: stravaActivity.start_latlng?.[0] ?? 0,
   startLng: stravaActivity.start_latlng?.[1] ?? 0,
+  endLat: stravaActivity.end_latlng?.[0] ?? 0,
+  endLng: stravaActivity.end_latlng?.[1] ?? 0,
 });
 
 export const parseStravaStream = (

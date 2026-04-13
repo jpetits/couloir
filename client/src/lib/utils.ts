@@ -33,28 +33,6 @@ export function formatDate(dateString: string): string {
   });
 }
 
-export function getDistancePoints(
-  lat1: number,
-  lng1: number,
-  lat2: number,
-  lng2: number,
-  units: Units = "meters",
-): number {
-  const from = point([lng1, lat1]);
-  const to = point([lng2, lat2]);
-  const segDist = distance(from, to, { units });
-  return segDist;
-}
-
-export function activityColor(id: string): string {
-  let hash = 0;
-  for (let i = 0; i < id.length; i++) {
-    hash = id.charCodeAt(i) + ((hash << 5) - hash);
-  }
-  const hue = Math.abs(hash) % 360;
-  return `hsl(${hue}, 70%, 55%)`;
-}
-
 export const colorInterpolate = (
   current: number,
   min: number,
