@@ -6,7 +6,11 @@ import ActivityStatsWrapper from "./ActivityStatsWrapper";
 
 async function StatsMap() {
   const activityList = await fetchActivities({ limit: "10000" });
-  return <ActivityStatsWrapper activityList={activityList} />;
+  const activityListWithCoords = activityList.filter(
+    (a) => a.startLat !== null && a.startLng !== null,
+  );
+
+  return <ActivityStatsWrapper activityList={activityListWithCoords} />;
 }
 
 export default async function StatsContent() {

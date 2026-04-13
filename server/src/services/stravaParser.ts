@@ -15,10 +15,10 @@ export const parseStravaActivity = (stravaActivity: any) => ({
   maxHeartrate: stravaActivity.max_heartrate ?? 0,
   minHeartrate: 0,
   maxSlope: 0, // not available from Strava summary
-  startLat: stravaActivity.start_latlng?.[0] ?? 0,
-  startLng: stravaActivity.start_latlng?.[1] ?? 0,
-  endLat: stravaActivity.end_latlng?.[0] ?? 0,
-  endLng: stravaActivity.end_latlng?.[1] ?? 0,
+  startLat: stravaActivity.start_latlng?.[0] ?? null,
+  startLng: stravaActivity.start_latlng?.[1] ?? null,
+  endLat: stravaActivity.end_latlng?.[0] ?? null,
+  endLng: stravaActivity.end_latlng?.[1] ?? null,
 });
 
 export const parseStravaStream = (

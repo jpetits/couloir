@@ -15,11 +15,15 @@ export default function ProfileContent({
 }) {
   const yearSelection = useMapStore((state) => state.yearSelection);
 
+  const activityListWithCoords = activityList.filter(
+    (a) => a.startLat !== null && a.startLng !== null,
+  );
+
   const activityListByYearSelection = yearSelection
-    ? activityList.filter(
+    ? activityListWithCoords.filter(
         (a) => new Date(a.date).getFullYear() === yearSelection,
       )
-    : activityList;
+    : activityListWithCoords;
 
   return (
     <>

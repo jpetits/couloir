@@ -76,7 +76,7 @@ export default function MapContent({
           {filterByYearAndDateSelection(activityList).map((activity) => (
             <CircleMarker
               key={activity.id}
-              center={[activity.startLat, activity.startLng]}
+              center={[activity.startLat!, activity.startLng!]}
               radius={6}
               pathOptions={{
                 color: "#3b82f6",

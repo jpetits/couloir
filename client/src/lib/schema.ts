@@ -33,10 +33,10 @@ export const ActivitySchema = z.object({
   maxSlope: z.number(),
   points: z.array(PointSchema).optional(),
   stravaActivityId: z.string().nullable().optional(),
-  startLat: z.number(),
-  startLng: z.number(),
-  endLat: z.number(),
-  endLng: z.number(),
+  startLat: z.number().nullable(),
+  startLng: z.number().nullable(),
+  endLat: z.number().nullable(),
+  endLng: z.number().nullable(),
 });
 
 export type Activity = z.infer<typeof ActivitySchema>;

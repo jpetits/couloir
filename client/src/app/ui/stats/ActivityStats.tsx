@@ -70,9 +70,10 @@ export default function ActivityStats({
     [activityList],
   );
 
-  const activityListBounds = activityList
-    .filter((a) => a.startLat && a.startLng)
-    .map((a) => [a.startLat, a.startLng]) as [number, number][];
+  const activityListBounds = activityList.map((a) => [
+    a.startLat,
+    a.startLng,
+  ]) as [number, number][];
 
   return (
     <div className="flex flex-col gap-1 mt-3">
@@ -132,12 +133,15 @@ export default function ActivityStats({
             <>
               <Marker
                 key={hoveredActivity.id + "-end"}
-                position={[hoveredActivity.endLat, hoveredActivity.endLng]}
+                position={[hoveredActivity.endLat!, hoveredActivity.endLng!]}
                 icon={stopLeafletIcon}
               />
               <Marker
                 key={hoveredActivity.id + "-start"}
-                position={[hoveredActivity.startLat, hoveredActivity.startLng]}
+                position={[
+                  hoveredActivity.startLat!,
+                  hoveredActivity.startLng!,
+                ]}
                 icon={startLeafletIcon}
               />
             </>

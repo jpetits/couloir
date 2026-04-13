@@ -30,10 +30,10 @@ export const activities = pgTable(
     maxHeartrate: real("max_heartrate").notNull(), // in bpm
     minHeartrate: real("min_heartrate").notNull(), // in bpm
     maxSlope: real("max_slope").notNull(), // in degrees
-    startLat: real("start_lat").notNull(),
-    startLng: real("start_lng").notNull(),
-    endLat: real("end_lat").notNull(),
-    endLng: real("end_lng").notNull(),
+    startLat: real("start_lat"),
+    startLng: real("start_lng"),
+    endLat: real("end_lat"),
+    endLng: real("end_lng"),
   },
   (table) => [
     index("activities_user_id_idx").on(table.userId),
