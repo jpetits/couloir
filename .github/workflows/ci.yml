@@ -32,6 +32,9 @@ jobs:
       - name: Typecheck
         run: pnpm typecheck
 
+      - name: knip
+        run: pnpm knip
+
       - name: Build
         run: pnpm build
         env:
@@ -64,3 +67,6 @@ jobs:
 
       - name: Typecheck
         run: pnpm typecheck
+
+      - name: knip
+        run: pnpm knip

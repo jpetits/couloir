@@ -4,6 +4,7 @@ import {
   MapBounds,
   MapBoundsSchema,
 } from "@/lib/schema";
+import { AssetMediaSize } from "@/types/image";
 
 export const ROUTES = {
   home: "/",
@@ -32,6 +33,8 @@ export const ROUTES = {
     publicStats: (username: string) => `/api/public/${username}/stats`,
     publicActivities: (username: string) =>
       `/api/public/${username}/activities`,
+    imagePath: (imageId: string, size: AssetMediaSize = "thumbnail") =>
+      `${process.env.NEXT_PUBLIC_API_URL}/api/public/assets/${imageId}/thumbnail?size=${size}`,
   },
   external: {
     stravaAuth: (redirect: string) =>

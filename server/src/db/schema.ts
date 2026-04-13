@@ -3,9 +3,8 @@ import {
   uuid,
   text,
   real,
-  date,
-  numeric,
   timestamp,
+  numeric,
   boolean,
   index,
 } from "drizzle-orm/pg-core";
@@ -18,7 +17,7 @@ export const activities = pgTable(
     name: text("name").notNull().default("Activity"),
     stravaActivityId: numeric("strava_activity_id").unique(),
     userId: text("user_id").notNull(),
-    date: date("date").notNull(),
+    startDate: timestamp("start_date"),
     duration: real("duration").notNull(), // in seconds
     distance: real("distance").notNull(), // in meters
     elevationGain: real("elevation_gain").notNull(),
@@ -43,6 +42,7 @@ export const activities = pgTable(
 
 export const activitiesRelations = relations(activities, ({ many }) => ({
   points: many(points),
+  images: many(images),
 }));
 
 export const points = pgTable(
@@ -56,7 +56,7 @@ export const points = pgTable(
     lng: real("lng").notNull(),
     elevation: real("elevation").notNull(),
     speed: real("speed").notNull(), // km/h
-    time: date("time").notNull(),
+    time: timestamp("time"),
     distance: real("distance").notNull(), // distance from previous point in meters
     cumDistance: real("cum_distance").notNull(), // cumulative distance from start in meters
     heartrate: real("heartrate").notNull(), // in bpm
@@ -96,10 +96,10 @@ export const images = pgTable("images", {
   activityId: uuid("activity_id")
     .notNull()
     .references(() => activities.id, { onDelete: "cascade" }),
-  url: text("url").notNull(), // Rock5B URL
+  immichId: text("immich_id").notNull(), // Immich ID
   lat: real("lat").notNull(), // from EXIF
   lng: real("lng").notNull(), // from EXIF
-  takenAt: date("taken_at").notNull(), // from EXIF
+  takenAt: timestamp("taken_at").notNull(), // from EXIF
 });
 
 export const imagesRelations = relations(images, ({ one }) => ({

@@ -14,7 +14,7 @@ export default function YearButtons({
   const activityIdList = useMapStore((state) => state.activityIdList);
 
   const yearList = Array.from(
-    new Set(activityList.map((a) => new Date(a.date).getFullYear())),
+    new Set(activityList.map((a) => a.startDate.getFullYear())),
   ).sort((a, b) => a - b);
 
   return (
@@ -36,7 +36,7 @@ export default function YearButtons({
               : activityList.filter(
                     (a) =>
                       activityIdList.has(a.id) &&
-                      new Date(a.date).getFullYear() === year,
+                      a.startDate.getFullYear() === year,
                   ).length > 0
                 ? "outline"
                 : "ghost"

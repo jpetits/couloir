@@ -35,3 +35,35 @@ export const getPublicMap: RequestHandler = asyncHandler(
     res.status(200).json(activities);
   },
 );
+
+const IMMICH_URL = process.env.IMMICH_URL!;
+const IMMICH_API_KEY = process.env.IMMICH_API_KEY!;
+
+export const getAsset: RequestHandler = asyncHandler(
+  async (req: Request, res: Response, _next: NextFunction) => {
+    const id = req.params.id;
+    const { size } = req.validatedQuery as any;
+
+    const upstream = await fetch(
+      `${IMMICH_URL}/api/assets/${id}/thumbnail?size=${size}`,
+      { headers: { "x-api-key": IMMICH_API_KEY } },
+    );
+
+    console.log(upstream.ok, upstream.status);
+
+    if (!upstream.ok) {
+      res.status(upstream.status).end();
+      return;
+    }
+
+    res.setHeader(
+      "Content-Type",
+      upstream.headers.get("content-type") ?? "image/jpeg",
+    );
+    res.setHeader("Cross-Origin-Resource-Policy", "cross-origin");
+    res.setHeader("Cache-Control", "public, max-age=31536000, immutable");
+
+    const buffer = await upstream.arrayBuffer();
+    res.end(Buffer.from(buffer));
+  },
+);

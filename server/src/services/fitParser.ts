@@ -68,7 +68,7 @@ const getPointsFromRecords = (records: FitRecord[]) => {
       lng: r.lng,
       elevation: r.enhanced_altitude ?? 0,
       speed: r.enhanced_speed ?? 0,
-      time: r.timestamp ? new Date(r.timestamp).toISOString() : "",
+      time: r.timestamp ? new Date(r.timestamp) : null,
       distance: dist,
       cumDistance: cumDist,
       heartrate: r.heart_rate ?? 0,
@@ -100,9 +100,7 @@ export const parseFitFile = (fileBuffer: Buffer): Promise<ParsedActivity> => {
         startLng: firstPoint?.lng ?? null,
         endLat: points[points.length - 1]?.lat ?? null,
         endLng: points[points.length - 1]?.lng ?? null,
-        date: firstPoint?.time
-          ? new Date(firstPoint.time).toISOString()
-          : new Date().toISOString(),
+        startDate: firstPoint?.time ? new Date(firstPoint.time) : null,
         duration: session?.total_timer_time ?? 0,
         distance: totalDistance,
         elevationGain: session?.total_ascent ?? elevationGain,

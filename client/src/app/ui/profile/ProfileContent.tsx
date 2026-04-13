@@ -21,7 +21,7 @@ export default function ProfileContent({
 
   const activityListByYearSelection = yearSelection
     ? activityListWithCoords.filter(
-        (a) => new Date(a.date).getFullYear() === yearSelection,
+        (a) => a.startDate.getFullYear() === yearSelection,
       )
     : activityListWithCoords;
 
@@ -33,7 +33,7 @@ export default function ProfileContent({
       <div className="flex gap-2 mb-4">
         <YearButtons activityList={activityList} />
       </div>
-      <ProfileStats activitiyList={activityListByYearSelection} />
+      <ProfileStats activityList={activityListByYearSelection} />
       <ActivityStatsWrapper activityList={activityListByYearSelection} />
     </>
   );

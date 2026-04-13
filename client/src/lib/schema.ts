@@ -1,5 +1,13 @@
 import { z } from "zod";
 
+export const ImageSchema = z.object({
+  id: z.string(),
+  activityId: z.string(),
+  immichId: z.string(),
+  lat: z.number(),
+  lng: z.number(),
+});
+
 export const PointSchema = z.object({
   id: z.string(),
   activityId: z.string(),
@@ -8,7 +16,7 @@ export const PointSchema = z.object({
   elevation: z.number(),
   speed: z.number(),
   heartrate: z.number(),
-  time: z.string(),
+  time: z.coerce.date(),
   distance: z.number(),
   cumDistance: z.number(),
 });
@@ -19,7 +27,7 @@ export const ActivitySchema = z.object({
   id: z.string(),
   name: z.string(),
   userId: z.string(),
-  date: z.string(),
+  startDate: z.coerce.date(),
   duration: z.number(),
   distance: z.number(),
   elevationGain: z.number(),
@@ -32,6 +40,7 @@ export const ActivitySchema = z.object({
   minHeartrate: z.number(),
   maxSlope: z.number(),
   points: z.array(PointSchema).optional(),
+  images: z.array(ImageSchema).optional(),
   stravaActivityId: z.string().nullable().optional(),
   startLat: z.number().nullable(),
   startLng: z.number().nullable(),
@@ -61,7 +70,7 @@ export const ActivityFiltersSchema = z.object({
   maxDistance: z.coerce.string().optional(),
   minDuration: z.coerce.string().optional(),
   maxDuration: z.coerce.string().optional(),
-  sortBy: z.enum(activityColumns).default("date").optional(),
+  sortBy: z.enum(activityColumns).default("startDate").optional(),
   sortOrder: z.enum(["asc", "desc"]).default("desc").optional(),
   page: z.coerce.string().default("1").optional(),
   limit: z.coerce.string().default("100").optional(),

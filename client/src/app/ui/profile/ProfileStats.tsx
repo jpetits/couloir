@@ -17,7 +17,10 @@ import {
   BLOCK_TOTAL_SIZE,
   DATE_FORMAT,
 } from "@/lib/constants";
-import { useResizeCalendar } from "@/app/hooks/useActivityCalendar";
+import {
+  useLabelCalendar,
+  useResizeCalendar,
+} from "@/app/hooks/useActivityCalendar";
 
 const THEME_COLORS = {
   light: ["#e5e7eb", "#93c5fd", "#60a5fa", "#3b82f6", "#1d4ed8"],
@@ -25,9 +28,9 @@ const THEME_COLORS = {
 };
 
 export default function ProfileStats({
-  activitiyList,
+  activityList,
 }: {
-  activitiyList: Activity[];
+  activityList: Activity[];
 }) {
   const { resolvedTheme } = useTheme();
   const { weeks, setContainerRef } = useResizeCalendar();
@@ -36,14 +39,11 @@ export default function ProfileStats({
   const setDateSelection = useMapStore((state) => state.setDateSelection);
   const activityIdList = useMapStore((state) => state.activityIdList);
 
-  const activityListFiltered = activitiyList.filter((a) =>
+  const activityListFiltered = activityList.filter((a) =>
     activityIdList.has(a.id),
   );
 
   const startDate = useMemo(() => {
-    const activityListFirstDate =
-      activityListFiltered[activityListFiltered.length - 1]?.date.split("T")[0];
-
     const minStartDate = format(
       startOfWeek(subWeeks(new Date(), weeks), {
         weekStartsOn: 0,
@@ -51,7 +51,9 @@ export default function ProfileStats({
       DATE_FORMAT,
     );
 
-    if (!activityListFirstDate) return minStartDate;
+    const firstActivity = activityListFiltered[activityListFiltered.length - 1];
+    if (!firstActivity?.startDate) return minStartDate;
+    const activityListFirstDate = format(firstActivity.startDate, DATE_FORMAT);
 
     if (activityListFirstDate > minStartDate) return minStartDate;
 
@@ -59,13 +61,14 @@ export default function ProfileStats({
   }, [activityListFiltered, weeks]);
 
   const lastDate = useMemo(() => {
-    const activityListLastDate = activityListFiltered[0]?.date.split("T")[0];
     const minLastDate = format(
       addDays(new Date(startDate), weeks * 7 - 1),
       DATE_FORMAT,
     );
 
-    if (!activityListLastDate) return minLastDate;
+    const lastActivity = activityListFiltered[0];
+    if (!lastActivity?.startDate) return minLastDate;
+    const activityListLastDate = format(lastActivity.startDate, DATE_FORMAT);
 
     if (activityListLastDate < minLastDate) return minLastDate;
 
@@ -76,8 +79,8 @@ export default function ProfileStats({
     const countByDate = activityListFiltered.reduce<Record<string, number>>(
       (acc, activity) => ({
         ...acc,
-        [activity.date.split("T")[0]]:
-          (acc[activity.date.split("T")[0]] || 0) + 1,
+        [format(activity.startDate, DATE_FORMAT)]:
+          (acc[format(activity.startDate, DATE_FORMAT)] || 0) + 1,
       }),
       {},
     );
@@ -105,10 +108,7 @@ export default function ProfileStats({
       months: Array.from({ length: 12 }, (_, i) => {
         const year = i >= startMonth ? startYear : startYear + 1;
         const showYear = year !== startYear || i === startMonth;
-        return showYear
-          ? `${MONTHS[i]} 
-  '${String(year).slice(2)}`
-          : MONTHS[i];
+        return showYear ? `${MONTHS[i]} '${String(year).slice(2)}` : MONTHS[i];
       }),
     };
   }, [startDate]);
@@ -190,12 +190,15 @@ export default function ProfileStats({
     } as React.SVGProps<SVGRectElement>);
   };
 
+  const { calendarWrapperRef } = useLabelCalendar(selection, startDate);
+
   return (
     <>
       <div ref={setContainerRef} />
       <div
         className="[&_text]:cursor-pointer"
         onClick={(e) => handleMonthClick(e)}
+        ref={calendarWrapperRef}
       >
         <ActivityCalendar
           labels={labels}

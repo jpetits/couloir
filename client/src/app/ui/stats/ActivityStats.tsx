@@ -11,6 +11,8 @@ import { Card } from "@/components/ui/card";
 import MapContent from "./MapContent";
 import { useMapStore } from "@/store/mapStore";
 import L from "leaflet";
+import { format } from "date-fns";
+import { DATE_FORMAT } from "@/lib/constants";
 
 type HeatMapField = {
   field: keyof Pick<PointStats, "speed" | "elevation" | "heartrate">;
@@ -63,7 +65,7 @@ export default function ActivityStats({
 
       if (activityId) {
         const activity = activityList.find((a) => a.id === activityId) || null;
-        setHoveredDate(activity?.date || null);
+        setHoveredDate(activity ? format(activity.startDate, DATE_FORMAT) : null);
         setHoveredActivity(activity);
       }
     },
@@ -104,7 +106,7 @@ export default function ActivityStats({
             <Card className="p-3 shadow-lg text-sm min-w-48">
               <p className="font-semibold">{hoveredActivity.name}</p>
               <p className="text-muted-foreground text-xs mt-1">
-                {hoveredActivity.date} ·{" "}
+                {format(hoveredActivity.startDate, DATE_FORMAT)} ·{" "}
                 {(hoveredActivity.distance / 1000).toFixed(1)} km ·{" "}
                 {hoveredActivity.elevationGain} m d+
               </p>

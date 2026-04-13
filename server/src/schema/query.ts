@@ -5,19 +5,16 @@ import { activities } from "../db/schema";
 const activityColumns = Object.keys(getTableColumns(activities));
 
 export const activityFiltersSchema = z.object({
-  dateFrom: z.string().optional(),
-  dateTo: z.string().optional(),
+  dateFrom: z.coerce.date().optional(),
+  dateTo: z.coerce.date().optional(),
   minDistance: z.coerce.number().optional(),
   maxDistance: z.coerce.number().optional(),
   minDuration: z.coerce.number().optional(),
   maxDuration: z.coerce.number().optional(),
-  sortBy: z.enum(activityColumns).default("date"),
-  sortOrder: z.enum(["asc", "desc"]).default("desc"),
-  limit: z.coerce
-    .number()
-    .gt(0, { message: "errors.amountRequired" })
-    .default(100),
-  page: z.coerce.number().gt(0).default(1),
+  sortBy: z.enum(activityColumns).default("startDate").optional(),
+  sortOrder: z.enum(["asc", "desc"]).default("desc").optional(),
+  limit: z.coerce.number().gt(0).default(100).optional(),
+  page: z.coerce.number().gt(0).default(1).optional(),
 });
 
 export type ActivityFilters = z.infer<typeof activityFiltersSchema>;
@@ -59,3 +56,7 @@ export const mapBoundsSchema = z.object({
 });
 
 export type MapBounds = z.infer<typeof mapBoundsSchema>;
+
+export const assetsSchema = z.object({
+  size: z.enum(["thumbnail", "medium", "full"]).default("thumbnail").optional(),
+});

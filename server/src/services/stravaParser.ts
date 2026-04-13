@@ -3,7 +3,7 @@ import type { NewPoint } from "../types/types";
 
 export const parseStravaActivity = (stravaActivity: any) => ({
   name: stravaActivity.name,
-  date: new Date(stravaActivity.start_date).toISOString().split("T")[0]!,
+  startDate: new Date(stravaActivity.start_date),
   duration: stravaActivity.elapsed_time, // seconds
   distance: stravaActivity.distance, // meters
   elevationGain: stravaActivity.total_elevation_gain ?? 0,
@@ -35,7 +35,7 @@ export const parseStravaStream = (
     lng: point[1],
     elevation: stravaStream.altitude?.data[index] ?? 0,
     speed: (stravaStream.velocity_smooth?.data[index] ?? 0) * 3.6, // m/s → km/h
-    time: new Date(stravaStream.time?.data[index] ?? 0).toISOString(),
+    time: new Date(stravaStream.time?.data[index] ?? 0),
     distance:
       (stravaStream.distance?.data[index] ?? 0) -
       (stravaStream.distance?.data[index - 1] ?? 0), // meters

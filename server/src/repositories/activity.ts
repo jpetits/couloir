@@ -18,10 +18,10 @@ export const activityRepository = {
     const conditions = [eq(activities.userId, userId)];
 
     if (filters.dateFrom) {
-      conditions.push(gte(activities.date, filters.dateFrom));
+      conditions.push(gte(activities.startDate, filters.dateFrom));
     }
     if (filters.dateTo) {
-      conditions.push(lte(activities.date, filters.dateTo));
+      conditions.push(lte(activities.startDate, filters.dateTo));
     }
     if (filters.minDistance) {
       conditions.push(gte(activities.distance, filters.minDistance));
@@ -37,23 +37,26 @@ export const activityRepository = {
     }
 
     const orderFns = { asc, desc } as const;
-    const orderFn = orderFns[filters.sortOrder];
+    const orderFn = orderFns[filters.sortOrder ?? "desc"];
 
     const columns = getTableColumns(activities);
-    const orderCol = columns[filters.sortBy as keyof typeof columns];
+    const orderCol =
+      columns[(filters.sortBy ?? "startDate") as keyof typeof columns];
 
+    const limit = filters.limit ?? 100;
+    const page = filters.page ?? 1;
     return db
       .select()
       .from(activities)
       .where(and(...conditions))
       .orderBy(orderFn(orderCol))
-      .offset((filters.page - 1) * filters.limit)
-      .limit(filters.limit);
+      .offset((page - 1) * limit)
+      .limit(limit);
   },
   findById: async (id: string) => {
     return db.query.activities.findFirst({
       where: (activities, { eq }) => eq(activities.id, id),
-      with: { points: true },
+      with: { points: true, images: true },
     });
   },
   create: async (data: typeof activities.$inferInsert) => {
@@ -98,7 +101,7 @@ export const activityRepository = {
   listWithPoints: async (userId: string) => {
     return db.query.activities.findMany({
       where: (activities, { eq }) => eq(activities.userId, userId),
-      with: { points: true },
+      with: { points: true, images: true },
     });
   },
   findByStravaId: async (stravaActivityId: string, userId: string) => {
@@ -117,11 +120,11 @@ export const activityRepository = {
     });
   },
   listByUserId: async (userId: string) => {
-    return db
-      .select()
-      .from(activities)
-      .where(eq(activities.userId, userId))
-      .orderBy(desc(activities.date));
+    return db.query.activities.findMany({
+      where: (activities, { eq }) => eq(activities.userId, userId),
+      with: { images: true },
+      orderBy: (activities, { desc }) => [desc(activities.startDate)],
+    });
   },
   createMany: async (activitiesData: (typeof activities.$inferInsert)[]) => {
     if (activitiesData.length === 0) return [];

@@ -2,7 +2,7 @@ import { Activity } from "@/lib/schema";
 import { useShallow } from "zustand/react/shallow";
 import { Column, ColumnDef, TableMeta } from "@tanstack/react-table";
 import { Button } from "@/components/ui/button";
-import { formatDate, formatDuration } from "@/lib/utils";
+import { formatDuration } from "@/lib/utils";
 import Link from "next/link";
 import { ROUTES } from "@/routing/constants";
 import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
@@ -13,6 +13,8 @@ import MinusIcon from "@heroicons/react/24/outline/MinusIcon";
 import CheckIcon from "@heroicons/react/24/outline/CheckIcon";
 import StopIcon from "@heroicons/react/24/outline/StopIcon";
 import { useActivitySelectionStore } from "@/store/activitySelection";
+import { format } from "date-fns/format";
+import { DATE_FORMAT } from "@/lib/constants";
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData> {
@@ -71,7 +73,11 @@ export const columns: ColumnDef<Activity>[] = [
     accessorKey: "date",
     header: ({ column }) => <HeaderCell column={column} title="Date" />,
     cell: ({ row }) => {
-      return <div className="font-medium">{formatDate(row.original.date)}</div>;
+      return (
+        <div className="font-medium">
+          {format(row.original.startDate, DATE_FORMAT)}
+        </div>
+      );
     },
   },
   {

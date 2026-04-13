@@ -1,7 +1,8 @@
 import { Activity } from "@/lib/schema";
 import { useMapStore } from "@/store/mapStore";
 import { useEffect, useState } from "react";
-import { ZOOM_THRESHOLD } from "@/lib/constants";
+import { DATE_FORMAT, ZOOM_THRESHOLD } from "@/lib/constants";
+import { format } from "date-fns";
 import { useMap, useMapEvents } from "react-leaflet";
 import { useApi } from "./useApi";
 import { fetchActivitiesWithPointsInBounds } from "@/lib/dataClient";
@@ -40,7 +41,7 @@ export function useFitBounds(activityList: Activity[]) {
   useEffect(() => {
     if ((!dateSelection && !yearSelection) || zoom >= ZOOM_THRESHOLD) return;
     const filtered = activityList.filter((activity) => {
-      const date = activity.date.split("T")[0];
+      const date = format(activity.startDate, DATE_FORMAT);
       const hasActivityStartPoint =
         activity.startLat !== undefined && activity.startLng !== undefined;
       const isActivityDateInRange = dateSelection
@@ -49,7 +50,7 @@ export function useFitBounds(activityList: Activity[]) {
       const filterDateSelection =
         hasActivityStartPoint && isActivityDateInRange;
       const filterYearSelection = yearSelection
-        ? new Date(activity.date).getFullYear() === yearSelection
+        ? activity.startDate.getFullYear() === yearSelection
         : true;
       return filterDateSelection && filterYearSelection;
     });
