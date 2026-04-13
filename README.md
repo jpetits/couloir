@@ -19,11 +19,8 @@ A personal activity tracker for outdoor sports — skiing, surfing, trekking, an
 - Bulk selection and delete
 - Stats page with distance per month chart and personal records
 - Public profile at `couloir.work/u/[username]` — shareable activity map with activity heatmap calendar, date range selection, and map↔calendar sync
+- Immich integration — GPS-tagged photos synced from a self-hosted Immich instance, displayed as markers on the map at their capture location with thumbnail popups
 - Dark/light mode
-
-## Roadmap
-
-- [ ] Self-hosted image server on Rock5B via Coolify — upload photos from iPhone, display on map at GPS location
 
 ## Tech Stack
 
@@ -52,6 +49,7 @@ A personal activity tracker for outdoor sports — skiing, surfing, trekking, an
 - [Vercel](https://vercel.com/) — frontend
 - [Railway](https://railway.app/) — backend
 - [NeonDB](https://neon.tech/) — serverless Postgres
+- [Immich](https://immich.app/) — self-hosted photo library, GPS photos synced via API
 - [Playwright](https://playwright.dev/) — end-to-end tests
 
 ## Architecture

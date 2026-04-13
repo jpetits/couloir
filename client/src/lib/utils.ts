@@ -23,15 +23,6 @@ export function formatDuration(
   return parts.join(" ");
 }
 
-export function formatDate(dateString: string): string {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("fr-FR", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
-}
-
 export const colorInterpolate = (
   current: number,
   min: number,
