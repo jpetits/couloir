@@ -12,7 +12,7 @@
     "lint": "eslint . --ext .ts",
     "start": "tsx server.ts",
     "knip": "pnpm dlx knip --config knip.json",
-    "immich:sync": "tsx --env-file=.env src/scripts/syncImmichAssets.ts"
+    "immich:sync": "tsx src/scripts/syncImmichAssets.ts"
   },
   "keywords": [],
   "author": "",

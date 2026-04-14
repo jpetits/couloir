@@ -58,6 +58,7 @@ export default function ActivityStats({
   }>({ field: "speed", unit: "km/h" });
   const [hoveredPoint, setHoveredPoint] = useState<PointStats | null>(null);
   const [hoveredActivity, setHoveredActivity] = useState<Activity | null>(null);
+  const [showPhotos, setShowPhotos] = useState(false);
   const setHoveredDate = useMapStore((state) => state.setHoveredDate);
   const handleHover = useCallback(
     (point: PointStats | null, activityId?: string | null) => {
@@ -65,7 +66,9 @@ export default function ActivityStats({
 
       if (activityId) {
         const activity = activityList.find((a) => a.id === activityId) || null;
-        setHoveredDate(activity ? format(activity.startDate, DATE_FORMAT) : null);
+        setHoveredDate(
+          activity ? format(activity.startDate, DATE_FORMAT) : null,
+        );
         setHoveredActivity(activity);
       }
     },
@@ -91,6 +94,14 @@ export default function ActivityStats({
             {field.charAt(0).toUpperCase() + field.slice(1)}
           </Button>
         ))}
+        <Button
+          variant={showPhotos ? "default" : "outline"}
+          className="cursor-pointer ml-auto"
+          size="sm"
+          onClick={() => setShowPhotos((v) => !v)}
+        >
+          Photos
+        </Button>
       </div>
 
       <div
@@ -128,6 +139,7 @@ export default function ActivityStats({
             activityList={activityList}
             handleHover={handleHover}
             hoveredActivity={hoveredActivity}
+            showPhotos={showPhotos}
             heatMapField={heatMapField}
           />
 

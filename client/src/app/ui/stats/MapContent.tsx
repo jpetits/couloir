@@ -22,13 +22,16 @@ export default function MapContent({
   handleHover,
   hoveredActivity,
   heatMapField,
+  showPhotos,
 }: {
   activityList: Activity[];
   handleHover: (point: PointStats | null, activity?: string | null) => void;
   hoveredActivity: Activity | null;
   heatMapField: { field: keyof PointStats; unit: string };
+  showPhotos: boolean;
 }) {
   const zoom = useZoom();
+
   const dateSelection = useMapStore((state) => state.dateSelection);
   const yearSelection = useMapStore((state) => state.yearSelection);
 
@@ -76,22 +79,26 @@ export default function MapContent({
     (a.images ?? []).filter((img) => img.lat && img.lng),
   );
 
-  const photoIcon = L.divIcon({
-    html: `<div style="width:28px;height:28px;background:#fff;border:2px solid #3b82f6;border-radius:4px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.3)">
-      <svg viewBox="0 0 24 24" fill="#3b82f6" xmlns="http://www.w3.org/2000/svg">
-        <path d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2zM8.5 13.5l2.5 3 3.5-4.5 4.5 6H5l3.5-4.5z"/>
-      </svg>
-    </div>`,
-    className: "",
-    iconSize: [28, 28],
-    iconAnchor: [14, 14],
-  });
+  const makePhotoIcon = (immichId: string) =>
+    L.divIcon({
+      html: `<div style="width:48px;height:48px;border:2px solid white;border-radius:4px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.4)">
+        <img src="${ROUTES.api.imagePath(immichId, "thumbnail")}" style="width:100%;height:100%;object-fit:cover" />
+      </div>`,
+      className: "",
+      iconSize: [48, 48],
+      iconAnchor: [24, 24],
+    });
 
   return (
     <>
-      {zoom >= ZOOM_THRESHOLD &&
+      {showPhotos &&
+        zoom >= ZOOM_THRESHOLD &&
         allImages.map((img) => (
-          <Marker key={img.id} position={[img.lat!, img.lng!]} icon={photoIcon}>
+          <Marker
+            key={img.id}
+            position={[img.lat!, img.lng!]}
+            icon={makePhotoIcon(img.immichId)}
+          >
             <Popup minWidth={300} maxWidth={300}>
               <img
                 src={ROUTES.api.imagePath(img.immichId, "thumbnail")}

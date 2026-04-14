@@ -22,6 +22,16 @@ A personal activity tracker for outdoor sports — skiing, surfing, trekking, an
 - Immich integration — GPS-tagged photos synced from a self-hosted Immich instance, displayed as markers on the map at their capture location with thumbnail popups
 - Dark/light mode
 
+## Roadmap
+
+- [ ] **Summit detection** — detect elevation peaks across activity tracks, reverse geocode to get peak names, display summit count on profile and markers on map
+- [ ] **Life map** — photos + activities at all zoom levels with clustering, turning the map into a personal geographic history
+- [ ] **Timeline scrubber** — replay geographic history month by month across activities and photos
+- [ ] **Weather on activity** — show conditions at time of activity using Open-Meteo historical API (free, no key)
+- [ ] **Personal records** — longest, highest, fastest, displayed on profile
+- [ ] **Activity type tagging** — ski/hike/bike/surf labels with per-type colors on map
+- [ ] **Route planning** — draw a route, get elevation profile, export as GPX
+
 ## Tech Stack
 
 **Frontend**
