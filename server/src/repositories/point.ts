@@ -18,11 +18,14 @@ export const pointRepository = {
     return db.execute(sql`
       SELECT p.*
       FROM points p
-      JOIN activities a ON p.activity_id = a.id
-      WHERE a.user_id = ${userId}
-      AND p.lat BETWEEN ${bounds.south} AND ${bounds.north}
-      AND p.lng BETWEEN ${bounds.west} AND ${bounds.east}
-      
+      WHERE p.activity_id IN (
+        SELECT DISTINCT p2.activity_id
+        FROM points p2
+        JOIN activities a ON p2.activity_id = a.id
+        WHERE a.user_id = ${userId}
+        AND p2.lat BETWEEN ${bounds.south} AND ${bounds.north}
+        AND p2.lng BETWEEN ${bounds.west} AND ${bounds.east}
+      )
     `);
   },
 };
