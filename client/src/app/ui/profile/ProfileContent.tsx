@@ -14,12 +14,6 @@ export default function ProfileContent({
   activityList: Activity[];
   username: string;
 }) {
-  console.log(
-    "ProfileContent render with activityList:",
-    activityList
-      .filter((a) => a.summits && a.summits.length > 0)
-      .map((a) => ({ id: a.id, summits: a.summits })),
-  );
   const yearSelection = useMapStore((state) => state.yearSelection);
 
   const activityListWithCoords = activityList.filter(

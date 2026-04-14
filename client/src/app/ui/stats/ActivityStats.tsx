@@ -169,16 +169,13 @@ export default function ActivityStats({
                 ]}
                 icon={startLeafletIcon}
               />
-              {hoveredActivity.summits?.map((summit) => {
-                console.log("Summit:", summit);
-                return (
-                  <Marker
-                    key={hoveredActivity.id + "-summit-" + summit.id}
-                    position={[summit.lat, summit.lng]}
-                    icon={summitLeafletIcon}
-                  />
-                );
-              })}
+              {hoveredActivity.summits?.map((summit) => (
+                <Marker
+                  key={hoveredActivity.id + "-summit-" + summit.id}
+                  position={[summit.lat, summit.lng]}
+                  icon={summitLeafletIcon}
+                />
+              ))}
             </>
           )}
 
