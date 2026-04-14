@@ -1,6 +1,7 @@
 import { fireEvent, render, screen } from "@testing-library/react";
-import BackButton from "./BackButton";
 import { useRouter } from "next/navigation";
+
+import BackButton from "./BackButton";
 
 jest.mock("next/navigation", () => ({
   useSearchParams: jest.fn(),

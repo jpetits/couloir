@@ -1,5 +1,6 @@
-import StatsContent from "@/app/ui/stats/StatsContent";
 import { Suspense } from "react";
+
+import StatsContent from "@/app/ui/stats/StatsContent";
 
 export default async function StatsPage() {
   return (

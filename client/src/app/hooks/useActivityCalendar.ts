@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+
 import { BLOCK_TOTAL_SIZE, MONTHS } from "@/lib/constants";
 
 const DEFAULT_WEEKS = 200;

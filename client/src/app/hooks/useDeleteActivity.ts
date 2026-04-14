@@ -1,12 +1,15 @@
 "use client";
 
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useRef } from "react";
+
 import type { InfiniteData, QueryKey } from "@tanstack/react-query";
-import { useApi } from "./useApi";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { toast } from "sonner";
+
 import { deleteActivity } from "@/lib/dataClient";
 import type { Activity } from "@/lib/schema";
-import { useRef } from "react";
-import { toast } from "sonner";
+
+import { useApi } from "./useApi";
 
 export function useDeleteActivity() {
   const apiFetch = useApi();

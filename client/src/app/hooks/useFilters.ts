@@ -1,5 +1,6 @@
-import { ActivityFilters, ActivityFiltersSchema } from "@/lib/schema";
 import { useRouter, useSearchParams } from "next/navigation";
+
+import { ActivityFilters, ActivityFiltersSchema } from "@/lib/schema";
 
 export const useFilters = () => {
   const router = useRouter();

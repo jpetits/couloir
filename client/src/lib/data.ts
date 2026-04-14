@@ -1,4 +1,5 @@
 import { ROUTES } from "@/routing/constants";
+
 import { apiFetch } from "./api";
 import {
   Activity,

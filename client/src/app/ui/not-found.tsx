@@ -1,5 +1,6 @@
-import { ROUTES } from "@/routing/constants";
 import Link from "next/link";
+
+import { ROUTES } from "@/routing/constants";
 
 export default function ErrorDisplay({ message }: { message: string }) {
   return (

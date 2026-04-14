@@ -1,11 +1,11 @@
-import { fetchActivities, userIsStravaConnected } from "@/lib/data";
 import ActivityList from "@/app/ui/activity/ActivityList";
-import UploadButton from "@/app/ui/dashboard/UploadButton";
-import { ActivityFiltersSchema } from "@/lib/schema";
-import StravaSyncButton from "@/app/ui/dashboard/StravaSyncButton";
-import StravaConnectButton from "@/app/ui/dashboard/StravaConnectButton";
-import StatsButton from "@/app/ui/dashboard/StatsButton";
 import BackButton from "@/app/ui/dashboard/BackButton";
+import StatsButton from "@/app/ui/dashboard/StatsButton";
+import StravaConnectButton from "@/app/ui/dashboard/StravaConnectButton";
+import StravaSyncButton from "@/app/ui/dashboard/StravaSyncButton";
+import UploadButton from "@/app/ui/dashboard/UploadButton";
+import { fetchActivities, userIsStravaConnected } from "@/lib/data";
+import { ActivityFiltersSchema } from "@/lib/schema";
 
 export default async function Activities({
   searchParams,

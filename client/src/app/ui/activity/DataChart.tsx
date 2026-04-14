@@ -1,17 +1,19 @@
 "use client";
 
+import { useCallback } from "react";
+
+import type { MouseHandlerDataParam, TooltipIndex } from "recharts";
 import {
-  AreaChart,
   Area,
-  XAxis,
-  YAxis,
-  ResponsiveContainer,
+  AreaChart,
   CartesianGrid,
   ReferenceLine,
+  ResponsiveContainer,
   Tooltip,
+  XAxis,
+  YAxis,
 } from "recharts";
-import type { MouseHandlerDataParam, TooltipIndex } from "recharts";
-import { useCallback } from "react";
+
 import { PointStats } from "@/types/activity";
 
 export default function DataChart({

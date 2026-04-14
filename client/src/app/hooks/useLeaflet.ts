@@ -1,13 +1,16 @@
-import { Activity } from "@/lib/schema";
-import { useMapStore } from "@/store/mapStore";
 import { useEffect, useState } from "react";
-import { DATE_FORMAT, ZOOM_THRESHOLD } from "@/lib/constants";
-import { format } from "date-fns";
 import { useMap, useMapEvents } from "react-leaflet";
-import { useApi } from "./useApi";
+
+import { format } from "date-fns";
+
+import { DATE_FORMAT, ZOOM_THRESHOLD } from "@/lib/constants";
 import { fetchActivitiesWithPointsInBounds } from "@/lib/dataClient";
-import { PointStats } from "@/types/activity";
+import { Activity } from "@/lib/schema";
 import { enrichPointList } from "@/lib/utils";
+import { useMapStore } from "@/store/mapStore";
+import { PointStats } from "@/types/activity";
+
+import { useApi } from "./useApi";
 
 export function useZoom() {
   const map = useMap();

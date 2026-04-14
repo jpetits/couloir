@@ -1,21 +1,24 @@
 "use client";
 
-import { Activity } from "@/lib/schema";
-import { getClosestPoint } from "@/lib/utils";
 import { CircleMarker, Marker, Polyline, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
+
+import { format } from "date-fns";
 import L from "leaflet";
-import { ROUTES } from "@/routing/constants";
+
 import {
   useFetchActivityListInBounds,
   useFitBounds,
   useZoom,
 } from "@/app/hooks/useLeaflet";
-import { PointStats } from "@/types/activity";
-import ActivityPolylines from "./ActivityPolylines";
-import { useMapStore } from "@/store/mapStore";
 import { DATE_FORMAT, ZOOM_THRESHOLD } from "@/lib/constants";
-import { format } from "date-fns";
+import { Activity } from "@/lib/schema";
+import { getClosestPoint } from "@/lib/utils";
+import { ROUTES } from "@/routing/constants";
+import { useMapStore } from "@/store/mapStore";
+import { PointStats } from "@/types/activity";
+
+import ActivityPolylines from "./ActivityPolylines";
 
 export default function MapContent({
   activityList,

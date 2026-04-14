@@ -1,11 +1,14 @@
 "use client";
 
 import { useCallback } from "react";
-import { MapContainer, TileLayer, Polyline, CircleMarker } from "react-leaflet";
-import type { PointStats } from "@/types/activity";
+import { CircleMarker, MapContainer, Polyline, TileLayer } from "react-leaflet";
+
+import L, { LeafletMouseEvent } from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { LeafletMouseEvent } from "leaflet";
-import L from "leaflet";
+import { useTheme } from "next-themes";
+
+import type { PointStats } from "@/types/activity";
+
 const canvas = L.canvas({ padding: 0.5 });
 
 export default function ActivityMap({
@@ -17,6 +20,7 @@ export default function ActivityMap({
   pointList: PointStats[];
   hoveredPoint?: PointStats | null;
 }) {
+  const { resolvedTheme } = useTheme();
   const handleMouseMove = useCallback(
     (e: LeafletMouseEvent) => {
       const closest = pointList.reduce(
@@ -37,8 +41,12 @@ export default function ActivityMap({
       bounds={pointList.map((p) => [p.lat, p.lng])}
     >
       <TileLayer
-        attribution='&copy; <a href="https://www.openstreetmap.org/">OpenStreetMap</a>'
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'
+        url={
+          resolvedTheme === "dark"
+            ? "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
+            : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+        }
       />
       {pointList.length > 0 &&
         pointList.map((p, j) => {

@@ -1,11 +1,15 @@
-import { fetchActivity } from "@/lib/data";
-import ActivityDetailClient from "@/app/ui/activity/ActivityDetailClient";
-import BackButton from "@/app/ui/dashboard/BackButton";
-import ActivityName from "@/app/ui/activity/ActivityName";
-import { formatDuration } from "@/lib/utils";
+import { Suspense } from "react";
+
 import { format } from "date-fns";
+
+import ActivityDetailClient from "@/app/ui/activity/ActivityDetailClient";
+import ActivityImages from "@/app/ui/activity/ActivityImages";
+import ActivityName from "@/app/ui/activity/ActivityName";
+import ActivityWeather from "@/app/ui/activity/ActivityWeather";
+import BackButton from "@/app/ui/dashboard/BackButton";
 import { DATE_FORMAT } from "@/lib/constants";
-import { ROUTES } from "@/routing/constants";
+import { fetchActivity } from "@/lib/data";
+import { formatDuration } from "@/lib/utils";
 
 export default async function ActivityPage({
   params,
@@ -19,7 +23,12 @@ export default async function ActivityPage({
     <main>
       <BackButton />
       <ActivityName activity={activity} />
-      <p>{format(activity.startDate, DATE_FORMAT)}</p>
+      <p>
+        {format(activity.startDate, DATE_FORMAT)}
+        <Suspense fallback={<span>Loading weather...</span>}>
+          <ActivityWeather activity={activity} />
+        </Suspense>
+      </p>
       <ul>
         <li>Durée : {formatDuration(activity.duration, false)}</li>
         <li>Distance : {(activity.distance / 1000).toFixed(1)} km</li>
@@ -30,21 +39,9 @@ export default async function ActivityPage({
           km/h
         </li>
       </ul>
-      {activity.images && activity.images.length > 0 && (
-        <div>
-          <h2>Photos</h2>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-            {activity.images.map((image) => (
-              <img
-                key={image.id}
-                src={ROUTES.api.imagePath(image.immichId, "thumbnail")}
-                alt={`Image ${image.id}`}
-                className="w-full h-auto"
-              />
-            ))}
-          </div>
-        </div>
-      )}
+      <Suspense fallback={<p>Loading photos...</p>}>
+        <ActivityImages activity={activity} />
+      </Suspense>
       {activity.points && activity.points.length > 0 && (
         <ActivityDetailClient activity={activity} />
       )}

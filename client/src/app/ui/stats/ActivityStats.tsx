@@ -2,6 +2,7 @@
 
 import { Activity } from "@/lib/schema";
 import { useCallback, useState } from "react";
+import { useTheme } from "next-themes";
 import { MapContainer } from "react-leaflet/MapContainer";
 import { TileLayer } from "react-leaflet/TileLayer";
 import { CircleMarker, Marker, ScaleControl } from "react-leaflet";
@@ -52,6 +53,7 @@ export default function ActivityStats({
 }: {
   activityList: Activity[];
 }) {
+  const { resolvedTheme } = useTheme();
   const [heatMapField, setHeatMapField] = useState<{
     field: keyof PointStats;
     unit: string;
@@ -131,8 +133,11 @@ export default function ActivityStats({
           style={{ height: "700px", width: "100%" }}
         >
           <TileLayer
-            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+            url={resolvedTheme === "dark"
+              ? "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
+              : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            }
+            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'
           />
 
           <MapContent

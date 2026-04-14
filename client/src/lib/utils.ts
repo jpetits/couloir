@@ -1,6 +1,8 @@
-import { PointStats } from "@/types/activity";
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
+
+import { PointStats } from "@/types/activity";
+
 import { Activity, Point } from "./schema";
 
 export function cn(...inputs: ClassValue[]) {

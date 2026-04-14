@@ -1,8 +1,9 @@
 "use client";
 
-import { useActivitySelectionStore } from "@/store/activitySelection";
-import { useDeleteActivity } from "@/app/hooks/useDeleteActivity";
 import { useShallow } from "zustand/react/shallow";
+
+import { useDeleteActivity } from "@/app/hooks/useDeleteActivity";
+import { useActivitySelectionStore } from "@/store/activitySelection";
 
 export default function BulkActionBar() {
   const [clear, selected] = useActivitySelectionStore(

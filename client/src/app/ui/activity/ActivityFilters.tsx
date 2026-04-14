@@ -1,8 +1,10 @@
 "use client";
 
-import { useFilters } from "@/app/hooks/useFilters";
-import { useDebounce } from "use-debounce";
 import { useEffect, useState } from "react";
+
+import { useDebounce } from "use-debounce";
+
+import { useFilters } from "@/app/hooks/useFilters";
 
 export default function ActivityFilters() {
   const { filters, setFilters } = useFilters();

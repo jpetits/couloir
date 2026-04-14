@@ -2,9 +2,11 @@
 
 import { memo, useEffect, useRef } from "react";
 import { Polyline } from "react-leaflet";
-import { PointStats } from "@/types/activity";
 
 import L from "leaflet";
+
+import { PointStats } from "@/types/activity";
+
 const canvas = L.canvas({ padding: 0.5 });
 
 type HoverStatus = "hovered" | "dimmed" | "idle";

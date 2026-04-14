@@ -1,6 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
+
 import type { PointStats } from "@/types/activity";
 
 const ActivityMap = dynamic(() => import("./ActivityMap"), { ssr: false });

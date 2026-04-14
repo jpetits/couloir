@@ -1,11 +1,13 @@
 "use client";
 
-import { useState, useCallback } from "react";
+import { useCallback, useState } from "react";
+
 import type { Activity } from "@/lib/schema";
+import { enrichPointList } from "@/lib/utils";
 import type { PointStats } from "@/types/activity";
+
 import ActivityMapWrapper from "./ActivityMapWrapper";
 import DataChart from "./DataChart";
-import { enrichPointList } from "@/lib/utils";
 
 export default function ActivityDetailClient({
   activity,

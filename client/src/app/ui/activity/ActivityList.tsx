@@ -1,20 +1,23 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { columns } from "./Columns";
-import { usePaginatedScroll } from "../../hooks/usePaginatedScroll";
-import ActivityFilters from "./ActivityFilters";
-import { Activity } from "@/lib/schema";
+
 import { useMutationState } from "@tanstack/react-query";
-import { DataTable } from "./DataTable";
-import BulkActionBar from "./BulkActionBar";
-import { useActivitySelectionStore } from "@/store/activitySelection";
 import {
   useRouter,
   useSearchParams,
 } from "next/dist/client/components/navigation";
+
 import { stravaConnect } from "@/lib/dataClient";
+import { Activity } from "@/lib/schema";
+import { useActivitySelectionStore } from "@/store/activitySelection";
+
 import { useApi } from "../../hooks/useApi";
+import { usePaginatedScroll } from "../../hooks/usePaginatedScroll";
+import ActivityFilters from "./ActivityFilters";
+import BulkActionBar from "./BulkActionBar";
+import { columns } from "./Columns";
+import { DataTable } from "./DataTable";
 
 export default function ActivityList({
   initialActivityList,

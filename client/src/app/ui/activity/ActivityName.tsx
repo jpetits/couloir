@@ -1,10 +1,12 @@
 "use client";
 
-import { useOptimistic, useState, startTransition } from "react";
+import { startTransition, useOptimistic, useState } from "react";
+
 import { useRouter } from "next/navigation";
-import { Activity } from "@/lib/schema";
-import { patchActivity } from "@/lib/dataClient";
+
 import { useApi } from "@/app/hooks/useApi";
+import { patchActivity } from "@/lib/dataClient";
+import { Activity } from "@/lib/schema";
 
 export default function ActivityName({ activity }: { activity: Activity }) {
   const router = useRouter();

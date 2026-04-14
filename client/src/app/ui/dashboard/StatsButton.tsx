@@ -1,7 +1,8 @@
 "use client";
 
-import { ROUTES } from "@/routing/constants";
 import { useRouter } from "next/dist/client/components/navigation";
+
+import { ROUTES } from "@/routing/constants";
 
 export default function StatsButton() {
   const router = useRouter();

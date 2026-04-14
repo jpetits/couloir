@@ -1,8 +1,11 @@
 import { useEffect, useMemo } from "react";
-import { useInfiniteQuery, keepPreviousData } from "@tanstack/react-query";
+
+import { keepPreviousData, useInfiniteQuery } from "@tanstack/react-query";
+
+import { ROUTES } from "@/routing/constants";
+
 import { useApi } from "./useApi";
 import { useFilters } from "./useFilters";
-import { ROUTES } from "@/routing/constants";
 
 export function usePaginatedScroll<T>(
   initialMovieList: T[],

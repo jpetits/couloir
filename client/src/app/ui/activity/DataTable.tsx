@@ -1,16 +1,24 @@
 "use client";
 
 import React from "react";
-import { Activity } from "@/lib/schema";
+import { useState } from "react";
+
 import {
   ColumnDef,
   flexRender,
   getCoreRowModel,
-  useReactTable,
   getSortedRowModel,
   SortingState,
+  useReactTable,
 } from "@tanstack/react-table";
+import {
+  useRouter,
+  useSearchParams,
+} from "next/dist/client/components/navigation";
+import { useShallow } from "zustand/react/shallow";
 
+import { useDeleteActivity } from "@/app/hooks/useDeleteActivity";
+import DeleteDialog from "@/app/ui/modal/DeleteDialog";
 import {
   Table,
   TableBody,
@@ -19,17 +27,10 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-import { useState } from "react";
-import DeleteDialog from "@/app/ui/modal/DeleteDialog";
-import { useDeleteActivity } from "@/app/hooks/useDeleteActivity";
-import {
-  useRouter,
-  useSearchParams,
-} from "next/dist/client/components/navigation";
-import { RowSkeleton } from "../skeletons";
+import { Activity } from "@/lib/schema";
 import { useActivitySelectionStore } from "@/store/activitySelection";
-import { useShallow } from "zustand/react/shallow";
+
+import { RowSkeleton } from "../skeletons";
 
 export function DataTable<TData extends { id: string }, TValue>({
   columns,

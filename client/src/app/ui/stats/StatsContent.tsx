@@ -1,7 +1,9 @@
-import StatsCard from "@/app/ui/stats/Card";
-import { fetchStats, fetchActivities } from "@/lib/data";
-import { formatDuration } from "@/lib/utils";
 import { Suspense } from "react";
+
+import StatsCard from "@/app/ui/stats/Card";
+import { fetchActivities, fetchStats } from "@/lib/data";
+import { formatDuration } from "@/lib/utils";
+
 import ActivityStatsWrapper from "./ActivityStatsWrapper";
 
 async function StatsMap() {

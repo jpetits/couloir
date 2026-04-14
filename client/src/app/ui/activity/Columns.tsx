@@ -1,20 +1,21 @@
-import { Activity } from "@/lib/schema";
-import { useShallow } from "zustand/react/shallow";
-import { Column, ColumnDef, TableMeta } from "@tanstack/react-table";
-import { Button } from "@/components/ui/button";
-import { formatDuration } from "@/lib/utils";
-import Link from "next/link";
-import { ROUTES } from "@/routing/constants";
-import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
-import ChevronUpIcon from "@heroicons/react/24/outline/ChevronUpIcon";
+import CheckIcon from "@heroicons/react/24/outline/CheckIcon";
 import ChevronDownIcon from "@heroicons/react/24/outline/ChevronDownIcon";
 import ChevronUpDownIcon from "@heroicons/react/24/outline/ChevronUpDownIcon";
+import ChevronUpIcon from "@heroicons/react/24/outline/ChevronUpIcon";
 import MinusIcon from "@heroicons/react/24/outline/MinusIcon";
-import CheckIcon from "@heroicons/react/24/outline/CheckIcon";
 import StopIcon from "@heroicons/react/24/outline/StopIcon";
-import { useActivitySelectionStore } from "@/store/activitySelection";
+import TrashIcon from "@heroicons/react/24/outline/TrashIcon";
+import { Column, ColumnDef, TableMeta } from "@tanstack/react-table";
 import { format } from "date-fns/format";
+import Link from "next/link";
+import { useShallow } from "zustand/react/shallow";
+
+import { Button } from "@/components/ui/button";
 import { DATE_FORMAT } from "@/lib/constants";
+import { Activity } from "@/lib/schema";
+import { formatDuration } from "@/lib/utils";
+import { ROUTES } from "@/routing/constants";
+import { useActivitySelectionStore } from "@/store/activitySelection";
 
 declare module "@tanstack/react-table" {
   interface TableMeta<TData> {

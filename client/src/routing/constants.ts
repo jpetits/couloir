@@ -1,6 +1,6 @@
 import {
-  ActivityFilters,
   ActivityApiParamsSchema,
+  ActivityFilters,
   MapBounds,
   MapBoundsSchema,
 } from "@/lib/schema";
@@ -37,6 +37,11 @@ export const ROUTES = {
       `${process.env.NEXT_PUBLIC_API_URL}/api/public/assets/${imageId}/thumbnail?size=${size}`,
   },
   external: {
+    openMeteo: (
+      activity: { startLat: number; startLng: number },
+      date: string,
+    ) =>
+      `https://archive-api.open-meteo.com/v1/archive?latitude=${activity.startLat}&longitude=${activity.startLng}&start_date=${date}&end_date=${date}&hourly=temperature_2m,weathercode,windspeed_10m&timezone=UTC`,
     stravaAuth: (redirect: string) =>
       `https://www.strava.com/oauth/authorize?client_id=${process.env.NEXT_PUBLIC_STRAVA_CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(redirect)}&approval_prompt=force&scope=read,activity:read_all`,
   },

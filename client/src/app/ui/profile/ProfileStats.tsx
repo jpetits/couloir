@@ -1,26 +1,28 @@
 "use client";
 
 import React, { useMemo } from "react";
-import { Activity } from "@/lib/schema";
 import {
   ActivityCalendar,
-  BlockElement,
   Activity as BlockActivity,
+  BlockElement,
 } from "react-activity-calendar";
-import { useMapStore } from "@/store/mapStore";
+
 import { addDays, format, startOfWeek, subWeeks } from "date-fns";
 import { useTheme } from "next-themes";
-import {
-  MONTHS,
-  BLOCK_MARGIN,
-  BLOCK_SIZE,
-  BLOCK_TOTAL_SIZE,
-  DATE_FORMAT,
-} from "@/lib/constants";
+
 import {
   useLabelCalendar,
   useResizeCalendar,
 } from "@/app/hooks/useActivityCalendar";
+import {
+  BLOCK_MARGIN,
+  BLOCK_SIZE,
+  BLOCK_TOTAL_SIZE,
+  DATE_FORMAT,
+  MONTHS,
+} from "@/lib/constants";
+import { Activity } from "@/lib/schema";
+import { useMapStore } from "@/store/mapStore";
 
 const THEME_COLORS = {
   light: ["#e5e7eb", "#93c5fd", "#60a5fa", "#3b82f6", "#1d4ed8"],

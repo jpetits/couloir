@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
+
 import { useAuth } from "@clerk/nextjs";
+
 import { ROUTES } from "@/routing/constants";
+
 import { useApi } from "./useApi";
 
 export function useStravaSync() {

@@ -1,9 +1,10 @@
 "use client";
 
 import { Activity } from "@/lib/schema";
-import ProfileStats from "./ProfileStats";
-import ActivityStatsWrapper from "../stats/ActivityStatsWrapper";
 import { useMapStore } from "@/store/mapStore";
+
+import ActivityStatsWrapper from "../stats/ActivityStatsWrapper";
+import ProfileStats from "./ProfileStats";
 import YearButtons from "./YearButtons";
 
 export default function ProfileContent({

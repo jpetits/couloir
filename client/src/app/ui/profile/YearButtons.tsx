@@ -1,7 +1,7 @@
 "use client";
 
-import { Activity } from "@/lib/schema";
 import { Button } from "@/components/ui/button";
+import { Activity } from "@/lib/schema";
 import { useMapStore } from "@/store/mapStore";
 
 export default function YearButtons({
