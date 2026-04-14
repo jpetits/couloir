@@ -43,6 +43,10 @@ export default function ProfileStats({
   const setDateSelection = useMapStore((state) => state.setDateSelection);
   const activityIdList = useMapStore((state) => state.activityIdList);
 
+  const setSelectedActivityId = useMapStore(
+    (state) => state.setSelectedActivityId,
+  );
+
   const activityListFiltered = activityList.filter((a) =>
     activityIdList.has(a.id),
   );
@@ -125,6 +129,7 @@ export default function ProfileStats({
     e.stopPropagation();
 
     if (!hasActivity) return;
+    setSelectedActivityId(null);
     if (e.shiftKey && selection) {
       const [a, b] = [selection.start, date].sort();
       setDateSelection({ start: a, end: b });
@@ -152,6 +157,7 @@ export default function ProfileStats({
     const clickedDate = new Date(startDate);
     clickedDate.setDate(clickedDate.getDate() + weekOffset * 7);
     const year = clickedDate.getFullYear();
+    setSelectedActivityId(null);
     if (
       selection &&
       selection.start.startsWith(

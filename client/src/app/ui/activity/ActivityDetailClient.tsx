@@ -29,20 +29,24 @@ export default function ActivityDetailClient({
         hoveredPoint={hoveredPoint}
         onHover={handleHover}
       />
-      <DataChart
-        pointList={enrichedPoints}
-        onHover={handleHover}
-        hoveredPoint={hoveredPoint}
-        dataKey="elevation"
-        unit="m"
-      />
-      <DataChart
-        pointList={enrichedPoints}
-        onHover={handleHover}
-        hoveredPoint={hoveredPoint}
-        dataKey="speed"
-        unit="km/h"
-      />
+      <div className="mt-5">
+        <DataChart
+          pointList={enrichedPoints}
+          onHover={handleHover}
+          hoveredPoint={hoveredPoint}
+          dataKey="elevation"
+          unit="m"
+        />
+      </div>
+      <div className="mt-5">
+        <DataChart
+          pointList={enrichedPoints}
+          onHover={handleHover}
+          hoveredPoint={hoveredPoint}
+          dataKey="speed"
+          unit="km/h"
+        />
+      </div>
     </>
   );
 }

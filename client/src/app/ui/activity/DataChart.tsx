@@ -9,7 +9,6 @@ import {
   CartesianGrid,
   ReferenceLine,
   ResponsiveContainer,
-  Tooltip,
   XAxis,
   YAxis,
 } from "recharts";
@@ -42,7 +41,7 @@ export default function DataChart({
   const handleMouseLeave = useCallback(() => onHover(null), [onHover]);
 
   return (
-    <div className="w-full h-48 mt-5">
+    <div className="w-full h-48">
       <ResponsiveContainer width="100%" height="100%">
         <AreaChart
           data={pointList}
@@ -76,7 +75,7 @@ export default function DataChart({
             stroke="#6b7280"
             width={55}
           />
-          <Tooltip
+          {/* <Tooltip
             contentStyle={{
               backgroundColor: "#1f2937",
               border: "none",
@@ -84,7 +83,7 @@ export default function DataChart({
             }}
             labelFormatter={(v) => `${v} km`}
             formatter={(v) => (v != null ? [`${v} ${unit}`, "Speed"] : [])}
-          />
+          /> */}
           {hoveredPoint != null && (
             <ReferenceLine
               x={hoveredPoint.cumDistance}

@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useState } from "react";
-import { CircleMarker, Marker, ScaleControl } from "react-leaflet";
+import { Marker, ScaleControl } from "react-leaflet";
 import { MapContainer } from "react-leaflet/MapContainer";
 import { TileLayer } from "react-leaflet/TileLayer";
 
@@ -10,25 +10,13 @@ import L from "leaflet";
 import { useTheme } from "next-themes";
 
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
-import { DATE_FORMAT } from "@/lib/constants";
+import { DATE_FORMAT, HEATMAP_OPTIONS } from "@/lib/constants";
 import { Activity } from "@/lib/schema";
 import { useMapStore } from "@/store/mapStore";
 import { PointStats } from "@/types/activity";
 
-import ActivityWeather from "../activity/ActivityWeather";
+import ActivitySidePanel from "./ActivitySidePanel";
 import MapContent from "./MapContent";
-
-type HeatMapField = {
-  field: keyof Pick<PointStats, "speed" | "elevation" | "heartrate">;
-  unit: string;
-};
-
-const HEATMAP_OPTIONS: HeatMapField[] = [
-  { field: "speed", unit: "km/h" },
-  { field: "elevation", unit: "m" },
-  { field: "heartrate", unit: "bpm" },
-];
 
 const startLeafletIcon = L.divIcon({
   html: `<svg width="24" height="24" viewBox="0 0 24 24" 
@@ -62,10 +50,11 @@ export default function ActivityStats({
     field: keyof PointStats;
     unit: string;
   }>({ field: "speed", unit: "km/h" });
-  const [hoveredPoint, setHoveredPoint] = useState<PointStats | null>(null);
   const [hoveredActivity, setHoveredActivity] = useState<Activity | null>(null);
   const [showPhotos, setShowPhotos] = useState(false);
+  const [show3DView, setShow3DView] = useState(false);
   const setHoveredDate = useMapStore((state) => state.setHoveredDate);
+  const setHoveredPoint = useMapStore((state) => state.setHoveredPoint);
   const handleHover = useCallback(
     (point: PointStats | null, activityId?: string | null) => {
       setHoveredPoint(point);
@@ -100,39 +89,34 @@ export default function ActivityStats({
             {field.charAt(0).toUpperCase() + field.slice(1)}
           </Button>
         ))}
-        <Button
-          variant={showPhotos ? "default" : "outline"}
-          className="cursor-pointer ml-auto"
-          size="sm"
-          onClick={() => setShowPhotos((v) => !v)}
-        >
-          Photos
-        </Button>
+        <div className="ml-auto">
+          <Button
+            variant={showPhotos ? "default" : "outline"}
+            className="cursor-pointer ml-auto"
+            size="sm"
+            onClick={() => setShowPhotos((v) => !v)}
+          >
+            Photos
+          </Button>
+          <Button
+            variant={show3DView ? "default" : "outline"}
+            className="cursor-pointer ml-auto"
+            size="sm"
+            onClick={() => setShow3DView((v) => !v)}
+          >
+            3D View
+          </Button>
+        </div>
       </div>
 
       <div
-        className="relative"
+        className="relative overflow-hidden"
         onMouseLeave={() => {
           handleHover(null, null);
           setHoveredDate(null);
           setHoveredActivity(null);
         }}
       >
-        {hoveredActivity && (
-          <div className="absolute bottom-8 left-2 z-1000 pointer-events-none">
-            <Card className="p-3 shadow-lg text-sm min-w-48">
-              <p className="font-semibold">{hoveredActivity.name}</p>
-              <p className="text-muted-foreground text-xs mt-1">
-                {format(hoveredActivity.startDate, DATE_FORMAT)} ·{" "}
-                {(hoveredActivity.distance / 1000).toFixed(1)} km ·{" "}
-                {hoveredActivity.elevationGain} m d+
-              </p>
-              <p>
-                <ActivityWeather activity={hoveredActivity} />
-              </p>
-            </Card>
-          </div>
-        )}
         <MapContainer
           className="markercluster-map"
           bounds={activityListBounds}
@@ -174,21 +158,13 @@ export default function ActivityStats({
             </>
           )}
 
-          {hoveredPoint && (
-            <CircleMarker
-              center={[hoveredPoint.lat, hoveredPoint.lng]}
-              radius={8}
-              pathOptions={{
-                color: "#fff",
-                fillColor: "#3b82f6",
-                fillOpacity: 1,
-                weight: 2,
-              }}
-            />
-          )}
-
           <ScaleControl position="bottomleft" imperial={false} />
         </MapContainer>
+        {hoveredActivity && (
+          <ActivitySidePanel
+            activity={activityList.find((a) => a.id === hoveredActivity?.id)!}
+          />
+        )}
       </div>
     </div>
   );

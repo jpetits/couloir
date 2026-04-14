@@ -1,3 +1,5 @@
+import { PointStats } from "@/types/activity";
+
 export const MONTHS = [
   "Jan",
   "Fév",
@@ -43,3 +45,12 @@ export const WEATHER_CODES: Record<number, { label: string; icon: string }> = {
   96: { label: "Thunderstorm with hail", icon: "⛈️" },
   99: { label: "Thunderstorm with heavy hail", icon: "⛈️" },
 };
+type HeatMapField = {
+  field: keyof Pick<PointStats, "speed" | "elevation" | "heartrate">;
+  unit: string;
+};
+export const HEATMAP_OPTIONS: HeatMapField[] = [
+  { field: "speed", unit: "km/h" },
+  { field: "elevation", unit: "m" },
+  { field: "heartrate", unit: "bpm" },
+];

@@ -1,6 +1,12 @@
 "use client";
 
-import { CircleMarker, Marker, Polyline, Popup } from "react-leaflet";
+import {
+  CircleMarker,
+  Marker,
+  Polyline,
+  Popup,
+  useMapEvents,
+} from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 
 import { format } from "date-fns";
@@ -15,6 +21,8 @@ import { DATE_FORMAT, ZOOM_THRESHOLD } from "@/lib/constants";
 import { Activity } from "@/lib/schema";
 import { getClosestPoint } from "@/lib/utils";
 import { ROUTES } from "@/routing/constants";
+import { useShallow } from "zustand/react/shallow";
+
 import { useMapStore } from "@/store/mapStore";
 import { PointStats } from "@/types/activity";
 
@@ -35,11 +43,41 @@ export default function MapContent({
 }) {
   const zoom = useZoom();
 
-  const dateSelection = useMapStore((state) => state.dateSelection);
-  const yearSelection = useMapStore((state) => state.yearSelection);
+  const {
+    dateSelection,
+    yearSelection,
+    hoveredPoint,
+    hoveredActivityPoints,
+    selectedActivityId,
+    setHoveredPoint,
+    setHoveredActivityPoints,
+    setSelectedActivityId,
+  } = useMapStore(
+    useShallow((state) => ({
+      dateSelection: state.dateSelection,
+      yearSelection: state.yearSelection,
+      hoveredPoint: state.hoveredPoint,
+      hoveredActivityPoints: state.hoveredActivityPoints,
+      selectedActivityId: state.selectedActivityId,
+      setHoveredPoint: state.setHoveredPoint,
+      setHoveredActivityPoints: state.setHoveredActivityPoints,
+      setSelectedActivityId: state.setSelectedActivityId,
+    })),
+  );
 
   useFitBounds(activityList);
   const { activityListInBounds } = useFetchActivityListInBounds(activityList);
+
+  useMapEvents({
+    click: () => setSelectedActivityId(null),
+    zoomend: (e) => {
+      if (e.target.getZoom() < ZOOM_THRESHOLD && selectedActivityId) {
+        setSelectedActivityId(null);
+        setHoveredActivityPoints([]);
+        setHoveredPoint(null);
+      }
+    },
+  });
 
   const yearSelectionFilter = (activity: Activity) => {
     if (!yearSelection) return true;
@@ -128,29 +166,64 @@ export default function MapContent({
           ))}
         </MarkerClusterGroup>
       ) : (
-        filteredActivityList.map(({ id, points }) => (
-          <div key={id}>
-            <ActivityPolylines
-              key={id}
-              points={points}
-              heatMapField={heatMapField}
-              status={getStatus(id)}
-            />
-            <Polyline
-              positions={points}
-              color="transparent"
-              weight={20}
-              eventHandlers={{
-                mousemove: (e) => {
-                  handleHover(
-                    getClosestPoint(e.latlng.lat, e.latlng.lng, points),
-                    id,
-                  );
-                },
-              }}
-            />
-          </div>
-        ))
+        filteredActivityList.map(
+          ({ id, points }) =>
+            (selectedActivityId ? selectedActivityId === id : true) && (
+              <div key={id}>
+                <ActivityPolylines
+                  key={id}
+                  points={points}
+                  heatMapField={heatMapField}
+                  status={getStatus(id)}
+                />
+                <Polyline
+                  positions={points}
+                  color="transparent"
+                  weight={20}
+                  eventHandlers={{
+                    mousemove: (e) => {
+                      setHoveredActivityPoints(points);
+                      handleHover(
+                        getClosestPoint(e.latlng.lat, e.latlng.lng, points),
+                        id,
+                      );
+                    },
+                    click: (e) => {
+                      L.DomEvent.stopPropagation(e);
+                      if (selectedActivityId === id) {
+                        setSelectedActivityId(null);
+                      } else {
+                        setSelectedActivityId(id);
+                      }
+                    },
+                  }}
+                />
+              </div>
+            ),
+        )
+      )}
+      {hoveredPoint && (
+        <CircleMarker
+          center={[hoveredPoint.lat, hoveredPoint.lng]}
+          radius={8}
+          pathOptions={{
+            color: "#fff",
+            fillColor: "#3b82f6",
+            fillOpacity: 1,
+            weight: 2,
+          }}
+          eventHandlers={{
+            click: (e) => {
+              L.DomEvent.stopPropagation(e);
+              const id = hoveredActivityPoints[0]?.activityId ?? null;
+              if (selectedActivityId === id) {
+                setSelectedActivityId(null);
+              } else {
+                setSelectedActivityId(id);
+              }
+            },
+          }}
+        />
       )}
     </>
   );

@@ -20,6 +20,7 @@ A personal activity tracker for outdoor sports — skiing, surfing, trekking, an
 - Stats page with distance per month chart and personal records
 - Public profile at `couloir.work/u/[username]` — shareable activity map with activity heatmap calendar, date range selection, and map↔calendar sync
 - Immich integration — GPS-tagged photos synced from a self-hosted Immich instance, displayed as markers on the map at their capture location with thumbnail popups
+- Weather on activity — historical conditions (temperature, wind, icon) fetched from Open-Meteo at the activity's start location and time, no API key required
 - Dark/light mode with adaptive map tiles (Stadia Alidade Smooth Dark / OpenStreetMap)
 
 ## Roadmap
@@ -27,7 +28,6 @@ A personal activity tracker for outdoor sports — skiing, surfing, trekking, an
 - [ ] **Summit detection** — detect elevation peaks across activity tracks, reverse geocode to get peak names, display summit count on profile and markers on map
 - [ ] **Life map** — photos + activities at all zoom levels with clustering, turning the map into a personal geographic history
 - [ ] **Timeline scrubber** — replay geographic history month by month across activities and photos
-- [ ] **Weather on activity** — show conditions at time of activity using Open-Meteo historical API (free, no key)
 - [ ] **Personal records** — longest, highest, fastest, displayed on profile
 - [ ] **Activity type tagging** — ski/hike/bike/surf labels with per-type colors on map
 - [ ] **Route planning** — draw a route, get elevation profile, export as GPX
