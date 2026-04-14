@@ -9,9 +9,12 @@ export type ApiFetch = <T>(path: string, options?: RequestInit) => Promise<T>;
 
 export const deleteActivity = (
   apiFetch: ApiFetch,
-  id: string,
+  ids: string[],
 ): Promise<void> => {
-  return apiFetch(ROUTES.api.deleteActivity(id), { method: "DELETE" });
+  return apiFetch(ROUTES.api.deleteActivity, {
+    method: "DELETE",
+    body: JSON.stringify({ ids }),
+  });
 };
 
 export const postActivity = (

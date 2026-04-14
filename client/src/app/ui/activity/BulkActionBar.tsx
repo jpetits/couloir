@@ -14,7 +14,7 @@ export default function BulkActionBar() {
   if (selected.length === 0) return null;
 
   const deleteSelected = () => {
-    selected.forEach((id) => deleteActivity(id));
+    deleteActivity(selected);
     clear();
   };
 

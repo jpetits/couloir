@@ -2,7 +2,7 @@
 
 import { useRef } from "react";
 
-import type { InfiniteData, QueryKey } from "@tanstack/react-query";
+import type { InfiniteData } from "@tanstack/react-query";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
@@ -21,33 +21,33 @@ export function useDeleteActivity() {
   );
   let previousSnapshots = useRef<Map<string, unknown>>(new Map());
 
-  const cancel = (id: string) => {
-    const timer = pendingDeletes.current.get(id);
+  const cancel = (ids: string[]) => {
+    const key = ids.join(",");
+    const timer = pendingDeletes.current.get(key);
     if (timer) {
       clearTimeout(timer);
-      pendingDeletes.current.delete(id);
-      const snapshot = previousSnapshots.current.get(id) as
-        | [QueryKey, unknown][]
+      pendingDeletes.current.delete(key);
+      const snapshot = previousSnapshots.current.get(key) as
+        | [unknown[], InfiniteData<Activity[]> | undefined][]
         | undefined;
-      previousSnapshots.current.delete(id);
-      snapshot?.forEach(([key, data]) => queryClient.setQueryData(key, data));
-      queryClient.invalidateQueries({
-        queryKey,
-      });
+      snapshot?.forEach(([qKey, data]) => queryClient.setQueryData(qKey, data));
+      previousSnapshots.current.delete(key);
+      queryClient.invalidateQueries({ queryKey });
     }
   };
 
   return useMutation({
-    mutationFn: (id: string) =>
+    mutationFn: (ids: string[]) =>
       new Promise((resolve, reject) => {
+        const key = ids.join(",");
         const timer = setTimeout(() => {
-          pendingDeletes.current.delete(id);
-          deleteActivity(apiFetch, id).then(resolve).catch(reject);
+          pendingDeletes.current.delete(key);
+          deleteActivity(apiFetch, ids).then(resolve).catch(reject);
         }, deleteTimeout);
-        pendingDeletes.current.set(id, timer);
+        pendingDeletes.current.set(key, timer);
       }),
 
-    onMutate: async (id) => {
+    onMutate: async (ids: string[]) => {
       await queryClient.cancelQueries({
         queryKey,
       });
@@ -65,28 +65,39 @@ export function useDeleteActivity() {
           return {
             ...old,
             pages: old.pages.map((page) =>
-              page.filter((activity) => activity.id !== id),
+              page.filter((activity) => !ids.includes(activity.id)),
             ),
           };
         },
       );
 
-      toast("Activity deleted", {
-        action: { label: "Undo", onClick: () => cancel(id) },
-        duration: deleteTimeout,
-      });
+      toast(
+        ids.length > 1
+          ? `${ids.length} activities deleted`
+          : "Activity deleted",
+        {
+          action: { label: "Undo", onClick: () => cancel(ids) },
+          duration: deleteTimeout,
+        },
+      );
 
-      previousSnapshots.current.set(id, previousData);
+      previousSnapshots.current.set(ids.join(","), previousData);
 
       return { previousData };
     },
 
-    onError: (_err, _id, onMutateResult) => {
-      queryClient.setQueryData(queryKey, onMutateResult?.previousData);
+    onError: (_err, _ids, onMutateResult) => {
+      onMutateResult?.previousData.forEach(([key, data]) =>
+        queryClient.setQueryData(key, data),
+      );
+
+      toast("Failed to delete activity", {
+        duration: deleteTimeout,
+      });
     },
 
-    onSettled: (_data, _err, id) => {
-      previousSnapshots.current.delete(id);
+    onSettled: (_data, _err, ids) => {
+      previousSnapshots.current.delete(ids.join(","));
       queryClient.invalidateQueries({
         queryKey,
       });

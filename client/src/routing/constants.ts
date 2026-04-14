@@ -25,7 +25,7 @@ export const ROUTES = {
         zoom: zoom.toString(),
       })}`,
     patchActivity: (id: string) => `/api/activities/${id}`,
-    deleteActivity: (id: string) => `/api/activities/${id}`,
+    deleteActivity: `/api/activities`,
     postActivity: `/api/activities`,
     stravaSync: `/api/strava/sync`,
     stravaConnect: `/api/strava/callback`,

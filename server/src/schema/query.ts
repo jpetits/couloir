@@ -1,5 +1,5 @@
-import z from "zod";
 import { getTableColumns } from "drizzle-orm";
+import z from "zod";
 import { activities } from "../db/schema";
 
 const activityColumns = Object.keys(getTableColumns(activities));
@@ -18,6 +18,12 @@ export const activityFiltersSchema = z.object({
 });
 
 export type ActivityFilters = z.infer<typeof activityFiltersSchema>;
+
+export const deleteActivitiesSchema = z.object({
+  ids: z.array(z.string()).min(1),
+});
+
+export type DeleteActivitiesInput = z.infer<typeof deleteActivitiesSchema>;
 
 export const patchActivitiesSchema = z.object({
   name: z.string().optional(),

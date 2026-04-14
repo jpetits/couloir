@@ -1,7 +1,6 @@
 "use client";
 
-import React from "react";
-import { useState } from "react";
+import React, { useState } from "react";
 
 import {
   ColumnDef,
@@ -159,7 +158,7 @@ export function DataTable<TData extends { id: string }, TValue>({
         <DeleteDialog
           display={!!selectedActivityToDelete}
           onDelete={() => {
-            deleteActivity(selectedActivityToDelete.id);
+            deleteActivity([selectedActivityToDelete.id]);
             setSelectedActivityToDelete(null);
           }}
           onCancel={() => setSelectedActivityToDelete(null)}

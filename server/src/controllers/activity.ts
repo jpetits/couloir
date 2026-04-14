@@ -1,13 +1,14 @@
-import type { Request, Response, NextFunction, RequestHandler } from "express";
-import * as activityService from "../services/activity";
+import type { NextFunction, Request, RequestHandler, Response } from "express";
+import { z } from "zod";
 import asyncHandler from "../middleware/asyncHandler";
-import { AppError } from "../types/appError";
 import type {
   ActivityFilters,
+  deleteActivitiesSchema,
   MapBounds,
   patchActivitiesSchema,
 } from "../schema/query";
-import { z } from "zod";
+import * as activityService from "../services/activity";
+import { AppError } from "../types/appError";
 
 //@route GET /activities
 //@desc Get all activities
@@ -77,10 +78,12 @@ export const patchActivity: RequestHandler = asyncHandler(
 // @access Public
 export const deleteActivity: RequestHandler = asyncHandler(
   async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.params.id as string;
+    const { ids } = req.validatedBody as z.infer<typeof deleteActivitiesSchema>;
 
-    await activityService.deleteActivity(id, req.user.id);
-    res.status(200).json({ id });
+    await Promise.all(
+      ids.map((id) => activityService.deleteActivity(id, req.user.id)),
+    );
+    res.status(200).json({ ids });
   },
 );
 
