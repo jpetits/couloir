@@ -19,7 +19,7 @@ A personal activity tracker for outdoor sports — skiing, surfing, trekking, an
 - Bulk selection and delete
 - Stats page with distance per month chart and personal records
 - Public profile at `couloir.work/u/[username]` — shareable activity map with activity heatmap calendar, date range selection, and map↔calendar sync
-- Immich integration — GPS-tagged photos synced from a self-hosted Immich instance, displayed as markers on the map at their capture location with thumbnail popups
+- Immich integration — GPS-tagged photos synced from a self-hosted Immich instance, displayed as markers on the map at their capture location with thumbnail popups; automatically re-synced on every Strava activity import/webhook call
 - Weather on activity — historical conditions (temperature, wind, icon) fetched from Open-Meteo at the activity's start location and time, no API key required
 - Dark/light mode with adaptive map tiles (Stadia Alidade Smooth Dark / OpenStreetMap)
 
