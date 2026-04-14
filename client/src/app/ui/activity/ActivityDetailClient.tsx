@@ -2,7 +2,7 @@
 
 import { useCallback, useState } from "react";
 
-import type { Activity } from "@/lib/schema";
+import type { Activity, Point } from "@/lib/schema";
 import { enrichPointList } from "@/lib/utils";
 import type { PointStats } from "@/types/activity";
 
@@ -12,7 +12,7 @@ import DataChart from "./DataChart";
 export default function ActivityDetailClient({
   activity,
 }: {
-  activity: Activity;
+  activity: Activity & { points: Point[] };
 }) {
   const [hoveredPoint, setHoveredPoint] = useState<PointStats | null>(null);
   const handleHover = useCallback(
@@ -20,7 +20,7 @@ export default function ActivityDetailClient({
     [],
   );
 
-  const enrichedPoints = enrichPointList(activity.points!, activity);
+  const enrichedPoints = enrichPointList(activity.points, activity);
 
   return (
     <>

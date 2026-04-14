@@ -41,7 +41,7 @@ export default async function ActivityPage({
         <ActivityImages activity={activity} />
       </Suspense>
       {activity.points && activity.points.length > 0 && (
-        <ActivityDetailClient activity={activity} />
+        <ActivityDetailClient activity={{ ...activity, points: activity.points }} />
       )}
     </main>
   );
