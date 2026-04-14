@@ -11,7 +11,7 @@ A personal activity tracker for outdoor sports — skiing, surfing, trekking, an
 - Upload `.fit` files from GPS devices
 - Sync activities from Strava (OAuth + background sync with real-time WebSocket progress)
 - Strava webhook — new activities appear automatically when recorded
-- Interactive map with multi-activity overlay and hover to explore each track
+- Interactive map with multi-activity overlay and hover to explore each track — click any track to open a side panel with stats, elevation chart, and a link to the full activity
 - Speed heatmap — track segments colored by speed (blue → green → yellow → red)
 - Cluster view at low zoom, switches to heatmap tracks when zoomed in with viewport-based lazy loading
 - Elevation and speed charts synced with the map cursor
