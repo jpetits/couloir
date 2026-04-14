@@ -11,6 +11,7 @@ import MarkerClusterGroup from "react-leaflet-cluster";
 
 import { format } from "date-fns";
 import L from "leaflet";
+import { useShallow } from "zustand/react/shallow";
 
 import {
   useFetchActivityListInBounds,
@@ -21,8 +22,6 @@ import { DATE_FORMAT, ZOOM_THRESHOLD } from "@/lib/constants";
 import { Activity } from "@/lib/schema";
 import { getClosestPoint } from "@/lib/utils";
 import { ROUTES } from "@/routing/constants";
-import { useShallow } from "zustand/react/shallow";
-
 import { useMapStore } from "@/store/mapStore";
 import { PointStats } from "@/types/activity";
 
@@ -32,13 +31,11 @@ export default function MapContent({
   activityList,
   handleHover,
   hoveredActivity,
-  heatMapField,
   showPhotos,
 }: {
   activityList: Activity[];
   handleHover: (point: PointStats | null, activity?: string | null) => void;
   hoveredActivity: Activity | null;
-  heatMapField: { field: keyof PointStats; unit: string };
   showPhotos: boolean;
 }) {
   const zoom = useZoom();
@@ -52,6 +49,7 @@ export default function MapContent({
     setHoveredPoint,
     setHoveredActivityPoints,
     setSelectedActivityId,
+    heatMapField,
   } = useMapStore(
     useShallow((state) => ({
       dateSelection: state.dateSelection,
@@ -62,6 +60,7 @@ export default function MapContent({
       setHoveredPoint: state.setHoveredPoint,
       setHoveredActivityPoints: state.setHoveredActivityPoints,
       setSelectedActivityId: state.setSelectedActivityId,
+      heatMapField: state.heatMapField,
     })),
   );
 

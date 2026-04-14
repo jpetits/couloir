@@ -18,6 +18,9 @@ export async function apiFetch<T>(
     },
   });
 
-  if (!res.ok) throw new Error(await res.text());
+  if (!res.ok) {
+    const text = await res.text();
+    throw new Error(text || `HTTP ${res.status} ${res.statusText}`);
+  }
   return res.json();
 }

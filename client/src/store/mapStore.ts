@@ -19,6 +19,8 @@ export interface MapStore {
   setHoveredPoint: (point: PointStats | null) => void;
   selectedActivityId: string | null;
   setSelectedActivityId: (id: string | null) => void;
+  heatMapField: { field: keyof PointStats; unit: string };
+  setHeatMapField: (field: keyof PointStats, unit: string) => void;
 }
 
 export const useMapStore = create<MapStore>((set) => ({
@@ -37,4 +39,6 @@ export const useMapStore = create<MapStore>((set) => ({
   setYearSelection: (yearSelection) => set({ yearSelection }),
   setHoveredActivityPoints: (points) => set({ hoveredActivityPoints: points }),
   setSelectedActivityId: (id) => set({ selectedActivityId: id }),
+  heatMapField: { field: "speed", unit: "km/h" },
+  setHeatMapField: (field, unit) => set({ heatMapField: { field, unit } }),
 }));

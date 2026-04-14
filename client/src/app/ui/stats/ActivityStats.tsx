@@ -8,6 +8,7 @@ import { TileLayer } from "react-leaflet/TileLayer";
 import { format } from "date-fns";
 import L from "leaflet";
 import { useTheme } from "next-themes";
+import { useShallow } from "zustand/react/shallow";
 
 import { Button } from "@/components/ui/button";
 import { DATE_FORMAT, HEATMAP_OPTIONS } from "@/lib/constants";
@@ -46,15 +47,18 @@ export default function ActivityStats({
   activityList: Activity[];
 }) {
   const { resolvedTheme } = useTheme();
-  const [heatMapField, setHeatMapField] = useState<{
-    field: keyof PointStats;
-    unit: string;
-  }>({ field: "speed", unit: "km/h" });
   const [hoveredActivity, setHoveredActivity] = useState<Activity | null>(null);
   const [showPhotos, setShowPhotos] = useState(false);
   const [show3DView, setShow3DView] = useState(false);
-  const setHoveredDate = useMapStore((state) => state.setHoveredDate);
-  const setHoveredPoint = useMapStore((state) => state.setHoveredPoint);
+  const { setHoveredDate, setHoveredPoint, heatMapField, setHeatMapField } =
+    useMapStore(
+      useShallow((state) => ({
+        setHoveredDate: state.setHoveredDate,
+        setHoveredPoint: state.setHoveredPoint,
+        heatMapField: state.heatMapField,
+        setHeatMapField: state.setHeatMapField,
+      })),
+    );
   const handleHover = useCallback(
     (point: PointStats | null, activityId?: string | null) => {
       setHoveredPoint(point);
@@ -84,7 +88,7 @@ export default function ActivityStats({
             variant={heatMapField.field === field ? "default" : "outline"}
             className="cursor-pointer"
             size="sm"
-            onClick={() => setHeatMapField({ field, unit })}
+            onClick={() => setHeatMapField(field, unit)}
           >
             {field.charAt(0).toUpperCase() + field.slice(1)}
           </Button>
@@ -137,7 +141,6 @@ export default function ActivityStats({
             handleHover={handleHover}
             hoveredActivity={hoveredActivity}
             showPhotos={showPhotos}
-            heatMapField={heatMapField}
           />
 
           {hoveredActivity && (

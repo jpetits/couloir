@@ -1,9 +1,8 @@
 "use client";
 
-import { useState } from "react";
-
 import { format } from "date-fns";
 import Link from "next/link";
+import { useShallow } from "zustand/react/shallow";
 
 import { Button } from "@/components/ui/button";
 import { DATE_FORMAT, HEATMAP_OPTIONS } from "@/lib/constants";
@@ -11,7 +10,6 @@ import { Activity } from "@/lib/schema";
 import { formatDuration } from "@/lib/utils";
 import { ROUTES } from "@/routing/constants";
 import { useMapStore } from "@/store/mapStore";
-import { PointStats } from "@/types/activity";
 
 import ActivityWeather from "../activity/ActivityWeather";
 import DataChart from "../activity/DataChart";
@@ -24,13 +22,16 @@ export default function ActivitySidePanel({
   const hoveredActivityPoints = useMapStore(
     (state) => state.hoveredActivityPoints,
   );
-  const hoveredPoint = useMapStore((state) => state.hoveredPoint);
-  const setHoveredPoint = useMapStore((state) => state.setHoveredPoint);
 
-  const [heatMapField, setHeatMapField] = useState<{
-    field: keyof PointStats;
-    unit: string;
-  }>({ field: "speed", unit: "km/h" });
+  const { hoveredPoint, setHoveredPoint, heatMapField, setHeatMapField } =
+    useMapStore(
+      useShallow((state) => ({
+        hoveredPoint: state.hoveredPoint,
+        setHoveredPoint: state.setHoveredPoint,
+        heatMapField: state.heatMapField,
+        setHeatMapField: state.setHeatMapField,
+      })),
+    );
 
   return (
     <div className="absolute top-0 right-0 h-full w-80 bg-background border-l shadow-xl z-1000 flex flex-col">
@@ -77,7 +78,7 @@ export default function ActivitySidePanel({
               variant={heatMapField.field === field ? "default" : "outline"}
               className="cursor-pointer  flex-1"
               size="sm"
-              onClick={() => setHeatMapField({ field, unit })}
+              onClick={() => setHeatMapField(field, unit)}
             >
               {field.charAt(0).toUpperCase() + field.slice(1)}
             </Button>
