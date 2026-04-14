@@ -1,9 +1,10 @@
-import { userRepository } from "../repositories/user";
+import type { activities, users } from "../db/schema";
 import { activityRepository } from "../repositories/activity";
 import { pointRepository } from "../repositories/point";
-import { parseStravaActivity, parseStravaStream } from "./stravaParser";
-import type { users, activities } from "../db/schema";
+import { userRepository } from "../repositories/user";
+import { syncImmichAssets } from "./immich";
 import { processQueue } from "./queue";
+import { parseStravaActivity, parseStravaStream } from "./stravaParser";
 import { sendMessage } from "./websocket";
 
 export const handleStravaCallback = async (code: string, userId: string) => {
@@ -206,6 +207,20 @@ const queueActivitiesForProcessing = async (
   });
 };
 
+const createOrUpdateActivityListWithPoints = async (
+  activityList: any[],
+  user: typeof users.$inferSelect,
+) => {
+  const allInserted = await createOrUpdateActivities(activityList, user.id);
+
+  await queueActivitiesForProcessing(allInserted, user);
+  if (allInserted.length > 0 && process.env.IMMICH_URL) {
+    await syncImmichAssets(user.id, allInserted);
+  }
+
+  return allInserted;
+};
+
 export const syncStravaActivities = async (user: typeof users.$inferSelect) => {
   sendMessage(user.id, {
     type: "sync:start",
@@ -218,9 +233,10 @@ export const syncStravaActivities = async (user: typeof users.$inferSelect) => {
 
     const allStravaActivities = await batchFetchStravaActivities(accessToken);
 
-    allInserted = await createOrUpdateActivities(allStravaActivities, user.id);
-
-    await queueActivitiesForProcessing(allInserted, user);
+    allInserted = await createOrUpdateActivityListWithPoints(
+      allStravaActivities,
+      user,
+    );
   } catch (error) {
     console.error("Error syncing Strava activities:", error);
     sendMessage(user.id, {
@@ -269,7 +285,5 @@ export const handleStravaWebhook = async (
 
   const stravaActivity = await activityResponse.json();
 
-  const allInserted = await createOrUpdateActivities([stravaActivity], user.id);
-
-  await queueActivitiesForProcessing(allInserted, user);
+  await createOrUpdateActivityListWithPoints([stravaActivity], user);
 };
