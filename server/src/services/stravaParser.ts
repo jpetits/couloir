@@ -1,7 +1,7 @@
-import { point, distance } from "@turf/turf";
-import type { NewPoint } from "../types/types";
+import { distance, point } from "@turf/turf";
+import type { NewPoint, StravaActivity, StravaStream } from "../types/types";
 
-export const parseStravaActivity = (stravaActivity: any) => ({
+export const parseStravaActivity = (stravaActivity: StravaActivity) => ({
   name: stravaActivity.name,
   startDate: new Date(stravaActivity.start_date),
   duration: stravaActivity.elapsed_time, // seconds
@@ -23,13 +23,13 @@ export const parseStravaActivity = (stravaActivity: any) => ({
 
 export const parseStravaStream = (
   activityId: string,
-  stravaStream: any,
+  stravaStream: StravaStream,
 ): NewPoint[] => {
-  if (!stravaStream || !stravaStream.latlng || !stravaStream.latlng.data) {
+  if (!stravaStream?.latlng?.data) {
     return [];
   }
 
-  const points = stravaStream.latlng.data.map((point: any, index: number) => ({
+  const points = stravaStream.latlng.data.map((point, index) => ({
     activityId,
     lat: point[0],
     lng: point[1],

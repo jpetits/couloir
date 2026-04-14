@@ -1,14 +1,14 @@
+import { relations } from "drizzle-orm";
 import {
-  pgTable,
-  uuid,
-  text,
-  real,
-  timestamp,
-  numeric,
   boolean,
   index,
+  numeric,
+  pgTable,
+  real,
+  text,
+  timestamp,
+  uuid,
 } from "drizzle-orm/pg-core";
-import { relations } from "drizzle-orm";
 
 export const activities = pgTable(
   "activities",
@@ -33,6 +33,7 @@ export const activities = pgTable(
     startLng: real("start_lng"),
     endLat: real("end_lat"),
     endLng: real("end_lng"),
+    weather: text("weather").default(""), // JSON stringified weather data at the start of the activity
   },
   (table) => [
     index("activities_user_id_idx").on(table.userId),
@@ -43,6 +44,7 @@ export const activities = pgTable(
 export const activitiesRelations = relations(activities, ({ many }) => ({
   points: many(points),
   images: many(images),
+  summits: many(summits),
 }));
 
 export const points = pgTable(
@@ -105,6 +107,25 @@ export const images = pgTable("images", {
 export const imagesRelations = relations(images, ({ one }) => ({
   activity: one(activities, {
     fields: [images.activityId],
+    references: [activities.id],
+  }),
+}));
+
+export const summits = pgTable("summits", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  activityId: uuid("activity_id")
+    .notNull()
+    .references(() => activities.id, { onDelete: "cascade" }),
+  lat: real("lat").notNull(),
+  lng: real("lng").notNull(),
+  elevation: real("elevation").notNull(), // in meters
+  osmId: text("osm_id").notNull().unique(), // OpenStreetMap ID for the summit
+  name: text("name"), // peak name from OSM
+});
+
+export const summitsRelations = relations(summits, ({ one }) => ({
+  activity: one(activities, {
+    fields: [summits.activityId],
     references: [activities.id],
   }),
 }));

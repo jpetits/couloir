@@ -41,6 +41,17 @@ const stopLeafletIcon = L.divIcon({
   iconAnchor: [10, 10],
 });
 
+const summitLeafletIcon = L.divIcon({
+  html: `<svg width="24" height="24" viewBox="0 0 24 24" 
+  xmlns="http://www.w3.org/2000/svg">                    
+    <circle cx="12" cy="12" r="12" fill="#fbbf24"/>      
+    <polygon points="12,6 16,14 8,14" fill="white"/>    
+  </svg>`,
+  className: "",
+  iconSize: [20, 20],
+  iconAnchor: [10, 10],
+});
+
 export default function ActivityStats({
   activityList,
 }: {
@@ -158,6 +169,16 @@ export default function ActivityStats({
                 ]}
                 icon={startLeafletIcon}
               />
+              {hoveredActivity.summits?.map((summit) => {
+                console.log("Summit:", summit);
+                return (
+                  <Marker
+                    key={hoveredActivity.id + "-summit-" + summit.id}
+                    position={[summit.lat, summit.lng]}
+                    icon={summitLeafletIcon}
+                  />
+                );
+              })}
             </>
           )}
 

@@ -2,9 +2,12 @@ import type { activities, users } from "../db/schema";
 import { activityRepository } from "../repositories/activity";
 import { pointRepository } from "../repositories/point";
 import { userRepository } from "../repositories/user";
+import type { StravaActivity, StravaStream } from "../types/types";
 import { syncImmichAssets } from "./immich";
 import { processQueue } from "./queue";
 import { parseStravaActivity, parseStravaStream } from "./stravaParser";
+import { summitsDetect } from "./summitsDetect";
+import { fetchWeatherForActivity } from "./weather";
 import { sendMessage } from "./websocket";
 
 export const handleStravaCallback = async (code: string, userId: string) => {
@@ -36,13 +39,13 @@ export const handleStravaCallback = async (code: string, userId: string) => {
 };
 
 const createOrUpdateActivities = async (
-  stravaActivities: any[],
+  stravaActivities: StravaActivity[],
   userId: string,
 ) => {
   const existing = await activityRepository.findStravaIdsByUser(userId);
   const existingIds = new Set(existing.map((a) => a.stravaActivityId));
 
-  const activitiesToInsert = stravaActivities
+  const parsed = stravaActivities
     .filter((a) => !existingIds.has(String(a.id)))
     .map((a) => ({
       ...parseStravaActivity(a),
@@ -50,9 +53,16 @@ const createOrUpdateActivities = async (
       stravaActivityId: String(a.id),
     }));
 
-  if (activitiesToInsert.length === 0) {
+  if (parsed.length === 0) {
     return [];
   }
+
+  const activitiesToInsert = await Promise.all(
+    parsed.map(async (activity) => ({
+      ...activity,
+      weather: JSON.stringify(await fetchWeatherForActivity(activity)),
+    })),
+  );
 
   return await activityRepository.createMany(activitiesToInsert);
 };
@@ -105,9 +115,9 @@ const getOrRefreshStravaAccessToken = async (
 
 const batchFetchStravaActivities = async (
   accessToken: string,
-): Promise<any[]> => {
+): Promise<StravaActivity[]> => {
   let page = 1;
-  let allStravaActivities: any[] = [];
+  let allStravaActivities: StravaActivity[] = [];
 
   while (true) {
     const activitiesResponse = await fetch(
@@ -155,7 +165,7 @@ const fetchStreamsForActivity = async (
     );
   }
 
-  return await streamsResponse.json();
+  return (await streamsResponse.json()) as StravaStream;
 };
 
 const queueActivitiesForProcessing = async (
@@ -184,21 +194,27 @@ const queueActivitiesForProcessing = async (
       return;
     }
 
-    await pointRepository.create(points);
+    const pointList = await pointRepository.create(points);
 
-    const minSpeed = Math.min(...points.map((p) => p.speed));
-    const minElevation = Math.min(...points.map((p) => p.elevation));
-    const maxElevation = Math.max(...points.map((p) => p.elevation));
-    const maxHeartrate = Math.max(...points.map((p) => p.heartrate));
-    const minHeartrate = Math.min(...points.map((p) => p.heartrate));
+    const minSpeed = Math.min(...pointList.map((p) => p.speed));
+    const minElevation = Math.min(...pointList.map((p) => p.elevation));
+    const maxElevation = Math.max(...pointList.map((p) => p.elevation));
+    const maxHeartrate = Math.max(...pointList.map((p) => p.heartrate));
+    const minHeartrate = Math.min(...pointList.map((p) => p.heartrate));
 
-    await activityRepository.update(stravaActivity.id, user.id, {
-      minSpeed,
-      minElevation,
-      maxElevation,
-      maxHeartrate,
-      minHeartrate,
-    });
+    const activity = await activityRepository.update(
+      stravaActivity.id,
+      user.id,
+      {
+        minSpeed,
+        minElevation,
+        maxElevation,
+        maxHeartrate,
+        minHeartrate,
+      },
+    );
+
+    await summitsDetect(user, activity, pointList);
 
     sendMessage(user.id, {
       type: "sync:progress",
@@ -208,13 +224,13 @@ const queueActivitiesForProcessing = async (
 };
 
 const createOrUpdateActivityListWithPoints = async (
-  activityList: any[],
+  activityList: StravaActivity[],
   user: typeof users.$inferSelect,
 ) => {
   const allInserted = await createOrUpdateActivities(activityList, user.id);
 
   await queueActivitiesForProcessing(allInserted, user);
-  if (allInserted.length > 0 && process.env.IMMICH_URL) {
+  if (allInserted.length > 0) {
     await syncImmichAssets(user.id, allInserted);
   }
 

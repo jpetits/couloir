@@ -12,7 +12,8 @@
     "lint": "eslint . --ext .ts",
     "start": "tsx server.ts",
     "knip": "pnpm dlx knip --config knip.json",
-    "immich:sync": "tsx src/scripts/syncImmichAssets.ts"
+    "immich:sync": "tsx src/scripts/syncImmichAssets.ts",
+    "summits:detect": "tsx src/scripts/detectSummits.ts"
   },
   "keywords": [],
   "author": "",

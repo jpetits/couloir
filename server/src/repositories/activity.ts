@@ -1,16 +1,16 @@
-import { activities } from "../db/schema";
 import {
-  eq,
-  sum,
-  count,
-  lte,
-  gte,
   and,
-  desc,
   asc,
+  count,
+  desc,
+  eq,
   getTableColumns,
+  gte,
+  lte,
+  sum,
 } from "drizzle-orm";
 import { db } from "../db/index";
+import { activities } from "../db/schema";
 import type { ActivityFilters } from "../schema/query";
 
 export const activityRepository = {
@@ -56,7 +56,7 @@ export const activityRepository = {
   findById: async (id: string) => {
     return db.query.activities.findFirst({
       where: (activities, { eq }) => eq(activities.id, id),
-      with: { points: true, images: true },
+      with: { points: true, images: true, summits: true },
     });
   },
   create: async (data: typeof activities.$inferInsert) => {
@@ -101,7 +101,7 @@ export const activityRepository = {
   listWithPoints: async (userId: string) => {
     return db.query.activities.findMany({
       where: (activities, { eq }) => eq(activities.userId, userId),
-      with: { points: true, images: true },
+      with: { points: true, images: true, summits: true },
     });
   },
   findByStravaId: async (stravaActivityId: string, userId: string) => {
@@ -122,7 +122,7 @@ export const activityRepository = {
   listByUserId: async (userId: string) => {
     return db.query.activities.findMany({
       where: (activities, { eq }) => eq(activities.userId, userId),
-      with: { images: true },
+      with: { images: true, summits: true },
       orderBy: (activities, { desc }) => [desc(activities.startDate)],
     });
   },

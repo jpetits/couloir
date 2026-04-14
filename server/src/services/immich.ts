@@ -10,6 +10,11 @@ async function fetchImmichAssetsWithGps(takenAfter?: Date, takenBefore?: Date) {
   let hasMore = true;
   const results = [];
 
+  if (!IMMICH_URL || !IMMICH_API_KEY) {
+    console.warn("IMMICH_URL or IMMICH_API_KEY not set, skipping Immich sync");
+    return [];
+  }
+
   while (hasMore) {
     const res = await fetch(`${IMMICH_URL}/api/search/metadata`, {
       method: "POST",

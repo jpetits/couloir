@@ -39,6 +39,6 @@ export const useMapStore = create<MapStore>((set) => ({
   setYearSelection: (yearSelection) => set({ yearSelection }),
   setHoveredActivityPoints: (points) => set({ hoveredActivityPoints: points }),
   setSelectedActivityId: (id) => set({ selectedActivityId: id }),
-  heatMapField: { field: "speed", unit: "km/h" },
+  heatMapField: { field: "elevation", unit: "m" },
   setHeatMapField: (field, unit) => set({ heatMapField: { field, unit } }),
 }));

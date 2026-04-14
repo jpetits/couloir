@@ -42,7 +42,7 @@ export default function ActivitySidePanel({
         </p>
       </div>
 
-      <div className="p-4 flex flex-col gap-3 text-sm">
+      <div className="p-4 flex flex-col gap-3 text-sm flex-1 overflow-y-auto">
         <p className="text-muted-foreground">
           <ActivityWeather activity={activity} />
         </p>
@@ -91,6 +91,20 @@ export default function ActivitySidePanel({
           dataKey={heatMapField.field}
           unit={heatMapField.unit}
         />
+        <div className="flex gap-2">
+          {activity.summits &&
+            activity.summits.length > 0 &&
+            activity.summits.map((summit) => (
+              <div key={summit.id} className="bg-muted rounded p-2 flex-1">
+                <p className="font-semibold">{summit.name}</p>
+                <p className="text-sm text-muted-foreground">
+                  {summit.elevation} m
+                </p>
+              </div>
+            ))}
+        </div>
+      </div>
+      <div className="p-4 border-t">
         <Link href={ROUTES.activity(activity.id)}>
           <Button className="w-full cursor-pointer" size="sm">
             Voir l'activité

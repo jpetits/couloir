@@ -1,5 +1,32 @@
 import { activities, points } from "../db/schema";
 
+export interface StravaActivity {
+  id: number;
+  name: string;
+  start_date: string;
+  duration: number;
+  elapsed_time: number;
+  distance: number;
+  total_elevation_gain: number;
+  max_speed: number;
+  max_heartrate?: number;
+  start_latlng?: [number, number];
+  end_latlng?: [number, number];
+}
+
+interface StravaStreamData<T> {
+  data: T[];
+}
+
+export interface StravaStream {
+  latlng?: StravaStreamData<[number, number]>;
+  altitude?: StravaStreamData<number>;
+  velocity_smooth?: StravaStreamData<number>;
+  time?: StravaStreamData<number>;
+  distance?: StravaStreamData<number>;
+  heartrate?: StravaStreamData<number>;
+}
+
 export interface FitRecord {
   position_lat?: number;
   position_long?: number;

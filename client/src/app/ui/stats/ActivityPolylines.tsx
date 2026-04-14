@@ -5,6 +5,7 @@ import { Polyline } from "react-leaflet";
 
 import L from "leaflet";
 
+import { useZoom } from "@/app/hooks/useLeaflet";
 import { PointStats } from "@/types/activity";
 
 const canvas = L.canvas({ padding: 0.5 });
@@ -21,6 +22,7 @@ const ActivityPolylines = memo(
     status: HoverStatus;
     heatMapField: { field: keyof PointStats; unit: string };
   }) => {
+    const zoom = useZoom();
     const borderRef = useRef<L.Polyline>(null);
     useEffect(() => {
       if (status === "hovered") borderRef.current?.bringToFront(); //leaflet doesn't handle z-index on canvas layers, so we need to manually bring the hovered polyline to front
@@ -47,16 +49,18 @@ const ActivityPolylines = memo(
 
     return (
       <>
-        <Polyline
-          key={`border-${points[0]!.id}`} //border polyline to create a contrast and make it more visible when hovered or dimmed
-          renderer={canvas}
-          positions={segments.flatMap((s) => s || [])}
-          weight={status === "dimmed" ? 3 : 6}
-          pathOptions={{
-            color: "lightgray",
-            opacity: status === "dimmed" ? 0.3 : 1,
-          }}
-        />
+        {zoom < 14 && (
+          <Polyline
+            key={`border-${points[0]!.id}`} //border polyline to create a contrast and make it more visible when hovered or dimmed
+            renderer={canvas}
+            positions={segments.flatMap((s) => s || [])}
+            weight={status === "dimmed" ? 3 : 6}
+            pathOptions={{
+              color: "lightgray",
+              opacity: status === "dimmed" ? 0.3 : 1,
+            }}
+          />
+        )}
         {segments.map((pos, i) => (
           <Polyline
             ref={borderRef}
