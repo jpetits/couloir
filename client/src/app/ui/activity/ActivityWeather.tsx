@@ -1,53 +1,44 @@
+"use client";
+
+import { useEffect, useState } from "react";
+
 import { format } from "date-fns";
 
 import { DATE_FORMAT, WEATHER_CODES } from "@/lib/constants";
 import type { Activity } from "@/lib/schema";
 import { ROUTES } from "@/routing/constants";
 
-export default async function ActivityWeather({
-  activity,
-}: {
-  activity: Activity;
-}) {
-  let weather: {
-    temp?: number;
-    windspeed?: number;
-    code?: number;
-    weather: { label: string; icon: string };
-  } | null = {
-    weather: {
-      label: "Unknown",
-      icon: "🌡️",
-    },
-  };
+type Weather = { temp: number; windspeed: number; code: number };
 
-  if (activity.startDate && activity.startLat && activity.startLng) {
+export default function ActivityWeather({ activity }: { activity: Activity }) {
+  const [weather, setWeather] = useState<Weather | null>(null);
+
+  useEffect(() => {
+    if (!activity.startDate || !activity.startLat || !activity.startLng) return;
     const date = format(activity.startDate, DATE_FORMAT);
-
-    const res = await fetch(
+    fetch(
       ROUTES.external.openMeteo(
         activity as { startLat: number; startLng: number },
         date,
       ),
-      { next: { revalidate: 86400 } },
     )
       .then((r) => r.json())
+      .then((res) => {
+        if (!res?.hourly) return;
+        const hour = activity.startDate!.getUTCHours();
+        setWeather({
+          temp: res.hourly.temperature_2m[hour],
+          windspeed: res.hourly.windspeed_10m[hour],
+          code: res.hourly.weathercode[hour],
+        });
+      })
       .catch(() => null);
+  }, [activity.id]);
 
-    if (res?.hourly) {
-      const hour = activity.startDate.getUTCHours();
-      weather = {
-        temp: res.hourly.temperature_2m[hour],
-        windspeed: res.hourly.windspeed_10m[hour],
-        code: res.hourly.weathercode[hour],
-        weather: WEATHER_CODES[res.hourly.weathercode[hour]],
-      };
-    }
-  }
+  if (!weather) return null;
 
+  const w = WEATHER_CODES[weather.code] ?? { label: "Unknown", icon: "🌡️" };
   return (
-    <>
-      {` · ${weather?.weather.icon} ${weather?.weather.label} · ${weather?.temp}°C · ${weather?.windspeed} km/h`}
-    </>
+    <>{`${w.icon} ${w.label} · ${weather.temp}°C · ${weather.windspeed} km/h`}</>
   );
 }

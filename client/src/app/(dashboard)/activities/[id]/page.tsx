@@ -25,9 +25,7 @@ export default async function ActivityPage({
       <ActivityName activity={activity} />
       <p>
         {format(activity.startDate, DATE_FORMAT)}
-        <Suspense fallback={<span>Loading weather...</span>}>
-          <ActivityWeather activity={activity} />
-        </Suspense>
+        <ActivityWeather activity={activity} />
       </p>
       <ul>
         <li>Durée : {formatDuration(activity.duration, false)}</li>

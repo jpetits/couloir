@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import {
   ActivityCalendar,
   Activity as BlockActivity,
@@ -35,6 +35,8 @@ export default function ProfileStats({
   activityList: Activity[];
 }) {
   const { resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => setMounted(true), []);
   const { weeks, setContainerRef } = useResizeCalendar();
   const selection = useMapStore((state) => state.dateSelection);
   const hoveredDate = useMapStore((state) => state.hoveredDate);
@@ -205,7 +207,7 @@ export default function ProfileStats({
         <ActivityCalendar
           labels={labels}
           className="*:[scrollbar-width:none] [&>*::-webkit-scrollbar]:hidden"
-          colorScheme={resolvedTheme === "dark" ? "dark" : "light"}
+          colorScheme={mounted && resolvedTheme === "dark" ? "dark" : "light"}
           theme={THEME_COLORS}
           showTotalCount={false}
           blockSize={BLOCK_SIZE}

@@ -1,19 +1,23 @@
 "use client";
 
-import { Activity } from "@/lib/schema";
 import { useCallback, useState } from "react";
-import { useTheme } from "next-themes";
+import { CircleMarker, Marker, ScaleControl } from "react-leaflet";
 import { MapContainer } from "react-leaflet/MapContainer";
 import { TileLayer } from "react-leaflet/TileLayer";
-import { CircleMarker, Marker, ScaleControl } from "react-leaflet";
-import { PointStats } from "@/types/activity";
+
+import { format } from "date-fns";
+import L from "leaflet";
+import { useTheme } from "next-themes";
+
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import MapContent from "./MapContent";
-import { useMapStore } from "@/store/mapStore";
-import L from "leaflet";
-import { format } from "date-fns";
 import { DATE_FORMAT } from "@/lib/constants";
+import { Activity } from "@/lib/schema";
+import { useMapStore } from "@/store/mapStore";
+import { PointStats } from "@/types/activity";
+
+import ActivityWeather from "../activity/ActivityWeather";
+import MapContent from "./MapContent";
 
 type HeatMapField = {
   field: keyof Pick<PointStats, "speed" | "elevation" | "heartrate">;
@@ -123,6 +127,9 @@ export default function ActivityStats({
                 {(hoveredActivity.distance / 1000).toFixed(1)} km ·{" "}
                 {hoveredActivity.elevationGain} m d+
               </p>
+              <p>
+                <ActivityWeather activity={hoveredActivity} />
+              </p>
             </Card>
           </div>
         )}
@@ -133,9 +140,10 @@ export default function ActivityStats({
           style={{ height: "700px", width: "100%" }}
         >
           <TileLayer
-            url={resolvedTheme === "dark"
-              ? "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
-              : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            url={
+              resolvedTheme === "dark"
+                ? "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png"
+                : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             }
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'
           />
