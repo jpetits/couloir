@@ -7,6 +7,7 @@ import {
   real,
   text,
   timestamp,
+  uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
 
@@ -111,17 +112,21 @@ export const imagesRelations = relations(images, ({ one }) => ({
   }),
 }));
 
-export const summits = pgTable("summits", {
-  id: uuid("id").primaryKey().defaultRandom(),
-  activityId: uuid("activity_id")
-    .notNull()
-    .references(() => activities.id, { onDelete: "cascade" }),
-  lat: real("lat").notNull(),
-  lng: real("lng").notNull(),
-  elevation: real("elevation").notNull(), // in meters
-  osmId: text("osm_id").notNull().unique(), // OpenStreetMap ID for the summit
-  name: text("name"), // peak name from OSM
-});
+export const summits = pgTable(
+  "summits",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    activityId: uuid("activity_id")
+      .notNull()
+      .references(() => activities.id, { onDelete: "cascade" }),
+    lat: real("lat").notNull(),
+    lng: real("lng").notNull(),
+    elevation: real("elevation").notNull(), // in meters
+    osmId: text("osm_id").notNull(), // OpenStreetMap ID for the summit
+    name: text("name"), // peak name from OSM
+  },
+  (table) => [uniqueIndex("summits_activity_osm_idx").on(table.activityId, table.osmId)],
+);
 
 export const summitsRelations = relations(summits, ({ one }) => ({
   activity: one(activities, {
