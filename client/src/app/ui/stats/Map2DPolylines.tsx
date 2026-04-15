@@ -13,7 +13,7 @@ const canvas = L.canvas({ padding: 0.5 });
 
 type HoverStatus = "hovered" | "dimmed" | "idle";
 
-const ActivityPolylines = memo(
+const Map2DPolylines = memo(
   ({
     points,
     status,
@@ -63,4 +63,4 @@ const ActivityPolylines = memo(
   },
 );
 
-export default ActivityPolylines;
+export default Map2DPolylines;

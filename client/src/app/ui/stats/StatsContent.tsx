@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import StatsCard from "@/app/ui/stats/Card";
+import StatsCard from "@/app/ui/stats/StatsCard";
 import { fetchActivities, fetchStats } from "@/lib/data";
 import { formatDuration } from "@/lib/utils";
 

@@ -1,24 +1,11 @@
-"use client";
-
-import {
-  CircleMarker,
-  Marker,
-  Polyline,
-  Popup,
-  useMapEvents,
-} from "react-leaflet";
+import { CircleMarker, Marker, Polyline, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 
 import { format } from "date-fns";
 import L from "leaflet";
 import { useShallow } from "zustand/react/shallow";
 
-import {
-  useFetchActivityListInBounds,
-  useFitBounds,
-  useSyncViewport,
-  useZoom,
-} from "@/app/hooks/useLeaflet";
+import { useFetchActivityListInBounds, useZoom } from "@/app/hooks/useLeaflet";
 import { DATE_FORMAT, ZOOM_THRESHOLD } from "@/lib/constants";
 import { Activity } from "@/lib/schema";
 import { getClosestPoint } from "@/lib/utils";
@@ -26,9 +13,9 @@ import { ROUTES } from "@/routing/constants";
 import { useMapStore } from "@/store/mapStore";
 import { PointStats } from "@/types/activity";
 
-import ActivityPolylines from "./ActivityPolylines";
+import Map2DPolylines from "./Map2DPolylines";
 
-export default function MapContent({
+export default function Map2DContent({
   activityList,
   handleHover,
   hoveredActivity,
@@ -40,14 +27,10 @@ export default function MapContent({
   showPhotos: boolean;
 }) {
   const zoom = useZoom();
-
   const {
     dateSelection,
     yearSelection,
-    hoveredPoint,
-    hoveredActivityPoints,
     selectedActivityId,
-    setHoveredPoint,
     setHoveredActivityPoints,
     setSelectedActivityId,
     heatMapField,
@@ -55,30 +38,14 @@ export default function MapContent({
     useShallow((state) => ({
       dateSelection: state.dateSelection,
       yearSelection: state.yearSelection,
-      hoveredPoint: state.hoveredPoint,
-      hoveredActivityPoints: state.hoveredActivityPoints,
       selectedActivityId: state.selectedActivityId,
-      setHoveredPoint: state.setHoveredPoint,
       setHoveredActivityPoints: state.setHoveredActivityPoints,
       setSelectedActivityId: state.setSelectedActivityId,
       heatMapField: state.heatMapField,
     })),
   );
 
-  useFitBounds(activityList);
-  useSyncViewport();
   const { activityListInBounds } = useFetchActivityListInBounds(activityList);
-
-  useMapEvents({
-    click: () => setSelectedActivityId(null),
-    zoomend: (e) => {
-      if (e.target.getZoom() < ZOOM_THRESHOLD && selectedActivityId) {
-        setSelectedActivityId(null);
-        setHoveredActivityPoints([]);
-        setHoveredPoint(null);
-      }
-    },
-  });
 
   const yearSelectionFilter = (activity: Activity) => {
     if (!yearSelection) return true;
@@ -124,8 +91,8 @@ export default function MapContent({
   const makePhotoIcon = (immichId: string) =>
     L.divIcon({
       html: `<div style="width:48px;height:48px;border:2px solid white;border-radius:4px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.4)">
-        <img src="${ROUTES.api.imagePath(immichId, "thumbnail")}" style="width:100%;height:100%;object-fit:cover" />
-      </div>`,
+          <img src="${ROUTES.api.imagePath(immichId, "thumbnail")}" style="width:100%;height:100%;object-fit:cover" />
+        </div>`,
       className: "",
       iconSize: [48, 48],
       iconAnchor: [24, 24],
@@ -171,7 +138,7 @@ export default function MapContent({
           ({ id, points }) =>
             (selectedActivityId ? selectedActivityId === id : true) && (
               <div key={id}>
-                <ActivityPolylines
+                <Map2DPolylines
                   key={id}
                   points={points}
                   heatMapField={heatMapField}
@@ -202,29 +169,6 @@ export default function MapContent({
               </div>
             ),
         )
-      )}
-      {hoveredPoint && (
-        <CircleMarker
-          center={[hoveredPoint.lat, hoveredPoint.lng]}
-          radius={8}
-          pathOptions={{
-            color: "#fff",
-            fillColor: "#3b82f6",
-            fillOpacity: 1,
-            weight: 2,
-          }}
-          eventHandlers={{
-            click: (e) => {
-              L.DomEvent.stopPropagation(e);
-              const id = hoveredActivityPoints[0]?.activityId ?? null;
-              if (selectedActivityId === id) {
-                setSelectedActivityId(null);
-              } else {
-                setSelectedActivityId(id);
-              }
-            },
-          }}
-        />
       )}
     </>
   );

@@ -7,7 +7,7 @@ import ActivityImages from "@/app/ui/activity/ActivityImages";
 import ActivityName from "@/app/ui/activity/ActivityName";
 import ActivityWeather from "@/app/ui/activity/ActivityWeather";
 import BackButton from "@/app/ui/dashboard/BackButton";
-import StatsCard from "@/app/ui/stats/Card";
+import StatsCard from "@/app/ui/stats/StatsCard";
 import { DATE_FORMAT } from "@/lib/constants";
 import { fetchActivity } from "@/lib/data";
 import { formatDuration } from "@/lib/utils";

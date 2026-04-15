@@ -14,11 +14,7 @@ import { useMapStore } from "@/store/mapStore";
 import ActivityWeather from "../activity/ActivityWeather";
 import DataChart from "../activity/DataChart";
 
-export default function ActivitySidePanel({
-  activity,
-}: {
-  activity: Activity;
-}) {
+export default function MapSidePanel({ activity }: { activity: Activity }) {
   const {
     hoveredPoint,
     setHoveredPoint,

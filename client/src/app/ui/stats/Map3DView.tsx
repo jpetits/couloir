@@ -10,7 +10,7 @@ import type { ActivityWithPoints } from "@/store/mapStore";
 import { useMapStore } from "@/store/mapStore";
 import type { PointStats } from "@/types/activity";
 
-import Map3DLayers from "./Map3DLayers";
+import Map3DContent from "./Map3DContent";
 
 const MAPTILER_KEY = process.env.NEXT_PUBLIC_MAPTILER_API_KEY;
 
@@ -109,7 +109,7 @@ export default function Map3DView({
         }}
         onMouseLeave={() => onHover(null, null)}
       >
-        <Map3DLayers
+        <Map3DContent
           activityList={activityList}
           heatMapField={heatMapField}
           visible={visible}

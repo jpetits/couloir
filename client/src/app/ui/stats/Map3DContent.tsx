@@ -27,7 +27,7 @@ function SyncViewport({ visible }: { visible: boolean }) {
   return null;
 }
 
-export default memo(function Map3DLayers({
+export default memo(function Map3DContent({
   activityList,
   heatMapField,
   visible,

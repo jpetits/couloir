@@ -16,9 +16,9 @@ import { Activity } from "@/lib/schema";
 import { useMapStore } from "@/store/mapStore";
 import { PointStats } from "@/types/activity";
 
-import ActivitySidePanel from "./ActivitySidePanel";
+import Map2DView from "./Map2DView";
 import Map3DView from "./Map3DView";
-import MapContent from "./MapContent";
+import MapSidePanel from "./MapSidePanel";
 
 const startLeafletIcon = L.divIcon({
   html: `<svg width="24" height="24" viewBox="0 0 24 24" 
@@ -166,7 +166,7 @@ export default function ActivityStats({
                 attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'
               />
 
-              <MapContent
+              <Map2DView
                 activityList={activityList}
                 handleHover={handleHover}
                 hoveredActivity={hoveredActivity}
@@ -208,7 +208,7 @@ export default function ActivityStats({
           </>
         </div>
         {hoveredActivity && (
-          <ActivitySidePanel
+          <MapSidePanel
             activity={activityList.find((a) => a.id === hoveredActivity?.id)!}
           />
         )}
