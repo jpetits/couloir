@@ -6,6 +6,7 @@ import { Polyline } from "react-leaflet";
 import L from "leaflet";
 
 import { useZoom } from "@/app/hooks/useLeaflet";
+import { getPointColor, getSegmentsFromPoints } from "@/lib/utils";
 import { PointStats } from "@/types/activity";
 
 const canvas = L.canvas({ padding: 0.5 });
@@ -28,24 +29,7 @@ const ActivityPolylines = memo(
       if (status === "hovered") borderRef.current?.bringToFront(); //leaflet doesn't handle z-index on canvas layers, so we need to manually bring the hovered polyline to front
     }, [status]);
 
-    const segments = points.map(
-      (point, i) =>
-        i > 0
-          ? ([
-              [points[i - 1]!.lat, points[i - 1]!.lng],
-              [point.lat, point.lng],
-            ] as [[number, number], [number, number]])
-          : ([[point.lat, point.lng]] as [[number, number]]), // for the first point, create a dummy segment to be able to color it based on speed/elevation/etc
-    ); // create segments between points, as we want to color each segment based on the point's speed/elevation/etc, but Leaflet doesn't support coloring individual points in a single Polyline
-
-    const getPointColor = (point: PointStats) => {
-      if (status === "dimmed") {
-        return "grey";
-      }
-
-      const colorField = (heatMapField.field + "Color") as keyof PointStats;
-      return String(point[colorField]);
-    };
+    const segments = getSegmentsFromPoints(points);
 
     return (
       <>
@@ -70,7 +54,7 @@ const ActivityPolylines = memo(
             weight={status === "dimmed" ? 2 : 5}
             pathOptions={{
               opacity: status === "dimmed" ? 0.3 : 1,
-              color: getPointColor(points[i]),
+              color: getPointColor(points[i], heatMapField, status),
             }}
           />
         ))}

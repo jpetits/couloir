@@ -1,10 +1,11 @@
 "use client";
 
 import { useEffect } from "react";
-import Map, { Layer, Source, useMap } from "react-map-gl/maplibre";
+import Map, { Layer, Marker, Source, useMap } from "react-map-gl/maplibre";
 
 import "maplibre-gl/dist/maplibre-gl.css";
 
+import { getSegmentsFromPoints, toSegmentGeojson } from "@/lib/utils";
 import type { ActivityWithPoints } from "@/store/mapStore";
 import { useMapStore } from "@/store/mapStore";
 import type { PointStats } from "@/types/activity";
@@ -28,20 +29,6 @@ function SyncViewport({ visible }: { visible: boolean }) {
   return null;
 }
 
-function toGeojson(list: ActivityWithPoints[]): GeoJSON.FeatureCollection {
-  return {
-    type: "FeatureCollection",
-    features: list.map(({ id, points }) => ({
-      type: "Feature",
-      properties: { id },
-      geometry: {
-        type: "LineString",
-        coordinates: points.map((p) => [p.lng, p.lat, p.elevation]),
-      },
-    })),
-  };
-}
-
 function centerOfPoints(points: PointStats[]) {
   if (points.length === 0) return null;
   const lats = points.map((p) => p.lat);
@@ -54,28 +41,26 @@ function centerOfPoints(points: PointStats[]) {
 
 export default function Map3DView({
   visible = true,
-  activityList,
+  activity,
+  hoveredPoint,
 }: {
   visible?: boolean;
-  activityList?: ActivityWithPoints[];
+  activity: ActivityWithPoints;
   height?: string;
+  hoveredPoint?: PointStats | null;
 }) {
-  const storeList = useMapStore((s) => s.activityListInBounds);
   const mapViewport = useMapStore((s) => s.mapViewport);
 
-  const list = activityList ?? storeList;
-  const geojson = toGeojson(list);
-
-  const allPoints = list.flatMap((a) => a.points);
-  const center = centerOfPoints(allPoints);
+  const center = centerOfPoints(activity?.points ?? []);
 
   const initialViewState = {
     latitude: center?.lat ?? mapViewport?.lat ?? 45.5,
     longitude: center?.lng ?? mapViewport?.lng ?? 6.5,
-    zoom: activityList ? 13 : (mapViewport?.zoom ?? 12),
+    zoom: activity ? 13 : (mapViewport?.zoom ?? 12),
     bearing: 0,
     pitch: 60,
   };
+  const segments = getSegmentsFromPoints(activity.points);
 
   return (
     <div className="w-full h-150">
@@ -85,7 +70,7 @@ export default function Map3DView({
         mapStyle={`https://api.maptiler.com/maps/outdoor-v2/style.json?key=${MAPTILER_KEY}`}
         terrain={{ source: "terrain-rgb", exaggeration: 1.5 }}
       >
-        {!activityList && <SyncViewport visible={visible} />}
+        {!activity && <SyncViewport visible={visible} />}
         <Source
           id="terrain-rgb"
           type="raster-dem"
@@ -102,17 +87,31 @@ export default function Map3DView({
             "hillshade-highlight-color": "#ffffff",
           }}
         />
-        <Source id="tracks" type="geojson" data={geojson}>
+        <Source
+          key={activity.id}
+          id={`tracks-${activity.id}`}
+          type="geojson"
+          data={toSegmentGeojson(activity.points, {
+            field: "elevation",
+            unit: "m",
+          })}
+        >
           <Layer
-            id="tracks-line"
+            key={`tracks-line-${activity.id}`}
+            id={`tracks-line-${activity.id}`}
             type="line"
             paint={{
-              "line-color": "#3b82f6",
-              "line-width": 2,
+              "line-color": ["get", "color"],
+              "line-width": 5,
               "line-opacity": 0.8,
             }}
           />
         </Source>
+        {hoveredPoint && (
+          <Marker longitude={hoveredPoint.lng} latitude={hoveredPoint.lat}>
+            <div className="w-4 h-4 rounded-full bg-white border-2 border-blue-500 shadow" />
+          </Marker>
+        )}
       </Map>
     </div>
   );
