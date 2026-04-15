@@ -19,19 +19,21 @@ export default function ActivitySidePanel({
 }: {
   activity: Activity;
 }) {
-  const hoveredActivityPoints = useMapStore(
-    (state) => state.hoveredActivityPoints,
+  const {
+    hoveredPoint,
+    setHoveredPoint,
+    heatMapField,
+    setHeatMapField,
+    hoveredActivityPoints,
+  } = useMapStore(
+    useShallow((state) => ({
+      hoveredPoint: state.hoveredPoint,
+      setHoveredPoint: state.setHoveredPoint,
+      heatMapField: state.heatMapField,
+      setHeatMapField: state.setHeatMapField,
+      hoveredActivityPoints: state.hoveredActivityPoints,
+    })),
   );
-
-  const { hoveredPoint, setHoveredPoint, heatMapField, setHeatMapField } =
-    useMapStore(
-      useShallow((state) => ({
-        hoveredPoint: state.hoveredPoint,
-        setHoveredPoint: state.setHoveredPoint,
-        heatMapField: state.heatMapField,
-        setHeatMapField: state.setHeatMapField,
-      })),
-    );
 
   return (
     <div className="absolute top-0 right-0 h-full w-80 bg-background border-l shadow-xl z-1000 flex flex-col">
@@ -92,9 +94,9 @@ export default function ActivitySidePanel({
           unit={heatMapField.unit}
         />
         <div className="flex gap-2">
-          {activity.summits &&
-            activity.summits.length > 0 &&
-            activity.summits.map((summit) => (
+          {activity?.activitySummits
+            ?.map((as) => as.summit)
+            .map((summit) => (
               <div key={summit.id} className="bg-muted rounded p-2 flex-1">
                 <p className="font-semibold">{summit.name}</p>
                 <p className="text-sm text-muted-foreground">

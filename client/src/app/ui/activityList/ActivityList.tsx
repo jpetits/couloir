@@ -14,10 +14,10 @@ import { useActivitySelectionStore } from "@/store/activitySelection";
 
 import { useApi } from "../../hooks/useApi";
 import { usePaginatedScroll } from "../../hooks/usePaginatedScroll";
-import ActivityFilters from "./ActivityFilters";
-import BulkActionBar from "./BulkActionBar";
-import { columns } from "./Columns";
-import { DataTable } from "./DataTable";
+import ActivityFilters from "../activity/ActivityFilters";
+import BulkActionBar from "../activity/BulkActionBar";
+import { columns } from "../activity/Columns";
+import { DataTable } from "../activity/DataTable";
 
 export default function ActivityList({
   initialActivityList,

@@ -16,6 +16,7 @@ import { useShallow } from "zustand/react/shallow";
 import {
   useFetchActivityListInBounds,
   useFitBounds,
+  useSyncViewport,
   useZoom,
 } from "@/app/hooks/useLeaflet";
 import { DATE_FORMAT, ZOOM_THRESHOLD } from "@/lib/constants";
@@ -65,6 +66,7 @@ export default function MapContent({
   );
 
   useFitBounds(activityList);
+  useSyncViewport();
   const { activityListInBounds } = useFetchActivityListInBounds(activityList);
 
   useMapEvents({

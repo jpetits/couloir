@@ -25,12 +25,17 @@ export type Point = z.infer<typeof PointSchema>;
 
 export const SummitSchema = z.object({
   id: z.string(),
-  activityId: z.string(),
+  osmId: z.string(),
+  name: z.string().nullable(),
   lat: z.number(),
   lng: z.number(),
   elevation: z.number(),
-  osmId: z.string(),
-  name: z.string().nullable(),
+});
+
+export const ActivitySummitSchema = z.object({
+  activityId: z.string(),
+  summitId: z.string(),
+  summit: SummitSchema,
 });
 
 export const ActivitySchema = z.object({
@@ -61,7 +66,7 @@ export const ActivitySchema = z.object({
   startLng: z.number().nullable(),
   endLat: z.number().nullable(),
   endLng: z.number().nullable(),
-  summits: z.array(SummitSchema).optional(),
+  activitySummits: z.array(ActivitySummitSchema).optional(),
 });
 
 export type Activity = z.infer<typeof ActivitySchema>;

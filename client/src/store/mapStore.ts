@@ -4,6 +4,8 @@ import { PointStats } from "@/types/activity";
 
 type DateSelection = { start: string; end: string } | null;
 
+export type ActivityWithPoints = { id: string; points: PointStats[] };
+
 export interface MapStore {
   dateSelection: DateSelection;
   setDateSelection: (s: DateSelection) => void;
@@ -21,6 +23,10 @@ export interface MapStore {
   setSelectedActivityId: (id: string | null) => void;
   heatMapField: { field: keyof PointStats; unit: string };
   setHeatMapField: (field: keyof PointStats, unit: string) => void;
+  activityListInBounds: ActivityWithPoints[];
+  setActivityListInBounds: (list: ActivityWithPoints[]) => void;
+  mapViewport: { lat: number; lng: number; zoom: number } | null;
+  setMapViewport: (viewport: { lat: number; lng: number; zoom: number }) => void;
 }
 
 export const useMapStore = create<MapStore>((set) => ({
@@ -31,6 +37,7 @@ export const useMapStore = create<MapStore>((set) => ({
   hoveredActivityPoints: [],
   hoveredPoint: null,
   selectedActivityId: null,
+  activityListInBounds: [],
   setHoveredPoint: (point) => set({ hoveredPoint: point }),
   setActivityIdList: (activityIdList) =>
     set({ activityIdList: new Set(activityIdList) }),
@@ -41,4 +48,7 @@ export const useMapStore = create<MapStore>((set) => ({
   setSelectedActivityId: (id) => set({ selectedActivityId: id }),
   heatMapField: { field: "elevation", unit: "m" },
   setHeatMapField: (field, unit) => set({ heatMapField: { field, unit } }),
+  setActivityListInBounds: (list) => set({ activityListInBounds: list }),
+  mapViewport: null,
+  setMapViewport: (viewport) => set({ mapViewport: viewport }),
 }));

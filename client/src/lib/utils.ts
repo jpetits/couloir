@@ -89,3 +89,51 @@ export const getClosestPoint = (
     { d: Infinity, p: null as PointStats | null },
   ).p;
 };
+
+export const getSegmentsFromPoints = (points: PointStats[]) =>
+  points.map(
+    (point, i) =>
+      i > 0
+        ? ([
+            [points[i - 1]!.lat, points[i - 1]!.lng],
+            [point.lat, point.lng],
+          ] as [[number, number], [number, number]])
+        : ([[point.lat, point.lng]] as [[number, number]]), // for the first point, create a dummy segment to be able to color it based on speed/elevation/etc
+  ); // create segments between points, as we want to color each segment based on the point's speed/elevation/etc, but Leaflet doesn't support coloring individual points in a single Polyline
+
+export const toSegmentGeojson = (
+  points: PointStats[],
+  heatMapField: { field: keyof PointStats; unit: string },
+): GeoJSON.FeatureCollection => ({
+  type: "FeatureCollection",
+  features: points.flatMap((point, i) => {
+    if (i === 0) return [];
+    const prev = points[i - 1]!;
+    return [
+      {
+        type: "Feature" as const,
+        properties: { color: getPointColor(point, heatMapField, "idle") },
+        geometry: {
+          type: "LineString" as const,
+          coordinates: [
+            [prev.lng, prev.lat, prev.elevation],
+            [point.lng, point.lat, point.elevation],
+          ],
+        },
+      },
+    ];
+  }),
+});
+
+export const getPointColor = (
+  point: PointStats,
+  heatMapField: { field: keyof PointStats; unit: string },
+  status: "hovered" | "dimmed" | "idle",
+) => {
+  if (status === "dimmed") {
+    return "grey";
+  }
+
+  const colorField = (heatMapField.field + "Color") as keyof PointStats;
+  return String(point[colorField]);
+};

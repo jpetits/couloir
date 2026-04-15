@@ -109,15 +109,11 @@ export default function ProfileStats({
   }, [activityListFiltered]);
 
   const labels = useMemo(() => {
-    const [yearStr, monthStr] = startDate.split("-");
-    const startYear = parseInt(yearStr);
-    const startMonth = parseInt(monthStr) - 1;
     return {
       months: Array.from({ length: 12 }, (_, i) => {
-        const year = i >= startMonth ? startYear : startYear + 1;
-        const showYear = year !== startYear || i === startMonth;
-        return showYear ? `${MONTHS[i]} '${String(year).slice(2)}` : MONTHS[i];
+        return MONTHS[i];
       }),
+      totalCount: "{{count}} activities found",
     };
   }, [startDate]);
 
@@ -215,7 +211,7 @@ export default function ProfileStats({
           className="*:[scrollbar-width:none] [&>*::-webkit-scrollbar]:hidden"
           colorScheme={mounted && resolvedTheme === "dark" ? "dark" : "light"}
           theme={THEME_COLORS}
-          showTotalCount={false}
+          showTotalCount
           blockSize={BLOCK_SIZE}
           blockMargin={BLOCK_MARGIN}
           renderBlock={(block, activity) => blockRender(block, activity)}

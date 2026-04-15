@@ -21,3 +21,14 @@ export function RowSkeleton({
     </>
   );
 }
+
+export function StatsMapSkeleton() {
+  return (
+    <div className="mt-3">
+      <div
+        className="w-full animate-pulse rounded-lg bg-muted"
+        style={{ height: 600 }}
+      />
+    </div>
+  );
+}
