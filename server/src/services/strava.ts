@@ -6,7 +6,6 @@ import type { StravaActivity, StravaStream } from "../types/types";
 import { syncImmichAssets } from "./immich";
 import { processQueue } from "./queue";
 import { parseStravaActivity, parseStravaStream } from "./stravaParser";
-import { summitsDetect } from "./summitsDetect";
 import { fetchWeatherForActivity } from "./weather";
 import { sendMessage } from "./websocket";
 
@@ -202,19 +201,13 @@ const queueActivitiesForProcessing = async (
     const maxHeartrate = Math.max(...pointList.map((p) => p.heartrate));
     const minHeartrate = Math.min(...pointList.map((p) => p.heartrate));
 
-    const activity = await activityRepository.update(
-      stravaActivity.id,
-      user.id,
-      {
-        minSpeed,
-        minElevation,
-        maxElevation,
-        maxHeartrate,
-        minHeartrate,
-      },
-    );
-
-    await summitsDetect(user, activity, pointList);
+    await activityRepository.update(stravaActivity.id, user.id, {
+      minSpeed,
+      minElevation,
+      maxElevation,
+      maxHeartrate,
+      minHeartrate,
+    });
 
     sendMessage(user.id, {
       type: "sync:progress",
