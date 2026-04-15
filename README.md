@@ -23,6 +23,7 @@ A personal activity tracker for outdoor sports — skiing, surfing, trekking, an
 - Weather on activity — historical conditions (temperature, wind, icon) fetched from Open-Meteo at the activity's start location and time, no API key required
 - Dark/light mode with adaptive map tiles (Stadia Alidade Smooth Dark / OpenStreetMap)
 - Summit detection — named OSM peaks detected along activity tracks via Overpass API, stored in a many-to-many relation and displayed in the activity side panel
+- 3D map view — MapLibre GL JS with free terrain tiles, activity tracks rendered in 3D relief
 
 ## Roadmap
 - [ ] **Life map** — photos + activities at all zoom levels with clustering, turning the map into a personal geographic history
@@ -30,7 +31,6 @@ A personal activity tracker for outdoor sports — skiing, surfing, trekking, an
 - [ ] **Personal records** — longest, highest, fastest, displayed on profile
 - [ ] **Activity type tagging** — ski/hike/bike/surf labels with per-type colors on map
 - [ ] **Route planning** — draw a route, get elevation profile, export as GPX
-- [ ] **3D map view** — MapLibre GL JS with free terrain tiles, activity tracks rendered in 3D relief, toggle between 2D and 3D
 
 ## Tech Stack
 
