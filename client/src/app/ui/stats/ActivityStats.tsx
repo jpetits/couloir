@@ -65,15 +65,16 @@ export default function ActivityStats({
   const {
     setHoveredDate,
     setHoveredPoint,
+    setHoveredActivityPoints,
     heatMapField,
     setHeatMapField,
     hoveredPoint,
-    selectedActivityId,
     activityListInBounds,
   } = useMapStore(
     useShallow((state) => ({
       setHoveredDate: state.setHoveredDate,
       setHoveredPoint: state.setHoveredPoint,
+      setHoveredActivityPoints: state.setHoveredActivityPoints,
       hoveredPoint: state.hoveredPoint,
       heatMapField: state.heatMapField,
       setHeatMapField: state.setHeatMapField,
@@ -91,19 +92,22 @@ export default function ActivityStats({
           activity ? format(activity.startDate, DATE_FORMAT) : null,
         );
         setHoveredActivity(activity);
+        const activityWithPoints = activityListInBounds.find(
+          (a) => a.id === activityId,
+        );
+        if (activityWithPoints)
+          setHoveredActivityPoints(activityWithPoints.points);
+      } else {
+        setHoveredActivityPoints([]);
       }
     },
-    [activityList],
+    [activityList, activityListInBounds],
   );
 
   const activityListBounds = activityList.map((a) => [
     a.startLat,
     a.startLng,
   ]) as [number, number][];
-
-  const selectedActivity = activityListInBounds.find(
-    (a) => a.id === selectedActivityId,
-  );
 
   return (
     <div className="flex flex-col gap-1 mt-3">
@@ -115,7 +119,7 @@ export default function ActivityStats({
           setHoveredActivity(null);
         }}
       >
-        <div className="absolute top-2 left-2 z-[1000] flex gap-1">
+        <div className="absolute top-2 left-15 z-1000 flex gap-1">
           {HEATMAP_OPTIONS.map(({ field, unit }) => (
             <Button
               key={field}
@@ -136,12 +140,10 @@ export default function ActivityStats({
             Photos
           </Button>
           <Button
-            variant={
-              selectedActivity ? (show3DView ? "default" : "outline") : "ghost"
-            }
+            variant={show3DView ? "default" : "outline"}
             className="cursor-pointer shadow"
             size="sm"
-            onClick={() => setShow3DView((v) => (selectedActivity ? !v : v))}
+            onClick={() => setShow3DView((v) => !v)}
           >
             3D View
           </Button>
@@ -210,11 +212,11 @@ export default function ActivityStats({
             activity={activityList.find((a) => a.id === hoveredActivity?.id)!}
           />
         )}
-        {show3DView && selectedActivity && (
+        {show3DView && (
           <Map3DView
             visible={show3DView}
             hoveredPoint={hoveredPoint}
-            activity={selectedActivity}
+            activityList={activityListInBounds}
             onHover={handleHover}
           />
         )}

@@ -46,7 +46,8 @@ export default function ActivityDetailClient({
       <div className={`${show3D ? "" : "hidden"}`}>
         <Map3DView
           visible={show3D}
-          activity={{ id: activity.id, points: enrichedPoints }}
+          activityList={[{ id: activity.id, points: enrichedPoints }]}
+          onHover={handleHover}
           hoveredPoint={hoveredPoint}
         />
       </div>
