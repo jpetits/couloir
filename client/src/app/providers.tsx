@@ -28,15 +28,12 @@ export default function Providers({ children }: { children: React.ReactNode }) {
             <ThemeButton />
             <Show when="signed-out">
               <SignInButton>
-                <Link href={ROUTES.signIn}>Sign In</Link>
+                <button>Sign In</button>
               </SignInButton>
               <SignUpButton>
-                <Link
-                  href={ROUTES.signUp}
-                  className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity"
-                >
+                <button className="px-6 py-3 rounded-lg bg-primary text-primary-foreground font-medium hover:opacity-90 transition-opacity">
                   Sign Up
-                </Link>
+                </button>
               </SignUpButton>
             </Show>
             <Show when="signed-in">
