@@ -1,33 +1,18 @@
 "use client";
 
-import { useEffect, useMemo } from "react";
-import Map, { Layer, Marker, Source, useMap } from "react-map-gl/maplibre";
+import { useMemo } from "react";
+import Map, { Marker } from "react-map-gl/maplibre";
 
 import "maplibre-gl/dist/maplibre-gl.css";
+import { useShallow } from "zustand/react/shallow";
 
-import { toSegmentGeojson } from "@/lib/utils";
 import type { ActivityWithPoints } from "@/store/mapStore";
 import { useMapStore } from "@/store/mapStore";
 import type { PointStats } from "@/types/activity";
 
+import Map3DLayers from "./Map3DLayers";
+
 const MAPTILER_KEY = process.env.NEXT_PUBLIC_MAPTILER_API_KEY;
-
-function SyncViewport({ visible }: { visible: boolean }) {
-  const { current: map } = useMap();
-  const mapViewport = useMapStore((s) => s.mapViewport);
-
-  useEffect(() => {
-    if (!visible || !map || !mapViewport) return;
-    map.flyTo({
-      center: [mapViewport.lng, mapViewport.lat],
-      zoom: mapViewport.zoom,
-      pitch: 60,
-      duration: 600,
-    });
-  }, [visible]);
-
-  return null;
-}
 
 function nearestPoint(points: PointStats[], lng: number, lat: number) {
   let best: PointStats | null = null;
@@ -54,10 +39,19 @@ export default function Map3DView({
   hoveredPoint?: PointStats | null;
   onHover: (point: PointStats | null, activityId: string | null) => void;
 }) {
-  const mapViewport = useMapStore((s) => s.mapViewport);
-  const setSelectedActivityId = useMapStore((s) => s.setSelectedActivityId);
-  const selectedActivityId = useMapStore((s) => s.selectedActivityId);
-  const heatMapField = useMapStore((s) => s.heatMapField);
+  const {
+    mapViewport,
+    setSelectedActivityId,
+    selectedActivityId,
+    heatMapField,
+  } = useMapStore(
+    useShallow((s) => ({
+      mapViewport: s.mapViewport,
+      setSelectedActivityId: s.setSelectedActivityId,
+      selectedActivityId: s.selectedActivityId,
+      heatMapField: s.heatMapField,
+    })),
+  );
 
   const initialViewState = useMemo(() => {
     const points = activityList.flatMap((a) => a.points) ?? [];
@@ -93,9 +87,7 @@ export default function Map3DView({
         onClick={(e) => {
           const feature = e.features?.[0];
           if (feature?.layer.id.startsWith("tracks-line-")) {
-            console.log("clicked feature", feature);
             const activityId = feature.layer.id.replace("tracks-line-", "");
-            console.log("clicked activityId", activityId);
             if (activityId === selectedActivityId) setSelectedActivityId(null);
             setSelectedActivityId(activityId);
             return;
@@ -117,71 +109,12 @@ export default function Map3DView({
         }}
         onMouseLeave={() => onHover(null, null)}
       >
-        {!activityList && <SyncViewport visible={visible} />}
-        <Source
-          id="terrain-rgb"
-          type="raster-dem"
-          url={`https://api.maptiler.com/tiles/terrain-rgb-v2/tiles.json?key=${MAPTILER_KEY}`}
-          tileSize={256}
+        <Map3DLayers
+          activityList={activityList}
+          heatMapField={heatMapField}
+          visible={visible}
         />
-        <Layer
-          id="hillshade"
-          type="hillshade"
-          source="terrain-rgb"
-          paint={{
-            "hillshade-exaggeration": 0.3,
-            "hillshade-shadow-color": "#000000",
-            "hillshade-highlight-color": "#ffffff",
-          }}
-        />
-        {activityList.map((activity) => (
-          <span key={activity.id}>
-            <Source
-              key={activity.id + "-zone"}
-              id={`tracks-${activity.id}-zone`}
-              type="geojson"
-              data={{
-                type: "FeatureCollection",
-                features: activity.points.map((p) => ({
-                  type: "Feature" as const,
-                  properties: {},
-                  geometry: {
-                    type: "Point" as const,
-                    coordinates: [p.lng, p.lat],
-                  },
-                })),
-              }}
-            >
-              <Layer
-                key={`tracks-line-${activity.id}-zone`}
-                id={`tracks-line-${activity.id}-zone`}
-                type="line"
-                paint={{
-                  "line-width": 10,
-                  "line-opacity": 1,
-                }}
-              />
-            </Source>
-            <Source
-              key={activity.id}
-              id={`tracks-${activity.id}`}
-              type="geojson"
-              data={toSegmentGeojson(activity.points, heatMapField)}
-            >
-              <Layer
-                key={`tracks-line-${activity.id}`}
-                id={`tracks-line-${activity.id}`}
-                type="line"
-                paint={{
-                  "line-color": ["get", "color"],
-                  "line-width": 5,
-                  "line-dasharray": [1, 1],
-                  "line-opacity": 0.8,
-                }}
-              />
-            </Source>
-          </span>
-        ))}
+
         {hoveredPoint && (
           <Marker longitude={hoveredPoint.lng} latitude={hoveredPoint.lat}>
             <div className="w-4 h-4 rounded-full bg-white border-2 border-blue-500 shadow" />

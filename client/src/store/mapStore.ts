@@ -5,6 +5,7 @@ import { PointStats } from "@/types/activity";
 type DateSelection = { start: string; end: string } | null;
 
 export type ActivityWithPoints = { id: string; points: PointStats[] };
+export type HeatMapField = { field: keyof PointStats; unit: string };
 
 export interface MapStore {
   dateSelection: DateSelection;
@@ -21,12 +22,16 @@ export interface MapStore {
   setHoveredPoint: (point: PointStats | null) => void;
   selectedActivityId: string | null;
   setSelectedActivityId: (id: string | null) => void;
-  heatMapField: { field: keyof PointStats; unit: string };
+  heatMapField: HeatMapField;
   setHeatMapField: (field: keyof PointStats, unit: string) => void;
   activityListInBounds: ActivityWithPoints[];
   setActivityListInBounds: (list: ActivityWithPoints[]) => void;
   mapViewport: { lat: number; lng: number; zoom: number } | null;
-  setMapViewport: (viewport: { lat: number; lng: number; zoom: number }) => void;
+  setMapViewport: (viewport: {
+    lat: number;
+    lng: number;
+    zoom: number;
+  }) => void;
 }
 
 export const useMapStore = create<MapStore>((set) => ({
