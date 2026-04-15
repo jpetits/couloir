@@ -47,6 +47,8 @@ export default function DataChart({
           data={pointList}
           onMouseMove={handleMouseMove}
           onMouseLeave={handleMouseLeave}
+          onTouchMove={handleMouseMove}
+          onTouchEnd={handleMouseLeave}
         >
           <defs>
             <linearGradient
@@ -75,15 +77,6 @@ export default function DataChart({
             stroke="#6b7280"
             width={55}
           />
-          {/* <Tooltip
-            contentStyle={{
-              backgroundColor: "#1f2937",
-              border: "none",
-              borderRadius: 6,
-            }}
-            labelFormatter={(v) => `${v} km`}
-            formatter={(v) => (v != null ? [`${v} ${unit}`, "Speed"] : [])}
-          /> */}
           {hoveredPoint != null && (
             <ReferenceLine
               x={hoveredPoint.cumDistance}
