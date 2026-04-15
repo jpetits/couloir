@@ -56,7 +56,7 @@ export const activityRepository = {
   findById: async (id: string) => {
     return db.query.activities.findFirst({
       where: (activities, { eq }) => eq(activities.id, id),
-      with: { points: true, images: true, summits: true },
+      with: { points: true, images: true, activitySummits: { with: { summit: true } } },
     });
   },
   create: async (data: typeof activities.$inferInsert) => {
@@ -101,7 +101,7 @@ export const activityRepository = {
   listWithPoints: async (userId: string) => {
     return db.query.activities.findMany({
       where: (activities, { eq }) => eq(activities.userId, userId),
-      with: { points: true, images: true, summits: true },
+      with: { points: true, images: true, activitySummits: { with: { summit: true } } },
     });
   },
   findByStravaId: async (stravaActivityId: string, userId: string) => {
@@ -122,7 +122,7 @@ export const activityRepository = {
   listByUserId: async (userId: string) => {
     return db.query.activities.findMany({
       where: (activities, { eq }) => eq(activities.userId, userId),
-      with: { images: true, summits: true },
+      with: { images: true, activitySummits: { with: { summit: true } } },
       orderBy: (activities, { desc }) => [desc(activities.startDate)],
     });
   },

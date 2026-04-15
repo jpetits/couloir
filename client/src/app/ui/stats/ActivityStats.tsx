@@ -17,6 +17,7 @@ import { useMapStore } from "@/store/mapStore";
 import { PointStats } from "@/types/activity";
 
 import ActivitySidePanel from "./ActivitySidePanel";
+import Map3DView from "./Map3DView";
 import MapContent from "./MapContent";
 
 const startLeafletIcon = L.divIcon({
@@ -132,60 +133,74 @@ export default function ActivityStats({
           setHoveredActivity(null);
         }}
       >
-        <MapContainer
-          className="markercluster-map"
-          bounds={activityListBounds}
-          maxZoom={18}
-          style={{ height: "700px", width: "100%" }}
-        >
-          <TileLayer
-            url={
-              resolvedTheme === "dark"
-                ? "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png?api_key=${process.env.NEXT_PUBLIC_STADIA_API_KEY}"
-                : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-            }
-            attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'
-          />
-
-          <MapContent
-            activityList={activityList}
-            handleHover={handleHover}
-            hoveredActivity={hoveredActivity}
-            showPhotos={showPhotos}
-          />
-
-          {hoveredActivity && (
-            <>
-              <Marker
-                key={hoveredActivity.id + "-end"}
-                position={[hoveredActivity.endLat!, hoveredActivity.endLng!]}
-                icon={stopLeafletIcon}
+        <div className={show3DView ? "hidden" : ""}>
+          <>
+            <MapContainer
+              className="markercluster-map"
+              bounds={activityListBounds}
+              maxZoom={18}
+              style={{ height: "700px", width: "100%" }}
+            >
+              <TileLayer
+                url={
+                  resolvedTheme === "dark"
+                    ? "https://tiles.stadiamaps.com/tiles/alidade_smooth_dark/{z}/{x}/{y}{r}.png?api_key=${process.env.NEXT_PUBLIC_STADIA_API_KEY}"
+                    : "https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                }
+                attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/">CARTO</a>'
               />
-              <Marker
-                key={hoveredActivity.id + "-start"}
-                position={[
-                  hoveredActivity.startLat!,
-                  hoveredActivity.startLng!,
-                ]}
-                icon={startLeafletIcon}
-              />
-              {hoveredActivity.summits?.map((summit) => (
-                <Marker
-                  key={hoveredActivity.id + "-summit-" + summit.id}
-                  position={[summit.lat, summit.lng]}
-                  icon={summitLeafletIcon}
-                />
-              ))}
-            </>
-          )}
 
-          <ScaleControl position="bottomleft" imperial={false} />
-        </MapContainer>
-        {hoveredActivity && (
-          <ActivitySidePanel
-            activity={activityList.find((a) => a.id === hoveredActivity?.id)!}
-          />
-        )}
+              <MapContent
+                activityList={activityList}
+                handleHover={handleHover}
+                hoveredActivity={hoveredActivity}
+                showPhotos={showPhotos}
+              />
+
+              {hoveredActivity && (
+                <>
+                  <Marker
+                    key={hoveredActivity.id + "-end"}
+                    position={[
+                      hoveredActivity.endLat!,
+                      hoveredActivity.endLng!,
+                    ]}
+                    icon={stopLeafletIcon}
+                  />
+                  <Marker
+                    key={hoveredActivity.id + "-start"}
+                    position={[
+                      hoveredActivity.startLat!,
+                      hoveredActivity.startLng!,
+                    ]}
+                    icon={startLeafletIcon}
+                  />
+                  {hoveredActivity.activitySummits
+                    ?.map((as) => as.summit)
+                    .map((summit) => (
+                      <Marker
+                        key={hoveredActivity.id + "-summit-" + summit.id}
+                        position={[summit.lat, summit.lng]}
+                        icon={summitLeafletIcon}
+                      />
+                    ))}
+                </>
+              )}
+
+              <ScaleControl position="bottomleft" imperial={false} />
+            </MapContainer>
+            {hoveredActivity && (
+              <ActivitySidePanel
+                activity={
+                  activityList.find((a) => a.id === hoveredActivity?.id)!
+                }
+              />
+            )}
+          </>
+        </div>
+        <div className={show3DView ? "" : "hidden"}>
+          <Map3DView visible={show3DView} />
+        </div>
       </div>
     </div>
   );

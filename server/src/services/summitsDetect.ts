@@ -1,9 +1,8 @@
 import { distance, point } from "@turf/turf";
-
 import { db } from "../db";
-import { activities, points, summits, users } from "../db/schema";
+import { activities, activitySummits, points, summits } from "../db/schema";
 
-const PROXIMITY_KM = 0.2; // 200m threshold to consider a summit reached
+const PROXIMITY_KM = 0.2;
 
 interface OsmPeak {
   id: number;
@@ -37,11 +36,9 @@ async function fetchOsmPeaks(
         signal: AbortSignal.timeout(OVERPASS_TIMEOUT_MS),
       });
 
-      console.log(`${endpoint}?data=${encodeURIComponent(query)}`);
-
       if (!res.ok) {
         console.warn(`Overpass endpoint ${endpoint} error: ${res.status}`);
-        await new Promise((r) => setTimeout(r, 10000));
+        await new Promise((r) => setTimeout(r, 2000));
         continue;
       }
 
@@ -52,7 +49,7 @@ async function fetchOsmPeaks(
         `Overpass endpoint ${endpoint} failed:`,
         (err as Error).message,
       );
-      await new Promise((r) => setTimeout(r, 10000));
+      await new Promise((r) => setTimeout(r, 2000));
     }
   }
 
@@ -61,7 +58,6 @@ async function fetchOsmPeaks(
 }
 
 export async function summitsDetect(
-  _user: typeof users.$inferSelect,
   activity: typeof activities.$inferSelect | undefined,
   pointList: (typeof points.$inferSelect)[],
 ) {
@@ -70,8 +66,6 @@ export async function summitsDetect(
   const osmPeaks = await fetchOsmPeaks(pointList);
   if (osmPeaks.length === 0) return;
 
-  const summitList: (typeof summits.$inferInsert)[] = [];
-
   for (const peak of osmPeaks) {
     const peakPoint = point([peak.lon, peak.lat]);
     const reached = pointList.some(
@@ -79,24 +73,32 @@ export async function summitsDetect(
         distance(point([p.lng, p.lat]), peakPoint, { units: "kilometers" }) <=
         PROXIMITY_KM,
     );
+    if (!reached) continue;
 
-    if (reached) {
-      summitList.push({
-        activityId: activity.id,
+    // Upsert the summit (may already exist from another activity)
+    const [summit] = await db
+      .insert(summits)
+      .values({
+        osmId: String(peak.id),
+        name: peak.tags.name ?? null,
         lat: peak.lat,
         lng: peak.lon,
         elevation: peak.tags.ele ? parseFloat(peak.tags.ele) : 0,
-        osmId: String(peak.id),
-        name: peak.tags.name ?? null,
-      });
-    }
+      })
+      .onConflictDoUpdate({
+        target: summits.osmId,
+        set: { name: peak.tags.name ?? null },
+      })
+      .returning();
+
+    if (!summit) continue;
+
+    // Link activity to summit, ignore if already linked
+    await db
+      .insert(activitySummits)
+      .values({ activityId: activity.id, summitId: summit.id })
+      .onConflictDoNothing();
   }
 
-  if (summitList.length === 0) return;
-
-  await db.insert(summits).values(summitList);
-
-  console.log(
-    `Detected ${summitList.length} summits for activity ${activity.id}`,
-  );
+  console.log(`Summit detection done for activity ${activity.id}`);
 }

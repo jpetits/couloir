@@ -4,10 +4,10 @@ import {
   index,
   numeric,
   pgTable,
+  primaryKey,
   real,
   text,
   timestamp,
-  uniqueIndex,
   uuid,
 } from "drizzle-orm/pg-core";
 
@@ -45,7 +45,7 @@ export const activities = pgTable(
 export const activitiesRelations = relations(activities, ({ many }) => ({
   points: many(points),
   images: many(images),
-  summits: many(summits),
+  activitySummits: many(activitySummits),
 }));
 
 export const points = pgTable(
@@ -112,25 +112,41 @@ export const imagesRelations = relations(images, ({ one }) => ({
   }),
 }));
 
-export const summits = pgTable(
-  "summits",
+// One row per unique OSM peak
+export const summits = pgTable("summits", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  osmId: text("osm_id").notNull().unique(),
+  name: text("name"),
+  lat: real("lat").notNull(),
+  lng: real("lng").notNull(),
+  elevation: real("elevation").notNull(), // in meters
+});
+
+export const summitsRelations = relations(summits, ({ many }) => ({
+  activitySummits: many(activitySummits),
+}));
+
+// Join table: which activities reached which summits
+export const activitySummits = pgTable(
+  "activity_summits",
   {
-    id: uuid("id").primaryKey().defaultRandom(),
     activityId: uuid("activity_id")
       .notNull()
       .references(() => activities.id, { onDelete: "cascade" }),
-    lat: real("lat").notNull(),
-    lng: real("lng").notNull(),
-    elevation: real("elevation").notNull(), // in meters
-    osmId: text("osm_id").notNull(), // OpenStreetMap ID for the summit
-    name: text("name"), // peak name from OSM
+    summitId: uuid("summit_id")
+      .notNull()
+      .references(() => summits.id, { onDelete: "cascade" }),
   },
-  (table) => [uniqueIndex("summits_activity_osm_idx").on(table.activityId, table.osmId)],
+  (table) => [primaryKey({ columns: [table.activityId, table.summitId] })],
 );
 
-export const summitsRelations = relations(summits, ({ one }) => ({
+export const activitySummitsRelations = relations(activitySummits, ({ one }) => ({
   activity: one(activities, {
-    fields: [summits.activityId],
+    fields: [activitySummits.activityId],
     references: [activities.id],
+  }),
+  summit: one(summits, {
+    fields: [activitySummits.summitId],
+    references: [summits.id],
   }),
 }));

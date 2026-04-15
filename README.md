@@ -22,10 +22,9 @@ A personal activity tracker for outdoor sports — skiing, surfing, trekking, an
 - Immich integration — GPS-tagged photos synced from a self-hosted Immich instance, displayed as markers on the map at their capture location with thumbnail popups; automatically re-synced on every Strava activity import/webhook call
 - Weather on activity — historical conditions (temperature, wind, icon) fetched from Open-Meteo at the activity's start location and time, no API key required
 - Dark/light mode with adaptive map tiles (Stadia Alidade Smooth Dark / OpenStreetMap)
+- Summit detection — named OSM peaks detected along activity tracks via Overpass API, stored in a many-to-many relation and displayed in the activity side panel
 
 ## Roadmap
-
-- [ ] **Summit detection** — detect elevation peaks across activity tracks, reverse geocode to get peak names, display summit count on profile and markers on map
 - [ ] **Life map** — photos + activities at all zoom levels with clustering, turning the map into a personal geographic history
 - [ ] **Timeline scrubber** — replay geographic history month by month across activities and photos
 - [ ] **Personal records** — longest, highest, fastest, displayed on profile

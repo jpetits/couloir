@@ -35,6 +35,23 @@ export function useBounds() {
   return bounds;
 }
 
+export function useSyncViewport() {
+  const map = useMap();
+  const setMapViewport = useMapStore((state) => state.setMapViewport);
+
+  const sync = () => {
+    const center = map.getCenter();
+    setMapViewport({ lat: center.lat, lng: center.lng, zoom: map.getZoom() });
+  };
+
+  useEffect(() => { sync(); }, []);
+
+  useMapEvents({
+    moveend: sync,
+    zoomend: sync,
+  });
+}
+
 export function useFitBounds(activityList: Activity[]) {
   const map = useMap();
   const zoom = useZoom();
@@ -80,45 +97,36 @@ export function useFetchActivityListInBounds(activityList: Activity[]) {
   const zoom = useZoom();
 
   const setActivityIdList = useMapStore((state) => state.setActivityIdList);
-
-  const [activityListInBounds, setActivityListInBounds] = useState<
-    { id: string; points: PointStats[] }[]
-  >([]);
+  const activityListInBounds = useMapStore((state) => state.activityListInBounds);
+  const setActivityListInBounds = useMapStore((state) => state.setActivityListInBounds);
 
   useEffect(() => {
     if (zoom < ZOOM_THRESHOLD) {
-      // under zoom threshold, we do not fetch points, we just set the activity list in bounds to the activities in bounds
       setActivityIdList(activityList.map((a) => a.id));
       return;
     }
-    if (zoom >= ZOOM_THRESHOLD) {
-      const mapBounds = {
-        north: bounds.getNorth(),
-        south: bounds.getSouth(),
-        east: bounds.getEast(),
-        west: bounds.getWest(),
-      };
-      fetchActivitiesWithPointsInBounds(
-        apiFetch,
-        mapBounds,
-        activityListInBounds.map((a) => a.id),
-        zoom, // adjust points detail based on zoom level
-      ).then((activities) => {
-        setActivityListInBounds(() => {
-          const next = new Map<string, { id: string; points: PointStats[] }>();
-
-          for (const [id, points] of Object.entries(activities)) {
-            const activityWithStats = activityList.find((a) => a.id === id);
-            if (!activityWithStats) continue;
-            const enriched = enrichPointList(points, activityWithStats);
-            next.set(id, { id, points: enriched });
-          }
-
-          return [...next.values()];
-        });
-        setActivityIdList(Object.keys(activities));
-      });
-    }
+    const mapBounds = {
+      north: bounds.getNorth(),
+      south: bounds.getSouth(),
+      east: bounds.getEast(),
+      west: bounds.getWest(),
+    };
+    fetchActivitiesWithPointsInBounds(
+      apiFetch,
+      mapBounds,
+      activityListInBounds.map((a) => a.id),
+      zoom,
+    ).then((activities) => {
+      const next = new Map<string, { id: string; points: PointStats[] }>();
+      for (const [id, points] of Object.entries(activities)) {
+        const activityWithStats = activityList.find((a) => a.id === id);
+        if (!activityWithStats) continue;
+        const enriched = enrichPointList(points, activityWithStats);
+        next.set(id, { id, points: enriched });
+      }
+      setActivityListInBounds([...next.values()]);
+      setActivityIdList(Object.keys(activities));
+    });
   }, [zoom, bounds]);
 
   return { activityListInBounds };
