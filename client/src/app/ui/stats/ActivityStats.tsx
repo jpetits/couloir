@@ -107,22 +107,29 @@ export default function ActivityStats({
 
   return (
     <div className="flex flex-col gap-1 mt-3">
-      <div className="flex gap-2">
-        {HEATMAP_OPTIONS.map(({ field, unit }) => (
-          <Button
-            key={field}
-            variant={heatMapField.field === field ? "default" : "outline"}
-            className="cursor-pointer"
-            size="sm"
-            onClick={() => setHeatMapField(field, unit)}
-          >
-            {field.charAt(0).toUpperCase() + field.slice(1)}
-          </Button>
-        ))}
-        <div className="ml-auto gap-2 flex">
+      <div
+        className="relative overflow-hidden"
+        onMouseLeave={() => {
+          handleHover(null, null);
+          setHoveredDate(null);
+          setHoveredActivity(null);
+        }}
+      >
+        <div className="absolute top-2 left-2 z-[1000] flex gap-1">
+          {HEATMAP_OPTIONS.map(({ field, unit }) => (
+            <Button
+              key={field}
+              variant={heatMapField.field === field ? "default" : "outline"}
+              className="cursor-pointer shadow"
+              size="sm"
+              onClick={() => setHeatMapField(field, unit)}
+            >
+              {field.charAt(0).toUpperCase() + field.slice(1)}
+            </Button>
+          ))}
           <Button
             variant={showPhotos ? "default" : "outline"}
-            className="cursor-pointer"
+            className="cursor-pointer shadow"
             size="sm"
             onClick={() => setShowPhotos((v) => !v)}
           >
@@ -132,23 +139,14 @@ export default function ActivityStats({
             variant={
               selectedActivity ? (show3DView ? "default" : "outline") : "ghost"
             }
-            className="cursor-pointer"
+            className="cursor-pointer shadow"
             size="sm"
             onClick={() => setShow3DView((v) => (selectedActivity ? !v : v))}
           >
             3D View
           </Button>
         </div>
-      </div>
 
-      <div
-        className="relative overflow-hidden"
-        onMouseLeave={() => {
-          handleHover(null, null);
-          setHoveredDate(null);
-          setHoveredActivity(null);
-        }}
-      >
         <div className={show3DView ? "hidden" : ""}>
           <>
             <MapContainer
@@ -205,20 +203,19 @@ export default function ActivityStats({
 
               <ScaleControl position="bottomleft" imperial={false} />
             </MapContainer>
-            {hoveredActivity && (
-              <ActivitySidePanel
-                activity={
-                  activityList.find((a) => a.id === hoveredActivity?.id)!
-                }
-              />
-            )}
           </>
         </div>
+        {hoveredActivity && (
+          <ActivitySidePanel
+            activity={activityList.find((a) => a.id === hoveredActivity?.id)!}
+          />
+        )}
         {show3DView && selectedActivity && (
           <Map3DView
             visible={show3DView}
             hoveredPoint={hoveredPoint}
             activity={selectedActivity}
+            onHover={handleHover}
           />
         )}
       </div>

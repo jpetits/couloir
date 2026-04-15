@@ -25,13 +25,6 @@ export function RowSkeleton({
 export function StatsMapSkeleton() {
   return (
     <div className="mt-3">
-      <div className="flex  gap-2 mt-3 mb-1">
-        <div className="w-20 h-8 rounded-md bg-muted" />
-        <div className="w-20 h-8 rounded-md bg-muted" />
-        <div className="w-20 h-8 rounded-md bg-muted" />
-        <div className="w-20 h-8 rounded-md bg-muted ml-auto" />
-        <div className="w-20 h-8 rounded-md bg-muted" />
-      </div>
       <div
         className="w-full animate-pulse rounded-lg bg-muted"
         style={{ height: 600 }}
