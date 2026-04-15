@@ -23,8 +23,6 @@ export const deleteActivitiesSchema = z.object({
   ids: z.array(z.string()).min(1),
 });
 
-export type DeleteActivitiesInput = z.infer<typeof deleteActivitiesSchema>;
-
 export const patchActivitiesSchema = z.object({
   name: z.string().optional(),
 });

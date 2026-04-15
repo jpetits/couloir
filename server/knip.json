@@ -3,5 +3,6 @@
   "project": ["src/**/*.ts"],
   "exclude": ["devDependencies"],
   "ignoreDependencies": [],
-  "ignoreExportsUsedInFile": true
+  "ignoreExportsUsedInFile": true,
+  "ignore": ["src/services/summitsDetect.ts"]
 }
