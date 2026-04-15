@@ -4,7 +4,12 @@ import dynamic from "next/dynamic";
 
 import { Activity } from "@/lib/schema";
 
-const ActivityStats = dynamic(() => import("./ActivityStats"), { ssr: false });
+import { StatsMapSkeleton } from "../skeletons";
+
+const ActivityStats = dynamic(() => import("./ActivityStats"), {
+  ssr: false,
+  loading: () => <StatsMapSkeleton />,
+});
 
 export default function ActivityStatsWrapper({
   activityList,

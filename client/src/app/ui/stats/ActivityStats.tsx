@@ -105,10 +105,10 @@ export default function ActivityStats({
             {field.charAt(0).toUpperCase() + field.slice(1)}
           </Button>
         ))}
-        <div className="ml-auto">
+        <div className="ml-auto gap-2 flex">
           <Button
             variant={showPhotos ? "default" : "outline"}
-            className="cursor-pointer ml-auto"
+            className="cursor-pointer"
             size="sm"
             onClick={() => setShowPhotos((v) => !v)}
           >
@@ -116,7 +116,7 @@ export default function ActivityStats({
           </Button>
           <Button
             variant={show3DView ? "default" : "outline"}
-            className="cursor-pointer ml-auto"
+            className="cursor-pointer"
             size="sm"
             onClick={() => setShow3DView((v) => !v)}
           >

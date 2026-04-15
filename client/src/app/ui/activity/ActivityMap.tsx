@@ -37,7 +37,7 @@ export default function ActivityMap({
 
   return (
     <MapContainer
-      style={{ height: 600, width: "100%" }}
+      className="w-full h-150"
       bounds={pointList.map((p) => [p.lat, p.lng])}
     >
       <TileLayer
@@ -66,6 +66,7 @@ export default function ActivityMap({
         })}
       <Polyline
         positions={pointList}
+        renderer={canvas}
         color="transparent"
         weight={20}
         eventHandlers={{

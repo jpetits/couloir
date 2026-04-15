@@ -1,4 +1,4 @@
-import ActivityList from "@/app/ui/activity/ActivityList";
+import ActivityList from "@/app/ui/activityList/ActivityList";
 import BackButton from "@/app/ui/dashboard/BackButton";
 import StatsButton from "@/app/ui/dashboard/StatsButton";
 import StravaConnectButton from "@/app/ui/dashboard/StravaConnectButton";

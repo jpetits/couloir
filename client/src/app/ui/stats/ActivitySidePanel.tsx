@@ -1,13 +1,10 @@
 "use client";
 
-import { useState } from "react";
-
 import { format } from "date-fns";
 import Link from "next/link";
 import { useShallow } from "zustand/react/shallow";
 
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogTitle } from "@/components/ui/dialog";
 import { DATE_FORMAT, HEATMAP_OPTIONS } from "@/lib/constants";
 import { Activity } from "@/lib/schema";
 import { formatDuration } from "@/lib/utils";
@@ -16,32 +13,27 @@ import { useMapStore } from "@/store/mapStore";
 
 import ActivityWeather from "../activity/ActivityWeather";
 import DataChart from "../activity/DataChart";
-import Map3DView from "./Map3DView";
 
 export default function ActivitySidePanel({
   activity,
 }: {
   activity: Activity;
 }) {
-  const hoveredActivityPoints = useMapStore(
-    (state) => state.hoveredActivityPoints,
+  const {
+    hoveredPoint,
+    setHoveredPoint,
+    heatMapField,
+    setHeatMapField,
+    hoveredActivityPoints,
+  } = useMapStore(
+    useShallow((state) => ({
+      hoveredPoint: state.hoveredPoint,
+      setHoveredPoint: state.setHoveredPoint,
+      heatMapField: state.heatMapField,
+      setHeatMapField: state.setHeatMapField,
+      hoveredActivityPoints: state.hoveredActivityPoints,
+    })),
   );
-
-  const [open3D, setOpen3D] = useState(false);
-
-  const { hoveredPoint, setHoveredPoint, heatMapField, setHeatMapField } =
-    useMapStore(
-      useShallow((state) => ({
-        hoveredPoint: state.hoveredPoint,
-        setHoveredPoint: state.setHoveredPoint,
-        heatMapField: state.heatMapField,
-        setHeatMapField: state.setHeatMapField,
-      })),
-    );
-
-  const activityList = hoveredActivityPoints.length > 0
-    ? [{ id: activity.id, points: hoveredActivityPoints }]
-    : [];
 
   return (
     <div className="absolute top-0 right-0 h-full w-80 bg-background border-l shadow-xl z-1000 flex flex-col">
@@ -113,22 +105,6 @@ export default function ActivitySidePanel({
               </div>
             ))}
         </div>
-        {activityList.length > 0 && (
-          <>
-            <div
-              className="rounded overflow-hidden cursor-pointer ring-1 ring-border"
-              onClick={() => setOpen3D(true)}
-            >
-              <Map3DView activityList={activityList} height="h-36" />
-            </div>
-            <Dialog open={open3D} onOpenChange={setOpen3D}>
-              <DialogContent className="max-w-4xl p-0 overflow-hidden">
-                <DialogTitle className="sr-only">3D View</DialogTitle>
-                <Map3DView activityList={activityList} height="h-[80vh]" />
-              </DialogContent>
-            </Dialog>
-          </>
-        )}
       </div>
       <div className="p-4 border-t">
         <Link href={ROUTES.activity(activity.id)}>

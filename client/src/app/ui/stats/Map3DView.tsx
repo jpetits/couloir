@@ -55,7 +55,6 @@ function centerOfPoints(points: PointStats[]) {
 export default function Map3DView({
   visible = true,
   activityList,
-  height = "h-175",
 }: {
   visible?: boolean;
   activityList?: ActivityWithPoints[];
@@ -79,7 +78,7 @@ export default function Map3DView({
   };
 
   return (
-    <div className={`w-full ${height}`}>
+    <div className="w-full h-150">
       <Map
         initialViewState={initialViewState}
         maxPitch={85}
