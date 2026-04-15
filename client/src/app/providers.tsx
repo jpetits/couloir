@@ -1,4 +1,6 @@
 "use client";
+import { useState } from "react";
+
 import {
   ClerkProvider,
   Show,
@@ -8,10 +10,8 @@ import {
 } from "@clerk/nextjs";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { ThemeProvider } from "next-themes";
-import { useState } from "react";
+
 import ThemeButton from "./ui/dashboard/ThemeButton";
-import Link from "next/dist/client/link";
-import { ROUTES } from "@/routing/constants";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(() => new QueryClient());
