@@ -135,7 +135,7 @@ export default function Map3DView({
           }}
         />
         {activityList.map((activity) => (
-          <>
+          <span key={activity.id}>
             <Source
               key={activity.id + "-zone"}
               id={`tracks-${activity.id}-zone`}
@@ -180,7 +180,7 @@ export default function Map3DView({
                 }}
               />
             </Source>
-          </>
+          </span>
         ))}
         {hoveredPoint && (
           <Marker longitude={hoveredPoint.lng} latitude={hoveredPoint.lat}>
