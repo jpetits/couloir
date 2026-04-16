@@ -14,13 +14,10 @@ import YearButtons from "./YearButtons";
 
 export default function ProfileContent({
   activityList,
-  username,
 }: {
   activityList: Activity[];
-  username: string;
 }) {
   const yearSelection = useMapStore((state) => state.yearSelection);
-  const hoveredActivity = useMapStore((state) => state.hoveredActivity);
   const [showStats, setShowStats] = useState(false);
 
   const activityListWithCoords = activityList.filter(

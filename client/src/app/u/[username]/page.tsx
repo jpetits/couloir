@@ -15,7 +15,7 @@ export default async function PublicProfilePage({
 
   return (
     <main className="mx-auto px-4">
-      <ProfileContent activityList={activityList} username={username} />
+      <ProfileContent activityList={activityList} />
     </main>
   );
 }
