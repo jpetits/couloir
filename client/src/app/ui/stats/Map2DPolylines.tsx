@@ -22,12 +22,9 @@ const Map2DPolylines = memo(
     heatMapField: { field: keyof PointStats; unit: string };
   }) => {
     const zoom = useZoom();
-    const canvasRef = useRef<L.Canvas | null>(null);
-    if (!canvasRef.current) canvasRef.current = L.canvas({ padding: 0.5 });
-    const canvas = canvasRef.current;
     const borderRef = useRef<L.Polyline>(null);
     useEffect(() => {
-      if (status === "hovered") borderRef.current?.bringToFront(); //leaflet doesn't handle z-index on canvas layers, so we need to manually bring the hovered polyline to front
+      if (status === "hovered") borderRef.current?.bringToFront();
     }, [status]);
 
     const segments = getSegmentsFromPoints(points);
@@ -36,8 +33,7 @@ const Map2DPolylines = memo(
       <>
         {zoom < 14 && (
           <Polyline
-            key={`border-${points[0]!.id}`} //border polyline to create a contrast and make it more visible when hovered or dimmed
-            renderer={canvas}
+            key={`border-${points[0]!.id}`}
             positions={segments.flatMap((s) => s || [])}
             weight={status === "dimmed" ? 3 : 6}
             pathOptions={{
@@ -50,7 +46,6 @@ const Map2DPolylines = memo(
           <Polyline
             ref={borderRef}
             key={`highlight-${points[i]!.id}`}
-            renderer={canvas}
             positions={pos}
             weight={status === "dimmed" ? 2 : 5}
             pathOptions={{
