@@ -5,9 +5,13 @@
 A personal activity tracker for outdoor sports — skiing, surfing, trekking, and more. Upload GPS files from any device or sync directly from Strava, and visualize all your activities on an interactive map with elevation and speed charts.
 
 <div align="center">
-  <img src="client/public/map.webp" width="32%" />
-  <img src="client/public/map2.webp" width="32%" />
-  <img src="client/public/map3.webp" width="32%" />
+  <img src="client/public/map.webp" width="24%" alt="3D map view with terrain relief" />
+  <img src="client/public/map2.webp" width="24%" alt="2D heatmap view with speed overlay" />
+  <img src="client/public/map3.webp" width="24%" alt="Zoomed out view with 400+ activities" />
+  <img src="client/public/map4.webp" width="24%" alt="Activity list with filters, FIT upload and Strava sync" />
+</div>
+<div align="center">
+  <sub>3D terrain view &nbsp;·&nbsp; 2D speed heatmap &nbsp;·&nbsp; 400+ activities overview &nbsp;·&nbsp; Activity list with FIT upload & Strava sync</sub>
 </div>
 
 ## Features
