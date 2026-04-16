@@ -2,6 +2,7 @@
 
 import { useCallback } from "react";
 
+import { useTheme } from "next-themes";
 import type { MouseHandlerDataParam, TooltipIndex } from "recharts";
 import {
   Area,
@@ -28,6 +29,8 @@ export default function DataChart({
   dataKey: keyof PointStats;
   unit?: string;
 }) {
+  const { resolvedTheme } = useTheme();
+
   const handleMouseMove = useCallback(
     (e: MouseHandlerDataParam) => {
       const activeIndex = e?.activeIndex as TooltipIndex | undefined;
@@ -84,7 +87,7 @@ export default function DataChart({
               strokeDasharray="3 3"
               label={{
                 value: `${hoveredPoint[dataKey]} ${unit}`,
-                fill: "#fff",
+                fill: resolvedTheme === "dark" ? "#fff" : "#000",
                 fontSize: 11,
                 position: "insideTopRight",
               }}
