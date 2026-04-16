@@ -56,3 +56,25 @@ export function useLabelCalendar(
 
   return { calendarWrapperRef };
 }
+
+export function useScrollFade(mounted: boolean) {
+  const [scrolledLeft, setScrolledLeft] = useState(false);
+  const [scrolledEnd, setScrolledEnd] = useState(true);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el =
+      scrollRef.current?.querySelector<HTMLElement>("div[style*='overflow']") ??
+      scrollRef.current?.querySelector<HTMLElement>("div");
+    if (!el) return;
+    const update = () => {
+      setScrolledLeft(el.scrollLeft > 0);
+      setScrolledEnd(el.scrollLeft + el.clientWidth >= el.scrollWidth - 1);
+    };
+    update();
+    el.addEventListener("scroll", update);
+    return () => el.removeEventListener("scroll", update);
+  }, [mounted]);
+
+  return { scrollRef, scrolledLeft, scrolledEnd };
+}

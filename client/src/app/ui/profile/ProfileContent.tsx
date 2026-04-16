@@ -34,22 +34,12 @@ export default function ProfileContent({
 
   return (
     <>
-      <h1 className="text-3xl font-bold mb-6">
-        Activités publiques de {username}
-      </h1>
-      <div className="flex gap-2 mb-4">
-        <YearButtons activityList={activityList} />
-      </div>
+      <h1 className="text-3xl font-bold">Activités publiques de {username}</h1>
 
       <div className="relative overflow-hidden">
-        <div className="hidden md:block mt-4">
-          <ProfileStats activityList={activityListByYearSelection} />
-        </div>
-
         <ActivityStatsWrapper activityList={activityListByYearSelection} />
 
-        {/* Mobile bottom sheet toggle — hidden on desktop */}
-        <div className="md:hidden absolute bottom-0 left-0 right-0 z-1000 flex justify-center pb-2 pointer-events-none">
+        <div className="absolute bottom-0 left-0 right-0 z-1000 flex justify-center pb-6 pointer-events-none">
           <Button
             variant="outline"
             size="sm"
@@ -65,10 +55,12 @@ export default function ProfileContent({
           </Button>
         </div>
 
-        {/* Mobile bottom sheet panel */}
         <div
-          className={`md:hidden absolute bottom-0 left-0 right-0 z-999 bg-background border-t px-4 pt-3 pb-4 transition-transform duration-300 ${showStats ? "translate-y-0" : "translate-y-full"}`}
+          className={` absolute bottom-0 left-0 right-0 z-999 bg-background border-t px-4 pt-2 pb-7 transition-transform duration-300 ${showStats ? "translate-y-0" : "translate-y-full"}`}
         >
+          <div className="flex gap-2 mb-2">
+            <YearButtons activityList={activityList} />
+          </div>
           <ProfileStats activityList={activityListByYearSelection} />
         </div>
       </div>

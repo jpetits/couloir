@@ -76,7 +76,7 @@ export default function Map3DView({
   }, [activityList]);
 
   return (
-    <div className="w-full h-150">
+    <div style={{ height: "calc(100dvh - 7rem)", width: "100%" }}>
       <Map
         initialViewState={initialViewState}
         maxPitch={85}

@@ -13,6 +13,7 @@ import { useTheme } from "next-themes";
 import {
   useLabelCalendar,
   useResizeCalendar,
+  useScrollFade,
 } from "@/app/hooks/useActivityCalendar";
 import {
   BLOCK_MARGIN,
@@ -205,25 +206,34 @@ export default function ProfileStats({
   };
 
   const { calendarWrapperRef } = useLabelCalendar(selection, startDate);
+  const { scrollRef, scrolledLeft, scrolledEnd } = useScrollFade(mounted);
 
   return (
     <>
       <div ref={setContainerRef} />
-      <div
-        className="[&_text]:cursor-pointer"
-        onClick={(e) => handleMonthClick(e)}
-        ref={calendarWrapperRef}
-      >
-        <ActivityCalendar
-          labels={labels}
-          className="*:[scrollbar-width:none] [&>*::-webkit-scrollbar]:hidden"
-          colorScheme={mounted && resolvedTheme === "dark" ? "dark" : "light"}
-          theme={THEME_COLORS}
-          showTotalCount
-          blockSize={BLOCK_SIZE}
-          blockMargin={BLOCK_MARGIN}
-          renderBlock={(block, activity) => blockRender(block, activity)}
-          data={activityCalendarData}
+      <div className="relative" ref={scrollRef}>
+        <div
+          className="[&_text]:cursor-pointer"
+          onClick={(e) => handleMonthClick(e)}
+          ref={calendarWrapperRef}
+        >
+          <ActivityCalendar
+            labels={labels}
+            className="*:[scrollbar-width:none] [&>*::-webkit-scrollbar]:hidden"
+            colorScheme={mounted && resolvedTheme === "dark" ? "dark" : "light"}
+            theme={THEME_COLORS}
+            showTotalCount
+            blockSize={BLOCK_SIZE}
+            blockMargin={BLOCK_MARGIN}
+            renderBlock={(block, activity) => blockRender(block, activity)}
+            data={activityCalendarData}
+          />
+        </div>
+        <div
+          className={`pointer-events-none absolute top-0 left-0 h-full w-10 bg-linear-to-r from-background to-transparent transition-opacity duration-300 ${scrolledLeft ? "opacity-100" : "opacity-0"}`}
+        />
+        <div
+          className={`pointer-events-none absolute top-0 right-0 h-full w-10 bg-linear-to-l from-background to-transparent transition-opacity duration-300 ${scrolledEnd ? "opacity-0" : "opacity-100"}`}
         />
       </div>
     </>

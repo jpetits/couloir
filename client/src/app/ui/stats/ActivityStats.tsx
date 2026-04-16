@@ -113,7 +113,7 @@ export default function ActivityStats({
   ]) as [number, number][];
 
   return (
-    <div className="flex flex-col gap-1 mt-3">
+    <div className="flex flex-col gap-1">
       <div
         className="relative overflow-hidden"
         onMouseLeave={() => {
@@ -158,8 +158,7 @@ export default function ActivityStats({
               className="markercluster-map"
               bounds={activityListBounds}
               maxZoom={18}
-              // height mobile friendly get full height of the screen minus the header and some margin
-              style={{ height: "calc(100dvh)", width: "100%" }}
+              style={{ height: "calc(100dvh - 7rem)", width: "100%" }}
             >
               <TileLayer
                 url={
