@@ -34,7 +34,7 @@ async function fetchImmichAssetsWithGps(takenAfter?: Date, takenBefore?: Date) {
       });
       if (res.ok) break;
       console.warn(
-        `Immich search failed with status ${res.status} (attempt ${attempt}/3)`,
+        `Immich search failed: ${res.status} ${res.statusText} — URL: ${IMMICH_URL}/api/search/metadata (attempt ${attempt}/3)`,
       );
     }
     if (!res!.ok) {

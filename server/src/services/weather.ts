@@ -28,11 +28,19 @@ export async function fetchWeatherForActivity(activity: {
       "Content-Type": "application/json",
     },
   });
-  const data = await res.json();
 
   if (!res.ok) {
     console.error(
-      `Failed to fetch weather data for activity at ${activity.startLat}, ${activity.startLng} from ${startDate} to ${endDate}: ${data.error || res.statusText}`,
+      `Failed to fetch weather data for activity at ${activity.startLat}, ${activity.startLng} from ${startDate} to ${endDate}: ${res.statusText}`,
+    );
+    return {};
+  }
+
+  const data = await res.json();
+
+  if (data.error) {
+    console.error(
+      `Failed to fetch weather data for activity at ${activity.startLat}, ${activity.startLng} from ${startDate} to ${endDate}: ${data.reason}`,
     );
     return {};
   }
