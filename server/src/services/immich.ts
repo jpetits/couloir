@@ -16,25 +16,32 @@ async function fetchImmichAssetsWithGps(takenAfter?: Date, takenBefore?: Date) {
   }
 
   while (hasMore) {
-    const res = await fetch(`${IMMICH_URL}/api/search/metadata`, {
-      method: "POST",
-      headers: {
-        "x-api-key": IMMICH_API_KEY,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        page,
-        size: 100,
-        withExif: true,
-        ...(takenAfter && { takenAfter: takenAfter.toISOString() }),
-        ...(takenBefore && { takenBefore: takenBefore.toISOString() }),
-      }),
-    });
-    if (!res.ok) {
-      console.warn(`Immich search failed with status ${res.status}, skipping`);
-      return [];
+    let res: Response | null = null;
+    for (let attempt = 1; attempt <= 3; attempt++) {
+      res = await fetch(`${IMMICH_URL}/api/search/metadata`, {
+        method: "POST",
+        headers: {
+          "x-api-key": IMMICH_API_KEY,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          page,
+          size: 100,
+          withExif: true,
+          ...(takenAfter && { takenAfter: takenAfter.toISOString() }),
+          ...(takenBefore && { takenBefore: takenBefore.toISOString() }),
+        }),
+      });
+      if (res.ok) break;
+      console.warn(
+        `Immich search failed with status ${res.status} (attempt ${attempt}/3)`,
+      );
     }
-    const data = await res.json();
+    if (!res!.ok) {
+      console.warn("Immich search failed after 3 attempts, skipping");
+      break;
+    }
+    const data = (await res?.json()) ?? {};
     const items = data.assets?.items ?? [];
     results.push(...items);
     hasMore = items.length === 100;
