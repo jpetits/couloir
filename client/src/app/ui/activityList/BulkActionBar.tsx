@@ -19,7 +19,7 @@ export default function BulkActionBar() {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white border-t p-4 flex items-center justify-between z-50">
+    <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t p-4 flex items-center justify-between z-50">
       <span>{selected.length} activité(s) sélectionnée(s)</span>
       <div className="flex gap-2">
         <button
@@ -30,7 +30,7 @@ export default function BulkActionBar() {
         </button>
         <button
           onClick={clear}
-          className="px-4 py-2 bg-gray-200 rounded hover:bg-gray-300"
+          className="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded hover:bg-gray-300 dark:hover:bg-gray-500"
         >
           Effacer la sélection
         </button>

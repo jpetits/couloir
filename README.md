@@ -41,6 +41,7 @@ A personal activity tracker for outdoor sports — skiing, surfing, trekking, an
 - [ ] **Route planning** — draw a route, get elevation profile, export as GPX
 - [ ] **Mobile version** — responsive layout optimized for phones
 - [ ] **Simplify map state** — refactor Zustand map store to reduce complexity
+- [ ] **Cluster sidebar** — clicking a marker cluster opens a sidebar listing the grouped activities with links, and previews each track on the map
 
 ## Tech Stack
 

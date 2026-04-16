@@ -32,14 +32,13 @@ export default function MapSidePanel({ activity }: { activity: Activity }) {
   );
 
   return (
-    <div className="absolute bottom-0 left-0 right-0 md:bottom-auto md:left-auto md:top-0 md:right-0 md:h-full md:w-80 md:border-l bg-background border-t md:border-t-0 shadow-xl z-1000 flex flex-col max-h-[50dvh] md:max-h-full overflow-y-auto">
+    <div className="absolute bottom-0 left-0 right-0 md:bottom-auto md:left-auto md:top-0 md:right-0 md:h-full md:w-80  bg-background border shadow-xl z-1000 flex flex-col max-h-[50dvh] md:max-h-full overflow-y-auto">
       <div className="flex-row items-top justify-between p-4 border-b">
         <h2 className="font-semibold text-sm truncate">{activity.name}</h2>
         <p className="text-muted-foreground text-sm">
           {format(activity.startDate!, DATE_FORMAT)}
         </p>
       </div>
-
       <div className="p-4 flex flex-col gap-3 text-sm flex-1 overflow-y-auto">
         <p className="text-muted-foreground">
           <ActivityWeather activity={activity} />
@@ -102,7 +101,7 @@ export default function MapSidePanel({ activity }: { activity: Activity }) {
             ))}
         </div>
       </div>
-      <div className="p-4 border-t">
+      <div className="p-4 border-t w-[90%] mx-auto">
         <Link href={ROUTES.activity(activity.id)}>
           <Button className="w-full cursor-pointer" size="sm">
             Voir l'activité

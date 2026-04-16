@@ -1,3 +1,4 @@
+import { Fragment } from "react";
 import { CircleMarker, Marker, Polyline, Popup } from "react-leaflet";
 import MarkerClusterGroup from "react-leaflet-cluster";
 
@@ -137,9 +138,8 @@ export default function Map2DContent({
         filteredActivityList.map(
           ({ id, points }) =>
             (selectedActivityId ? selectedActivityId === id : true) && (
-              <div key={id}>
+              <Fragment key={id}>
                 <Map2DPolylines
-                  key={id}
                   points={points}
                   heatMapField={heatMapField}
                   status={getStatus(id)}
@@ -166,7 +166,7 @@ export default function Map2DContent({
                     },
                   }}
                 />
-              </div>
+              </Fragment>
             ),
         )
       )}
