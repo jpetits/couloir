@@ -11,7 +11,7 @@ import { useTheme } from "next-themes";
 import { useShallow } from "zustand/react/shallow";
 
 import { Button } from "@/components/ui/button";
-import { DATE_FORMAT, HEATMAP_OPTIONS } from "@/lib/constants";
+import { DATE_FORMAT, HEATMAP_OPTIONS, MAP_HEIGHT } from "@/lib/constants";
 import { Activity } from "@/lib/schema";
 import { useMapStore } from "@/store/mapStore";
 import { PointStats } from "@/types/activity";
@@ -122,7 +122,7 @@ export default function ActivityStats({
           setHoveredActivity(null);
         }}
       >
-        <div className="absolute top-2 left-15 z-1000 flex gap-1 flex-wrap">
+        <div className="absolute top-2.5 left-15 z-1000 flex gap-1 flex-wrap">
           {HEATMAP_OPTIONS.map(({ field, unit }) => (
             <Button
               key={field}
@@ -158,7 +158,7 @@ export default function ActivityStats({
               className="markercluster-map"
               bounds={activityListBounds}
               maxZoom={18}
-              style={{ height: "calc(100dvh - 7rem)", width: "100%" }}
+              style={{ height: MAP_HEIGHT, width: "100%" }}
             >
               <TileLayer
                 url={

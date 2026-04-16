@@ -20,6 +20,7 @@ export default function ProfileContent({
   username: string;
 }) {
   const yearSelection = useMapStore((state) => state.yearSelection);
+  const hoveredActivity = useMapStore((state) => state.hoveredActivity);
   const [showStats, setShowStats] = useState(false);
 
   const activityListWithCoords = activityList.filter(
@@ -34,8 +35,6 @@ export default function ProfileContent({
 
   return (
     <>
-      <h1 className="text-3xl font-bold">Activités publiques de {username}</h1>
-
       <div className="relative overflow-hidden">
         <ActivityStatsWrapper activityList={activityListByYearSelection} />
 
