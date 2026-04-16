@@ -56,11 +56,16 @@ const createOrUpdateActivities = async (
     return [];
   }
 
-  const activitiesToInsert = await Promise.all(
-    parsed.map(async (activity) => ({
-      ...activity,
-      weather: JSON.stringify(await fetchWeatherForActivity(activity)),
-    })),
+  const activitiesToInsert: (typeof activities.$inferInsert)[] = [];
+  await processQueue(
+    parsed,
+    async (activity) => {
+      activitiesToInsert.push({
+        ...activity,
+        weather: JSON.stringify(await fetchWeatherForActivity(activity)),
+      });
+    },
+    1000,
   );
 
   return await activityRepository.createMany(activitiesToInsert);
