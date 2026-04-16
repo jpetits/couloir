@@ -59,7 +59,11 @@ const createOrUpdateActivities = async (
   const activitiesToInsert: (typeof activities.$inferInsert)[] = [];
   await processQueue(
     parsed,
-    async (activity) => {
+    async (activity, index) => {
+      sendMessage(userId, {
+        type: "sync:progress",
+        progress: Math.round(((index + 1) / parsed.length) * 50),
+      });
       activitiesToInsert.push({
         ...activity,
         weather: JSON.stringify(await fetchWeatherForActivity(activity)),
@@ -216,7 +220,7 @@ const queueActivitiesForProcessing = async (
 
     sendMessage(user.id, {
       type: "sync:progress",
-      progress: Math.round(((index + 1) / activityList.length) * 100),
+      progress: Math.round(((index + 1) / activityList.length) * 50),
     });
   });
 };
