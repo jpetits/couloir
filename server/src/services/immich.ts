@@ -30,6 +30,10 @@ async function fetchImmichAssetsWithGps(takenAfter?: Date, takenBefore?: Date) {
         ...(takenBefore && { takenBefore: takenBefore.toISOString() }),
       }),
     });
+    if (!res.ok) {
+      console.warn(`Immich search failed with status ${res.status}, skipping`);
+      return [];
+    }
     const data = await res.json();
     const items = data.assets?.items ?? [];
     results.push(...items);
