@@ -122,7 +122,7 @@ export default function ActivityStats({
           setHoveredActivity(null);
         }}
       >
-        <div className="absolute top-2 left-15 z-1000 flex gap-1">
+        <div className="absolute top-2 left-15 z-1000 flex gap-1 flex-wrap">
           {HEATMAP_OPTIONS.map(({ field, unit }) => (
             <Button
               key={field}
@@ -158,7 +158,8 @@ export default function ActivityStats({
               className="markercluster-map"
               bounds={activityListBounds}
               maxZoom={18}
-              style={{ height: "700px", width: "100%" }}
+              // height mobile friendly get full height of the screen minus the header and some margin
+              style={{ height: "calc(100dvh)", width: "100%" }}
             >
               <TileLayer
                 url={

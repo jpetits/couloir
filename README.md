@@ -39,6 +39,8 @@ A personal activity tracker for outdoor sports — skiing, surfing, trekking, an
 - [ ] **Personal records** — longest, highest, fastest, displayed on profile
 - [ ] **Activity type tagging** — ski/hike/bike/surf labels with per-type colors on map
 - [ ] **Route planning** — draw a route, get elevation profile, export as GPX
+- [ ] **Mobile version** — responsive layout optimized for phones
+- [ ] **Simplify map state** — refactor Zustand map store to reduce complexity
 
 ## Tech Stack
 

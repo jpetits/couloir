@@ -32,7 +32,7 @@ export default function MapSidePanel({ activity }: { activity: Activity }) {
   );
 
   return (
-    <div className="absolute top-0 right-0 h-full w-80 bg-background border-l shadow-xl z-1000 flex flex-col">
+    <div className="absolute bottom-0 left-0 right-0 md:bottom-auto md:left-auto md:top-0 md:right-0 md:h-full md:w-80 md:border-l bg-background border-t md:border-t-0 shadow-xl z-1000 flex flex-col max-h-[50dvh] md:max-h-full overflow-y-auto">
       <div className="flex-row items-top justify-between p-4 border-b">
         <h2 className="font-semibold text-sm truncate">{activity.name}</h2>
         <p className="text-muted-foreground text-sm">
