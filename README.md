@@ -4,7 +4,11 @@
 
 A personal activity tracker for outdoor sports — skiing, surfing, trekking, and more. Upload GPS files from any device or sync directly from Strava, and visualize all your activities on an interactive map with elevation and speed charts.
 
-![Couloir map](client/public/map.webp)
+<div align="center">
+  <img src="client/public/map.webp" width="32%" />
+  <img src="client/public/map2.webp" width="32%" />
+  <img src="client/public/map3.webp" width="32%" />
+</div>
 
 ## Features
 

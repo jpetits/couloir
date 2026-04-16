@@ -43,17 +43,37 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Screenshot */}
-      <section className="px-6 max-w-5xl mx-auto">
-        <div className="rounded-xl overflow-hidden border shadow-2xl">
-          <Image
-            src="/map.webp"
-            alt="Couloir activity map"
-            width={1200}
-            height={700}
-            className="w-full object-cover"
-            priority
-          />
+      {/* Screenshots */}
+      <section className="px-6 max-w-6xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="rounded-xl overflow-hidden border shadow-2xl">
+            <Image
+              src="/map.webp"
+              alt="Couloir activity map"
+              width={1200}
+              height={700}
+              className="w-full object-cover"
+              priority
+            />
+          </div>
+          <div className="rounded-xl overflow-hidden border shadow-2xl">
+            <Image
+              src="/map2.webp"
+              alt="Couloir activity stats"
+              width={1200}
+              height={700}
+              className="w-full object-cover"
+            />
+          </div>
+          <div className="rounded-xl overflow-hidden border shadow-2xl">
+            <Image
+              src="/map3.webp"
+              alt="Couloir 3D map"
+              width={1200}
+              height={700}
+              className="w-full object-cover"
+            />
+          </div>
         </div>
       </section>
 
