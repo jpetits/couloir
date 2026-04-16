@@ -9,8 +9,6 @@ import { useZoom } from "@/app/hooks/useLeaflet";
 import { getPointColor, getSegmentsFromPoints } from "@/lib/utils";
 import { PointStats } from "@/types/activity";
 
-const canvas = L.canvas({ padding: 0.5 });
-
 type HoverStatus = "hovered" | "dimmed" | "idle";
 
 const Map2DPolylines = memo(
@@ -24,6 +22,9 @@ const Map2DPolylines = memo(
     heatMapField: { field: keyof PointStats; unit: string };
   }) => {
     const zoom = useZoom();
+    const canvasRef = useRef<L.Canvas | null>(null);
+    if (!canvasRef.current) canvasRef.current = L.canvas({ padding: 0.5 });
+    const canvas = canvasRef.current;
     const borderRef = useRef<L.Polyline>(null);
     useEffect(() => {
       if (status === "hovered") borderRef.current?.bringToFront(); //leaflet doesn't handle z-index on canvas layers, so we need to manually bring the hovered polyline to front

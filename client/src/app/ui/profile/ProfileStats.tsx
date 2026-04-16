@@ -230,10 +230,10 @@ export default function ProfileStats({
           />
         </div>
         <div
-          className={`pointer-events-none absolute top-0 left-0 h-full w-10 bg-linear-to-r from-background to-transparent transition-opacity duration-300 ${scrolledLeft ? "opacity-100" : "opacity-0"}`}
+          className={`pointer-events-none absolute top-0 left-0 h-[90%] w-10 bg-linear-to-r from-background to-transparent transition-opacity duration-300 ${scrolledLeft ? "opacity-100" : "opacity-0"}`}
         />
         <div
-          className={`pointer-events-none absolute top-0 right-0 h-full w-10 bg-linear-to-l from-background to-transparent transition-opacity duration-300 ${scrolledEnd ? "opacity-0" : "opacity-100"}`}
+          className={`pointer-events-none absolute top-0 right-0 h-[90%] w-10 bg-linear-to-l from-background to-transparent transition-opacity duration-300 ${scrolledEnd ? "opacity-0" : "opacity-100"}`}
         />
       </div>
     </>
