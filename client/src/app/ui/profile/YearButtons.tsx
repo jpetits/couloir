@@ -27,27 +27,30 @@ export default function YearButtons({
       >
         All
       </Button>
-      {yearList.map((year) => (
-        <Button
-          key={year}
-          variant={
-            yearSelection === year
-              ? "default"
-              : activityList.filter(
-                    (a) =>
-                      activityIdList.has(a.id) &&
-                      a.startDate.getFullYear() === year,
-                  ).length > 0
-                ? "outline"
-                : "ghost"
-          }
-          className="cursor-pointer"
-          size="sm"
-          onClick={() => setYearSelection(year)}
-        >
-          {year}
-        </Button>
-      ))}
+      {yearList.map((year) => {
+        const hasActivityInYear =
+          activityList.filter(
+            (a) =>
+              activityIdList.has(a.id) && a.startDate.getFullYear() === year,
+          ).length > 0;
+        return (
+          <Button
+            key={year}
+            variant={
+              yearSelection === year
+                ? "default"
+                : hasActivityInYear
+                  ? "outline"
+                  : "ghost"
+            }
+            className={hasActivityInYear ? "cursor-pointer" : ""}
+            size="sm"
+            onClick={() => hasActivityInYear && setYearSelection(year)}
+          >
+            {year}
+          </Button>
+        );
+      })}
     </>
   );
 }

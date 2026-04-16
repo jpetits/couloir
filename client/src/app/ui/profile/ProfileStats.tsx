@@ -154,6 +154,14 @@ export default function ProfileStats({
     clickedDate.setDate(clickedDate.getDate() + weekOffset * 7);
     const year = clickedDate.getFullYear();
     setSelectedActivityId(null);
+    const hasActivityInYear =
+      activityList.filter(
+        (a) =>
+          activityIdList.has(a.id) &&
+          a.startDate.getMonth() === clickedDate.getMonth() &&
+          a.startDate.getFullYear() === year,
+      ).length > 0;
+    if (!hasActivityInYear) return;
     if (
       selection &&
       selection.start.startsWith(

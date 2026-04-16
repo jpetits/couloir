@@ -31,6 +31,7 @@ export default function Map2DView({
     setHoveredPoint,
     setHoveredActivityPoints,
     setSelectedActivityId,
+    setHoveredActivity,
   } = useMapStore(
     useShallow((state) => ({
       hoveredPoint: state.hoveredPoint,
@@ -39,6 +40,7 @@ export default function Map2DView({
       setHoveredPoint: state.setHoveredPoint,
       setHoveredActivityPoints: state.setHoveredActivityPoints,
       setSelectedActivityId: state.setSelectedActivityId,
+      setHoveredActivity: state.setHoveredActivity,
     })),
   );
 
@@ -52,6 +54,7 @@ export default function Map2DView({
         setSelectedActivityId(null);
         setHoveredActivityPoints([]);
         setHoveredPoint(null);
+        setHoveredActivity(null);
       }
     },
   });

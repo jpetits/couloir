@@ -59,7 +59,6 @@ export default function ActivityStats({
   activityList: Activity[];
 }) {
   const { resolvedTheme } = useTheme();
-  const [hoveredActivity, setHoveredActivity] = useState<Activity | null>(null);
   const [showPhotos, setShowPhotos] = useState(false);
   const [show3DView, setShow3DView] = useState(false);
   const {
@@ -70,6 +69,8 @@ export default function ActivityStats({
     setHeatMapField,
     hoveredPoint,
     activityListInBounds,
+    hoveredActivity,
+    setHoveredActivity,
   } = useMapStore(
     useShallow((state) => ({
       setHoveredDate: state.setHoveredDate,
@@ -80,6 +81,8 @@ export default function ActivityStats({
       setHeatMapField: state.setHeatMapField,
       selectedActivityId: state.selectedActivityId,
       activityListInBounds: state.activityListInBounds,
+      hoveredActivity: state.hoveredActivity,
+      setHoveredActivity: state.setHoveredActivity,
     })),
   );
   const handleHover = useCallback(
