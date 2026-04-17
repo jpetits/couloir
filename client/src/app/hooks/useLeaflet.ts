@@ -54,12 +54,12 @@ export function useSyncViewport() {
 
 export function useFitBounds(activityList: Activity[]) {
   const map = useMap();
-  const zoom = useZoom();
   const dateSelection = useMapStore((state) => state.dateSelection);
   const yearSelection = useMapStore((state) => state.yearSelection);
+  const activityListInBounds = useMapStore((state) => state.activityListInBounds);
 
   useEffect(() => {
-    if ((!dateSelection && !yearSelection) || zoom >= ZOOM_THRESHOLD) return;
+    if (!dateSelection && !yearSelection) return;
     const filtered = activityList.filter((activity) => {
       const date = format(activity.startDate, DATE_FORMAT);
       const hasActivityStartPoint =
@@ -75,16 +75,23 @@ export function useFitBounds(activityList: Activity[]) {
       return filterDateSelection && filterYearSelection;
     });
     if (filtered.length === 0) return;
-    const activityListLats = filtered.map(
-      (activity) => activity.startLat as number,
-    );
-    const activityListLngs = filtered.map(
-      (activity) => activity.startLng as number,
-    );
+
+    const filteredIds = new Set(filtered.map((a) => a.id));
+    const points = activityListInBounds
+      .filter((a) => filteredIds.has(a.id))
+      .flatMap((a) => a.points);
+
+    const lats = points.length
+      ? points.map((p) => p.lat)
+      : filtered.map((a) => a.startLat as number);
+    const lngs = points.length
+      ? points.map((p) => p.lng)
+      : filtered.map((a) => a.startLng as number);
+
     map.fitBounds(
       [
-        [Math.min(...activityListLats), Math.min(...activityListLngs)],
-        [Math.max(...activityListLats), Math.max(...activityListLngs)],
+        [Math.min(...lats), Math.min(...lngs)],
+        [Math.max(...lats), Math.max(...lngs)],
       ],
       { padding: [100, 100], animate: true, duration: 0.5 },
     );

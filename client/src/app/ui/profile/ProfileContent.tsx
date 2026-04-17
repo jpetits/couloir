@@ -22,14 +22,12 @@ export default function ProfileContent({
   const yearSelection = useMapStore((state) => state.yearSelection);
   const setProfileUsername = useMapStore((state) => state.setProfileUsername);
   const [showCalendar, setShowCalendar] = useState(false);
+  const showSideBar = useMapStore((state) => state.showSideBar);
 
-  const hoveredActivity = useMapStore((state) => state.hoveredActivity);
-  const setSelectedActivityId = useMapStore((state) => state.setSelectedActivityId);
+  const setSelectedActivityId = useMapStore(
+    (state) => state.setSelectedActivityId,
+  );
   const setHoveredActivity = useMapStore((state) => state.setHoveredActivity);
-
-  useEffect(() => {
-    if (hoveredActivity) setShowCalendar(false);
-  }, [hoveredActivity]);
 
   useEffect(() => {
     setProfileUsername(username);
@@ -51,34 +49,36 @@ export default function ProfileContent({
       <div className="relative overflow-hidden">
         <ActivityStatsWrapper activityList={activityListByYearSelection} />
 
-        <div className="absolute bottom-0 left-0 right-0 z-1000 flex justify-center pb-6 pointer-events-none">
-          <Button
-            variant="outline"
-            size="sm"
-            className="shadow-lg bg-background pointer-events-auto"
-            onClick={() => {
-              setShowCalendar((v) => !v);
-              setSelectedActivityId(null);
-              setHoveredActivity(null);
-            }}
-          >
-            {showCalendar ? (
-              <ChevronDown className="w-4 h-4 mr-1" />
-            ) : (
-              <ChevronUp className="w-4 h-4 mr-1" />
-            )}
-            Calendar
-          </Button>
+        <div className="absolute bottom-0 left-0 right-0 z-500 flex justify-center pb-6 pointer-events-none">
+          {!showSideBar && (
+            <Button
+              variant="outline"
+              size="sm"
+              className="shadow-lg bg-background pointer-events-auto"
+              onClick={() => {
+                setShowCalendar((v) => !v);
+                setSelectedActivityId(null);
+                setHoveredActivity(null);
+              }}
+            >
+              {showCalendar ? (
+                <ChevronDown className="w-4 h-4 mr-1" />
+              ) : (
+                <ChevronUp className="w-4 h-4 mr-1" />
+              )}
+              Calendar
+            </Button>
+          )}
         </div>
 
-        <div
-          className={` absolute bottom-0 left-0 right-0 z-999 bg-background border-t px-4 pt-2 pb-7 transition-transform duration-300 ${showCalendar ? "translate-y-0" : "translate-y-full"}`}
-        >
-          <div className="flex gap-2 mb-2">
-            <YearButtons activityList={activityList} />
+        {showCalendar && (
+          <div className="absolute bottom-0 left-0 right-0 z-499 bg-background border-t px-4 pt-2 pb-7">
+            <div className="flex gap-2 mb-2">
+              <YearButtons activityList={activityList} />
+            </div>
+            <ProfileStats activityList={activityListByYearSelection} />
           </div>
-          <ProfileStats activityList={activityListByYearSelection} />
-        </div>
+        )}
       </div>
     </>
   );

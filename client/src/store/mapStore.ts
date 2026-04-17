@@ -37,6 +37,8 @@ export interface MapStore {
   }) => void;
   profileUsername: string | null;
   setProfileUsername: (username: string | null) => void;
+  showSideBar: boolean;
+  setShowSideBar: (show: boolean) => void;
 }
 
 export const useMapStore = create<MapStore>((set) => ({
@@ -50,6 +52,9 @@ export const useMapStore = create<MapStore>((set) => ({
   selectedActivityId: null,
   activityListInBounds: [],
   mapViewport: null,
+  showSideBar: false,
+
+  setShowSideBar: (show) => set({ showSideBar: show }),
   setHoveredPoint: (point) => set({ hoveredPoint: point }),
   setActivityIdList: (activityIdList) =>
     set({ activityIdList: new Set(activityIdList) }),

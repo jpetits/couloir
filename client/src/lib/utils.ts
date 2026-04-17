@@ -112,7 +112,7 @@ export const toSegmentGeojson = (
     return [
       {
         type: "Feature" as const,
-        properties: { color: getPointColor(point, heatMapField, "idle") },
+        properties: { color: getPointColor(point, heatMapField) },
         geometry: {
           type: "LineString" as const,
           coordinates: [
@@ -128,12 +128,7 @@ export const toSegmentGeojson = (
 export const getPointColor = (
   point: PointStats,
   heatMapField: { field: keyof PointStats; unit: string },
-  status: "hovered" | "dimmed" | "idle",
 ) => {
-  if (status === "dimmed") {
-    return "grey";
-  }
-
   const colorField = (heatMapField.field + "Color") as keyof PointStats;
   return String(point[colorField]);
 };

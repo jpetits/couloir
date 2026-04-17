@@ -1,7 +1,7 @@
 "use client";
 
-import { X } from "lucide-react";
 import { format } from "date-fns";
+import { X } from "lucide-react";
 import Link from "next/link";
 import { useShallow } from "zustand/react/shallow";
 
@@ -21,37 +21,48 @@ export default function MapSidePanel({ activity }: { activity: Activity }) {
     setHoveredPoint,
     heatMapField,
     setHeatMapField,
-    hoveredActivityPoints,
+    selectedActivityId,
+    activityListInBounds,
     setHoveredActivity,
     setSelectedActivityId,
+    setShowSideBar,
   } = useMapStore(
     useShallow((state) => ({
       hoveredPoint: state.hoveredPoint,
       setHoveredPoint: state.setHoveredPoint,
       heatMapField: state.heatMapField,
       setHeatMapField: state.setHeatMapField,
-      hoveredActivityPoints: state.hoveredActivityPoints,
+      selectedActivityId: state.selectedActivityId,
+      activityListInBounds: state.activityListInBounds,
       setHoveredActivity: state.setHoveredActivity,
       setSelectedActivityId: state.setSelectedActivityId,
+      setShowSideBar: state.setShowSideBar,
     })),
   );
+
+  const selectedPoints =
+    activityListInBounds.find((a) => a.id === selectedActivityId)?.points ?? [];
 
   const close = () => {
     setHoveredActivity(null);
     setSelectedActivityId(null);
+    setShowSideBar(false);
   };
 
   return (
-    <div className="absolute bottom-0 left-0 right-0 md:bottom-auto md:left-auto md:top-0 md:right-0 md:h-full md:w-80  bg-background border shadow-xl z-1000 flex flex-col max-h-[50dvh] md:max-h-full overflow-y-auto">
-      <div className="flex items-start justify-between p-4 border-b">
+    <div className="absolute bottom-0 left-0 right-0 md:bottom-auto md:left-auto md:top-0 md:right-0 md:h-full md:w-80 bg-background border shadow-xl z-1000 flex flex-col max-h-[50dvh] md:max-h-full overflow-y-auto">
+      <div className="flex items-start justify-between p-4 border-b bg-gray-100 dark:bg-gray-700">
         <div>
           <h2 className="font-semibold text-sm truncate">{activity.name}</h2>
           <p className="text-muted-foreground text-sm">
             {format(activity.startDate!, DATE_FORMAT)}
           </p>
         </div>
-        <button onClick={close} className="text-muted-foreground hover:text-foreground ml-2 mt-0.5">
-          <X className="w-4 h-4" />
+        <button
+          onClick={close}
+          className="text-muted-foreground hover:text-foreground ml-2 mt-0.5 "
+        >
+          <X className="w-4 h-4 hover:cursor-pointer" />
         </button>
       </div>
       <div className="p-4 flex flex-col gap-3 text-sm flex-1 overflow-y-auto">
@@ -97,7 +108,7 @@ export default function MapSidePanel({ activity }: { activity: Activity }) {
           ))}
         </div>
         <DataChart
-          pointList={hoveredActivityPoints}
+          pointList={selectedPoints}
           onHover={(point) => setHoveredPoint(point)}
           hoveredPoint={hoveredPoint}
           dataKey={heatMapField.field}

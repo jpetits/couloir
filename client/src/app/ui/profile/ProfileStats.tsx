@@ -121,25 +121,32 @@ export default function ProfileStats({
   const handleBlockClick = (
     e: React.MouseEvent<SVGRectElement>,
     date: string,
-    hasActivity: boolean,
+    activityCount: number,
   ) => {
     e.stopPropagation();
 
-    if (!hasActivity) return;
+    if (!activityCount) return;
     setSelectedActivityId(null);
+    if (selection && (selection.start === date || selection.end === date)) {
+      setDateSelection(null);
+      return;
+    }
+
     if (e.shiftKey && selection) {
       const [a, b] = [selection.start, date].sort();
       setDateSelection({ start: a, end: b });
-    } else if (
-      selection &&
-      (selection.start === date || selection.end === date)
-    ) {
-      setDateSelection(null);
     } else {
       setDateSelection({
         start: date,
         end: date,
       });
+    }
+
+    if (activityCount === 1) {
+      const activity = activityList.find(
+        (a) => format(a.startDate, DATE_FORMAT) === date,
+      );
+      if (activity) setSelectedActivityId(activity.id);
     }
   };
 
@@ -187,7 +194,7 @@ export default function ProfileStats({
     const isHovered = hoveredDate === activity.date;
     const hasActivity = activity.count > 0;
 
-    return React.cloneElement(block, {
+    const cloned = React.cloneElement(block, {
       style: {
         cursor: hasActivity ? "pointer" : undefined,
         fill: isSelected || isHovered ? "red" : undefined,
@@ -201,8 +208,17 @@ export default function ProfileStats({
               block: "nearest",
             })
         : undefined,
-      onClick: (e) => handleBlockClick(e, activity.date, hasActivity),
+      onClick: (e) => handleBlockClick(e, activity.date, activity.count),
     } as React.SVGProps<SVGRectElement>);
+
+    if (!hasActivity) return cloned;
+
+    return (
+      <g>
+        {cloned}
+        <title>{`${activity.count} activité${activity.count > 1 ? "s" : ""}`}</title>
+      </g>
+    );
   };
 
   const { calendarWrapperRef } = useLabelCalendar(selection, startDate);

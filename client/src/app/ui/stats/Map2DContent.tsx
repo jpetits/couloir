@@ -135,40 +135,37 @@ export default function Map2DContent({
           ))}
         </MarkerClusterGroup>
       ) : (
-        filteredActivityList.map(
-          ({ id, points }) =>
-            (selectedActivityId ? selectedActivityId === id : true) && (
-              <Fragment key={id}>
-                <Map2DPolylines
-                  points={points}
-                  heatMapField={heatMapField}
-                  status={getStatus(id)}
-                />
-                <Polyline
-                  positions={points}
-                  color="transparent"
-                  weight={20}
-                  eventHandlers={{
-                    mousemove: (e) => {
-                      setHoveredActivityPoints(points);
-                      handleHover(
-                        getClosestPoint(e.latlng.lat, e.latlng.lng, points),
-                        id,
-                      );
-                    },
-                    click: (e) => {
-                      L.DomEvent.stopPropagation(e);
-                      if (selectedActivityId === id) {
-                        setSelectedActivityId(null);
-                      } else {
-                        setSelectedActivityId(id);
-                      }
-                    },
-                  }}
-                />
-              </Fragment>
-            ),
-        )
+        filteredActivityList.map(({ id, points }) => (
+          <Fragment key={id}>
+            <Map2DPolylines
+              points={points}
+              heatMapField={heatMapField}
+              status={getStatus(id)}
+            />
+            <Polyline
+              positions={points}
+              color="transparent"
+              weight={20}
+              eventHandlers={{
+                mousemove: (e) => {
+                  setHoveredActivityPoints(points);
+                  handleHover(
+                    getClosestPoint(e.latlng.lat, e.latlng.lng, points),
+                    id,
+                  );
+                },
+                click: (e) => {
+                  L.DomEvent.stopPropagation(e);
+                  if (selectedActivityId === id) {
+                    setSelectedActivityId(null);
+                  } else {
+                    setSelectedActivityId(id);
+                  }
+                },
+              }}
+            />
+          </Fragment>
+        ))
       )}
     </>
   );

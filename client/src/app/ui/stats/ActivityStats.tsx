@@ -71,6 +71,7 @@ export default function ActivityStats({
     activityListInBounds,
     hoveredActivity,
     setHoveredActivity,
+    selectedActivityId,
   } = useMapStore(
     useShallow((state) => ({
       setHoveredDate: state.setHoveredDate,
@@ -85,6 +86,10 @@ export default function ActivityStats({
       setHoveredActivity: state.setHoveredActivity,
     })),
   );
+
+  const panelActivity = selectedActivityId
+    ? activityList.find((a) => a.id === selectedActivityId)
+    : null;
   const handleHover = useCallback(
     (point: PointStats | null, activityId?: string | null) => {
       setHoveredPoint(point);
@@ -120,6 +125,7 @@ export default function ActivityStats({
           handleHover(null, null);
           setHoveredDate(null);
           setHoveredActivity(null);
+          if (!selectedActivityId) setHoveredActivityPoints([]);
         }}
       >
         <div className="absolute top-2.5 left-15 z-1000 flex gap-1 flex-wrap">
@@ -210,11 +216,6 @@ export default function ActivityStats({
             </MapContainer>
           </>
         </div>
-        {hoveredActivity && (
-          <MapSidePanel
-            activity={activityList.find((a) => a.id === hoveredActivity?.id)!}
-          />
-        )}
         {show3DView && (
           <Map3DView
             visible={show3DView}
@@ -223,6 +224,7 @@ export default function ActivityStats({
             onHover={handleHover}
           />
         )}
+        {panelActivity && <MapSidePanel activity={panelActivity} />}
       </div>
     </div>
   );
