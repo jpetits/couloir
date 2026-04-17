@@ -11,6 +11,8 @@ import { PointStats } from "@/types/activity";
 
 type HoverStatus = "hovered" | "dimmed" | "idle";
 
+const canvas = L.canvas({ padding: 0.5 });
+
 const Map2DPolylines = memo(
   ({
     points,
@@ -34,6 +36,7 @@ const Map2DPolylines = memo(
         {zoom < 14 && (
           <Polyline
             key={`border-${points[0]!.id}`}
+            renderer={canvas}
             positions={segments.flatMap((s) => s || [])}
             weight={status === "dimmed" ? 3 : 6}
             pathOptions={{
@@ -45,6 +48,7 @@ const Map2DPolylines = memo(
         {segments.map((pos, i) => (
           <Polyline
             ref={borderRef}
+            renderer={canvas}
             key={`highlight-${points[i]!.id}`}
             positions={pos}
             weight={status === "dimmed" ? 2 : 5}

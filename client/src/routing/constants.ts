@@ -24,6 +24,12 @@ export const ROUTES = {
         excludeActivityIds: excludeActivityIds.join(","),
         zoom: zoom.toString(),
       })}`,
+    publicMap: (username: string, bounds: MapBounds, excludeActivityIds: string[] = [], zoom: number) =>
+      `/api/public/${username}/map?${new URLSearchParams({
+        ...JSON.parse(JSON.stringify(MapBoundsSchema.parse(bounds))),
+        excludeActivityIds: excludeActivityIds.join(","),
+        zoom: zoom.toString(),
+      })}`,
     patchActivity: (id: string) => `/api/activities/${id}`,
     deleteActivity: `/api/activities`,
     postActivity: `/api/activities`,

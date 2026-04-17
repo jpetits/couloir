@@ -35,6 +35,8 @@ export interface MapStore {
     lng: number;
     zoom: number;
   }) => void;
+  profileUsername: string | null;
+  setProfileUsername: (username: string | null) => void;
 }
 
 export const useMapStore = create<MapStore>((set) => ({
@@ -61,4 +63,6 @@ export const useMapStore = create<MapStore>((set) => ({
   setActivityListInBounds: (list) => set({ activityListInBounds: list }),
   setMapViewport: (viewport) => set({ mapViewport: viewport }),
   setHoveredActivity: (activity) => set({ hoveredActivity: activity }),
+  profileUsername: null,
+  setProfileUsername: (username) => set({ profileUsername: username }),
 }));

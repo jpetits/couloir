@@ -99,6 +99,7 @@ export function useFetchActivityListInBounds(activityList: Activity[]) {
   const setActivityIdList = useMapStore((state) => state.setActivityIdList);
   const activityListInBounds = useMapStore((state) => state.activityListInBounds);
   const setActivityListInBounds = useMapStore((state) => state.setActivityListInBounds);
+  const profileUsername = useMapStore((state) => state.profileUsername);
 
   useEffect(() => {
     if (zoom < ZOOM_THRESHOLD) {
@@ -116,6 +117,7 @@ export function useFetchActivityListInBounds(activityList: Activity[]) {
       mapBounds,
       activityListInBounds.map((a) => a.id),
       zoom,
+      profileUsername ?? undefined,
     ).then((activities) => {
       const next = new Map<string, { id: string; points: PointStats[] }>();
       for (const [id, points] of Object.entries(activities)) {

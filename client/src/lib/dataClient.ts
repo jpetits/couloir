@@ -64,9 +64,11 @@ export async function fetchActivitiesWithPointsInBounds(
   bounds: MapBounds,
   excludeActivityIds: string[] = [],
   zoom: number,
+  username?: string,
 ): Promise<MapPointsResponse> {
-  return await apiFetch<MapPointsResponse>(
-    ROUTES.api.map(bounds, excludeActivityIds, zoom),
-    // ).then((data) => MapPointsResponseSchema.parse(data));
-  ).then((data) => data);
+  if (username) {
+    const url = `${process.env.NEXT_PUBLIC_API_URL}${ROUTES.api.publicMap(username, bounds, excludeActivityIds, zoom)}`;
+    return fetch(url).then((r) => r.json());
+  }
+  return apiFetch<MapPointsResponse>(ROUTES.api.map(bounds, excludeActivityIds, zoom));
 }

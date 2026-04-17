@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { ChevronDown, ChevronUp } from "lucide-react";
 
@@ -14,11 +14,19 @@ import YearButtons from "./YearButtons";
 
 export default function ProfileContent({
   activityList,
+  username,
 }: {
   activityList: Activity[];
+  username: string;
 }) {
   const yearSelection = useMapStore((state) => state.yearSelection);
+  const setProfileUsername = useMapStore((state) => state.setProfileUsername);
   const [showStats, setShowStats] = useState(false);
+
+  useEffect(() => {
+    setProfileUsername(username);
+    return () => setProfileUsername(null);
+  }, [username]);
 
   const activityListWithCoords = activityList.filter(
     (a) => a.startLat !== null && a.startLng !== null,
