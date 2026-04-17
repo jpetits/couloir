@@ -21,7 +21,15 @@ export default function ProfileContent({
 }) {
   const yearSelection = useMapStore((state) => state.yearSelection);
   const setProfileUsername = useMapStore((state) => state.setProfileUsername);
-  const [showStats, setShowStats] = useState(false);
+  const [showCalendar, setShowCalendar] = useState(false);
+
+  const hoveredActivity = useMapStore((state) => state.hoveredActivity);
+  const setSelectedActivityId = useMapStore((state) => state.setSelectedActivityId);
+  const setHoveredActivity = useMapStore((state) => state.setHoveredActivity);
+
+  useEffect(() => {
+    if (hoveredActivity) setShowCalendar(false);
+  }, [hoveredActivity]);
 
   useEffect(() => {
     setProfileUsername(username);
@@ -48,9 +56,13 @@ export default function ProfileContent({
             variant="outline"
             size="sm"
             className="shadow-lg bg-background pointer-events-auto"
-            onClick={() => setShowStats((v) => !v)}
+            onClick={() => {
+              setShowCalendar((v) => !v);
+              setSelectedActivityId(null);
+              setHoveredActivity(null);
+            }}
           >
-            {showStats ? (
+            {showCalendar ? (
               <ChevronDown className="w-4 h-4 mr-1" />
             ) : (
               <ChevronUp className="w-4 h-4 mr-1" />
@@ -60,7 +72,7 @@ export default function ProfileContent({
         </div>
 
         <div
-          className={` absolute bottom-0 left-0 right-0 z-999 bg-background border-t px-4 pt-2 pb-7 transition-transform duration-300 ${showStats ? "translate-y-0" : "translate-y-full"}`}
+          className={` absolute bottom-0 left-0 right-0 z-999 bg-background border-t px-4 pt-2 pb-7 transition-transform duration-300 ${showCalendar ? "translate-y-0" : "translate-y-full"}`}
         >
           <div className="flex gap-2 mb-2">
             <YearButtons activityList={activityList} />

@@ -1,5 +1,6 @@
 "use client";
 
+import { X } from "lucide-react";
 import { format } from "date-fns";
 import Link from "next/link";
 import { useShallow } from "zustand/react/shallow";
@@ -21,6 +22,8 @@ export default function MapSidePanel({ activity }: { activity: Activity }) {
     heatMapField,
     setHeatMapField,
     hoveredActivityPoints,
+    setHoveredActivity,
+    setSelectedActivityId,
   } = useMapStore(
     useShallow((state) => ({
       hoveredPoint: state.hoveredPoint,
@@ -28,16 +31,28 @@ export default function MapSidePanel({ activity }: { activity: Activity }) {
       heatMapField: state.heatMapField,
       setHeatMapField: state.setHeatMapField,
       hoveredActivityPoints: state.hoveredActivityPoints,
+      setHoveredActivity: state.setHoveredActivity,
+      setSelectedActivityId: state.setSelectedActivityId,
     })),
   );
 
+  const close = () => {
+    setHoveredActivity(null);
+    setSelectedActivityId(null);
+  };
+
   return (
     <div className="absolute bottom-0 left-0 right-0 md:bottom-auto md:left-auto md:top-0 md:right-0 md:h-full md:w-80  bg-background border shadow-xl z-1000 flex flex-col max-h-[50dvh] md:max-h-full overflow-y-auto">
-      <div className="flex-row items-top justify-between p-4 border-b">
-        <h2 className="font-semibold text-sm truncate">{activity.name}</h2>
-        <p className="text-muted-foreground text-sm">
-          {format(activity.startDate!, DATE_FORMAT)}
-        </p>
+      <div className="flex items-start justify-between p-4 border-b">
+        <div>
+          <h2 className="font-semibold text-sm truncate">{activity.name}</h2>
+          <p className="text-muted-foreground text-sm">
+            {format(activity.startDate!, DATE_FORMAT)}
+          </p>
+        </div>
+        <button onClick={close} className="text-muted-foreground hover:text-foreground ml-2 mt-0.5">
+          <X className="w-4 h-4" />
+        </button>
       </div>
       <div className="p-4 flex flex-col gap-3 text-sm flex-1 overflow-y-auto">
         <p className="text-muted-foreground">
