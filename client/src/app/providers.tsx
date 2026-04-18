@@ -32,7 +32,7 @@ export default function Providers({
       >
         <ClerkProvider>
           <header className="relative">
-            <div className="hidden md:flex justify-end items-center p-4 gap-4 h-16">
+            <div className="hidden lg:flex justify-end items-center p-4 gap-4 h-16">
               <ThemeButton />
               <Show when="signed-out">
                 <SignInButton>
