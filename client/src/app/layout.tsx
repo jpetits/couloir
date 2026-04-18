@@ -21,7 +21,8 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const { device } = userAgent({ headers: await headers() });
-  const isMobile = device.type === "mobile" || device.type === "tablet";
+  const isTablet = device.type === "tablet";
+  const isMobile = device.type === "mobile" || isTablet;
 
   return (
     <html
@@ -30,7 +31,7 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <body>
-        <DeviceProvider isMobile={isMobile}>
+        <DeviceProvider isMobile={isMobile} isTablet={isTablet}>
           <Providers>{children}</Providers>
         </DeviceProvider>
         <Toaster />

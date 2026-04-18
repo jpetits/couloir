@@ -10,7 +10,11 @@ import { useShallow } from "zustand/react/shallow";
 
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
-import { useIsMobile } from "@/context/DeviceContext";
+import {
+  useIsLandscape,
+  useIsMobile,
+  useIsTablet,
+} from "@/context/DeviceContext";
 import { DATE_FORMAT, HEATMAP_OPTIONS } from "@/lib/constants";
 import { Activity } from "@/lib/schema";
 import { formatDuration } from "@/lib/utils";
@@ -28,6 +32,8 @@ export default memo(function MapSidePanel({
   open?: boolean;
 }) {
   const isMobile = useIsMobile();
+  const isTablet = useIsTablet();
+  const isLandscape = useIsLandscape();
   const {
     hoveredPoint,
     setHoveredPoint,
@@ -152,8 +158,19 @@ export default memo(function MapSidePanel({
 
   if (isMobile) {
     return (
-      <Drawer modal={false} open={open} onClose={close}>
-        <DrawerContent className="max-h-[30dvh] z-1002 px-5">
+      <Drawer
+        modal={false}
+        open={open}
+        onClose={close}
+        direction={isLandscape || isTablet ? "right" : "bottom"}
+      >
+        <DrawerContent
+          className={
+            !isLandscape && !isTablet
+              ? "max-h-[30dvh] z-1002 px-5"
+              : "z-1002 px-5"
+          }
+        >
           <VisuallyHidden>
             <DrawerTitle>{activity.name}</DrawerTitle>
           </VisuallyHidden>
