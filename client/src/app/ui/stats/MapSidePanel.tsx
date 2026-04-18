@@ -153,7 +153,7 @@ export default memo(function MapSidePanel({
   if (isMobile) {
     return (
       <Drawer modal={false} open={open} onClose={close}>
-        <DrawerContent className="max-h-[30dvh] z-1000 px-5">
+        <DrawerContent className="max-h-[30dvh] z-1002 px-5">
           <VisuallyHidden>
             <DrawerTitle>{activity.name}</DrawerTitle>
           </VisuallyHidden>

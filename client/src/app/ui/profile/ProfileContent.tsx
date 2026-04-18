@@ -51,7 +51,7 @@ export default function ProfileContent({
       <div className="relative overflow-hidden">
         <ActivityStatsWrapper activityList={activityListByYearSelection} />
 
-        <div className="absolute bottom-0 left-0 right-0 z-10000 flex justify-center pointer-events-none">
+        <div className="absolute bottom-0 left-0 right-0 z-1002 flex justify-center pointer-events-none mb-4">
           {!showSideBar && (
             <Button
               variant="outline"
@@ -81,19 +81,19 @@ export default function ProfileContent({
           onOpenChange={setShowCalendar}
         >
           <DrawerContent
-            className="z-9999 px-4 pb-2 mb-4"
+            className="z-1001 px-4 pb-2 mb-4"
             aria-describedby={"calendar of activities"}
           >
             <VisuallyHidden>
               <DrawerTitle>Calendar</DrawerTitle>
             </VisuallyHidden>
-            <div className="relative flex items-center justify-center mb-2 mt-3">
+            <div className="relative flex items-center justify-center mb-2 mt-3 mx-4">
               <div className="flex gap-2 flex-wrap">
                 <YearButtons activityList={activityList} />
               </div>
               <button
                 onClick={() => setShowCalendar(false)}
-                className="absolute right-0 text-muted-foreground hover:text-foreground"
+                className="absolute right-0 text-muted-foreground hover:text-foreground cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
