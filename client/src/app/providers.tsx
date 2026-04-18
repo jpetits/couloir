@@ -50,14 +50,14 @@ export default function Providers({
             </div>
 
             <button
-              className="md:hidden absolute top-3 right-3 z-[10001] p-2 rounded-md bg-background/80 backdrop-blur-sm border"
+              className="lg:hidden absolute top-3 right-3 z-[10001] p-2 rounded-md bg-background/80 backdrop-blur-sm border"
               onClick={() => setMobileMenuOpen((v) => !v)}
             >
               {mobileMenuOpen ? <X className="w-4 h-4" /> : <Menu className="w-4 h-4" />}
             </button>
 
             {mobileMenuOpen && (
-              <div className="md:hidden absolute top-12 right-3 z-[10001] flex items-center gap-3 p-3 rounded-lg bg-background border shadow-lg">
+              <div className="lg:hidden absolute top-12 right-3 z-[10001] flex items-center gap-3 p-3 rounded-lg bg-background border shadow-lg">
                 <ThemeButton />
                 <Show when="signed-out">
                   <SignInButton>
