@@ -126,7 +126,7 @@ export default function ProfileStats({
     e.stopPropagation();
 
     if (!activityCount) return;
-    setSelectedActivityId(null);
+
     if (selection && (selection.start === date || selection.end === date)) {
       setDateSelection(null);
       return;
@@ -147,6 +147,8 @@ export default function ProfileStats({
         (a) => format(a.startDate, DATE_FORMAT) === date,
       );
       if (activity) setSelectedActivityId(activity.id);
+    } else {
+      setSelectedActivityId(null);
     }
   };
 

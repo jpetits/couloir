@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { Marker, ScaleControl } from "react-leaflet";
 import { MapContainer } from "react-leaflet/MapContainer";
 import { TileLayer } from "react-leaflet/TileLayer";
@@ -24,7 +24,7 @@ import Map2DView from "./Map2DView";
 import Map3DView from "./Map3DView";
 import MapSidePanel from "./MapSidePanel";
 
-export default function ActivityStats({
+export default function memoActivityStats({
   activityList,
 }: {
   activityList: Activity[];
@@ -59,6 +59,11 @@ export default function ActivityStats({
   const panelActivity = selectedActivityId
     ? activityList.find((a) => a.id === selectedActivityId)
     : null;
+  const [drawerActivity, setDrawerActivity] = useState<Activity | null>(null);
+  useEffect(() => {
+    if (panelActivity) setDrawerActivity(panelActivity);
+  }, [panelActivity?.id]);
+
   const handleHover = useCallback(
     (point: PointStats | null, activityId?: string | null) => {
       setHoveredPoint(point);
@@ -192,7 +197,12 @@ export default function ActivityStats({
             onHover={handleHover}
           />
         )}
-        {panelActivity && <MapSidePanel activity={panelActivity} />}
+        {(panelActivity ?? drawerActivity) && (
+          <MapSidePanel
+            activity={(panelActivity ?? drawerActivity)!}
+            open={!!panelActivity}
+          />
+        )}
       </div>
     </div>
   );
