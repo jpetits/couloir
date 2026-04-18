@@ -34,7 +34,6 @@ export default function Map2DContent({
     selectedActivityId,
     setHoveredActivityPoints,
     setSelectedActivityId,
-    heatMapField,
   } = useMapStore(
     useShallow((state) => ({
       dateSelection: state.dateSelection,
@@ -42,7 +41,6 @@ export default function Map2DContent({
       selectedActivityId: state.selectedActivityId,
       setHoveredActivityPoints: state.setHoveredActivityPoints,
       setSelectedActivityId: state.setSelectedActivityId,
-      heatMapField: state.heatMapField,
     })),
   );
 
@@ -137,11 +135,7 @@ export default function Map2DContent({
       ) : (
         filteredActivityList.map(({ id, points }) => (
           <Fragment key={id}>
-            <Map2DPolylines
-              points={points}
-              heatMapField={heatMapField}
-              status={getStatus(id)}
-            />
+            <Map2DPolylines points={points} status={getStatus(id)} />
             <Polyline
               positions={points}
               color="transparent"

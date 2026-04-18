@@ -2,11 +2,7 @@ import { memo, useEffect } from "react";
 import { Layer, Source, useMap } from "react-map-gl/maplibre";
 
 import { toSegmentGeojson } from "@/lib/utils";
-import {
-  useMapStore,
-  type ActivityWithPoints,
-  type HeatMapField,
-} from "@/store/mapStore";
+import { useMapStore, type ActivityWithPoints } from "@/store/mapStore";
 
 const MAPTILER_KEY = process.env.NEXT_PUBLIC_MAPTILER_API_KEY;
 
@@ -29,13 +25,13 @@ function SyncViewport({ visible }: { visible: boolean }) {
 
 export default memo(function Map3DContent({
   activityList,
-  heatMapField,
   visible,
 }: {
   activityList: ActivityWithPoints[];
-  heatMapField: HeatMapField;
   visible: boolean;
 }) {
+  const heatMapField = useMapStore((s) => s.heatMapField);
+
   return (
     <>
       {!activityList && <SyncViewport visible={visible} />}

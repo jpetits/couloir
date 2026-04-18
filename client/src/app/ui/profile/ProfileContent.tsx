@@ -54,7 +54,7 @@ export default function ProfileContent({
             <Button
               variant="outline"
               size="sm"
-              className="shadow-lg bg-background pointer-events-auto"
+              className="shadow-lg bg-background pointer-events-auto cursor-pointer"
               onClick={() => {
                 setShowCalendar((v) => !v);
                 setSelectedActivityId(null);
@@ -66,14 +66,16 @@ export default function ProfileContent({
               ) : (
                 <ChevronUp className="w-4 h-4 mr-1" />
               )}
-              Calendar
+              <span className={showCalendar ? "hidden md:block" : "block"}>
+                Calendar
+              </span>
             </Button>
           )}
         </div>
 
         {showCalendar && (
-          <div className="absolute bottom-0 left-0 right-0 z-499 bg-background border-t px-4 pt-2 pb-7">
-            <div className="flex gap-2 mb-2">
+          <div className="absolute bottom-0 left-0 right-0 z-499 bg-background border-t pt-2 pb-7">
+            <div className="flex gap-2 mb-2 flex-wrap justify-center">
               <YearButtons activityList={activityList} />
             </div>
             <ProfileStats activityList={activityListByYearSelection} />

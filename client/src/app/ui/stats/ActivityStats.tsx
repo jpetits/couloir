@@ -6,12 +6,16 @@ import { MapContainer } from "react-leaflet/MapContainer";
 import { TileLayer } from "react-leaflet/TileLayer";
 
 import { format } from "date-fns";
-import L from "leaflet";
 import { useTheme } from "next-themes";
 import { useShallow } from "zustand/react/shallow";
 
 import { Button } from "@/components/ui/button";
 import { DATE_FORMAT, HEATMAP_OPTIONS, MAP_HEIGHT } from "@/lib/constants";
+import {
+  startLeafletIcon,
+  stopLeafletIcon,
+  summitLeafletIcon,
+} from "@/lib/leafletIcons";
 import { Activity } from "@/lib/schema";
 import { useMapStore } from "@/store/mapStore";
 import { PointStats } from "@/types/activity";
@@ -19,39 +23,6 @@ import { PointStats } from "@/types/activity";
 import Map2DView from "./Map2DView";
 import Map3DView from "./Map3DView";
 import MapSidePanel from "./MapSidePanel";
-
-const startLeafletIcon = L.divIcon({
-  html: `<svg width="24" height="24" viewBox="0 0 24 24" 
-  xmlns="http://www.w3.org/2000/svg">                    
-    <circle cx="12" cy="12" r="12" fill="#3b82f6"/>      
-    <polygon points="8.5,7 18.5,12 8.5,17" fill="white"/>    
-  </svg>`,
-  className: "",
-  iconSize: [24, 24],
-  iconAnchor: [12, 12],
-});
-
-const stopLeafletIcon = L.divIcon({
-  html: `<svg width="24" height="24" viewBox="0 0 24 24" 
-  xmlns="http://www.w3.org/2000/svg">                    
-    <circle cx="12" cy="12" r="12" fill="red"/>      
-    <rect x="8" y="8" width="8" height="8" fill="white"/>    
-  </svg>`,
-  className: "",
-  iconSize: [20, 20],
-  iconAnchor: [10, 10],
-});
-
-const summitLeafletIcon = L.divIcon({
-  html: `<svg width="24" height="24" viewBox="0 0 24 24" 
-  xmlns="http://www.w3.org/2000/svg">                    
-    <circle cx="12" cy="12" r="12" fill="#fbbf24"/>      
-    <polygon points="12,6 16,14 8,14" fill="white"/>    
-  </svg>`,
-  className: "",
-  iconSize: [20, 20],
-  iconAnchor: [10, 10],
-});
 
 export default function ActivityStats({
   activityList,
@@ -67,7 +38,6 @@ export default function ActivityStats({
     setHoveredActivityPoints,
     heatMapField,
     setHeatMapField,
-    hoveredPoint,
     activityListInBounds,
     hoveredActivity,
     setHoveredActivity,
@@ -77,7 +47,6 @@ export default function ActivityStats({
       setHoveredDate: state.setHoveredDate,
       setHoveredPoint: state.setHoveredPoint,
       setHoveredActivityPoints: state.setHoveredActivityPoints,
-      hoveredPoint: state.hoveredPoint,
       heatMapField: state.heatMapField,
       setHeatMapField: state.setHeatMapField,
       selectedActivityId: state.selectedActivityId,
@@ -219,7 +188,6 @@ export default function ActivityStats({
         {show3DView && (
           <Map3DView
             visible={show3DView}
-            hoveredPoint={hoveredPoint}
             activityList={activityListInBounds}
             onHover={handleHover}
           />

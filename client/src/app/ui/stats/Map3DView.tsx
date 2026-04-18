@@ -31,26 +31,24 @@ function nearestPoint(points: PointStats[], lng: number, lat: number) {
 export default function Map3DView({
   visible = true,
   activityList,
-  hoveredPoint,
   onHover,
 }: {
   visible?: boolean;
   activityList: ActivityWithPoints[];
   height?: string;
-  hoveredPoint?: PointStats | null;
   onHover: (point: PointStats | null, activityId: string | null) => void;
 }) {
   const {
     mapViewport,
     setSelectedActivityId,
     selectedActivityId,
-    heatMapField,
+    hoveredPoint,
   } = useMapStore(
     useShallow((s) => ({
+      hoveredPoint: s.hoveredPoint,
       mapViewport: s.mapViewport,
       setSelectedActivityId: s.setSelectedActivityId,
       selectedActivityId: s.selectedActivityId,
-      heatMapField: s.heatMapField,
     })),
   );
 
@@ -110,11 +108,7 @@ export default function Map3DView({
         }}
         onMouseLeave={() => onHover(null, null)}
       >
-        <Map3DContent
-          activityList={activityList}
-          heatMapField={heatMapField}
-          visible={visible}
-        />
+        <Map3DContent activityList={activityList} visible={visible} />
 
         {hoveredPoint && (
           <Marker longitude={hoveredPoint.lng} latitude={hoveredPoint.lat}>

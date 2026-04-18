@@ -15,18 +15,11 @@ type HoverStatus = "hovered" | "dimmed" | "idle";
 const canvas = L.canvas({ padding: 0.5 });
 
 const Map2DPolylines = memo(
-  ({
-    points,
-    status,
-    heatMapField,
-  }: {
-    points: PointStats[];
-    status: HoverStatus;
-    heatMapField: { field: keyof PointStats; unit: string };
-  }) => {
+  ({ points, status }: { points: PointStats[]; status: HoverStatus }) => {
     const { resolvedTheme } = useTheme();
     const borderRef = useRef<L.Polyline>(null);
     const selectedActivityId = useMapStore((state) => state.selectedActivityId);
+    const heatMapField = useMapStore((state) => state.heatMapField);
     useEffect(() => {
       if (status === "hovered") borderRef.current?.bringToFront();
     }, [status]);
