@@ -53,7 +53,7 @@ export default function ProfileContent({
       <div className="relative overflow-hidden">
         <ActivityStatsWrapper activityList={activityListByYearSelection} />
 
-        <div className="absolute bottom-0 left-0 right-0 z-500 flex justify-center pb-6 pointer-events-none">
+        <div className="absolute bottom-0 left-0 right-0 z-10000 flex justify-center pointer-events-none">
           {!showSideBar && (
             <Button
               variant="outline"
@@ -77,40 +77,32 @@ export default function ProfileContent({
           )}
         </div>
 
-        {isMobile ? (
-          <Drawer
-            modal={false}
-            open={showCalendar}
-            onOpenChange={setShowCalendar}
+        <Drawer
+          modal={false}
+          open={showCalendar}
+          onOpenChange={setShowCalendar}
+        >
+          <DrawerContent
+            className="z-9999 px-4 pb-2 mb-4"
+            aria-describedby={"calendar of activities"}
           >
-            <DrawerContent className="z-499 px-4 pb-2 mb-10">
-              <VisuallyHidden>
-                <DrawerTitle>Calendar</DrawerTitle>
-              </VisuallyHidden>
-              <div className="relative flex items-center justify-center mb-2 mt-3">
-                <div className="flex gap-2 flex-wrap">
-                  <YearButtons activityList={activityList} />
-                </div>
-                <button
-                  onClick={() => setShowCalendar(false)}
-                  className="absolute right-0 text-muted-foreground hover:text-foreground"
-                >
-                  <X className="w-4 h-4" />
-                </button>
-              </div>
-              <ProfileStats activityList={activityListByYearSelection} />
-            </DrawerContent>
-          </Drawer>
-        ) : (
-          showCalendar && (
-            <div className="absolute bottom-0 left-0 right-0 z-499 bg-background border-t pt-2 pb-7">
-              <div className="flex gap-2 mb-2 flex-wrap justify-center">
+            <VisuallyHidden>
+              <DrawerTitle>Calendar</DrawerTitle>
+            </VisuallyHidden>
+            <div className="relative flex items-center justify-center mb-2 mt-3">
+              <div className="flex gap-2 flex-wrap">
                 <YearButtons activityList={activityList} />
               </div>
-              <ProfileStats activityList={activityListByYearSelection} />
+              <button
+                onClick={() => setShowCalendar(false)}
+                className="absolute right-0 text-muted-foreground hover:text-foreground"
+              >
+                <X className="w-4 h-4" />
+              </button>
             </div>
-          )
-        )}
+            <ProfileStats activityList={activityListByYearSelection} />
+          </DrawerContent>
+        </Drawer>
       </div>
     </>
   );
