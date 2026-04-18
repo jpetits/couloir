@@ -7,7 +7,6 @@ import { ChevronDown, ChevronUp, X } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
-import { useIsMobile } from "@/context/DeviceContext";
 import { Activity } from "@/lib/schema";
 import { useMapStore } from "@/store/mapStore";
 
@@ -22,7 +21,6 @@ export default function ProfileContent({
   activityList: Activity[];
   username: string;
 }) {
-  const isMobile = useIsMobile();
   const yearSelection = useMapStore((state) => state.yearSelection);
   const setProfileUsername = useMapStore((state) => state.setProfileUsername);
   const [showCalendar, setShowCalendar] = useState(false);

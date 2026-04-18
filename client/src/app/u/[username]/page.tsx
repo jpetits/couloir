@@ -14,7 +14,7 @@ export default async function PublicProfilePage({
   if (!activityList) notFound();
 
   return (
-    <main className="mx-auto px-4">
+    <main>
       <ProfileContent activityList={activityList} username={username} />
     </main>
   );
