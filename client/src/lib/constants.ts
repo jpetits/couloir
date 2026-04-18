@@ -55,4 +55,4 @@ export const HEATMAP_OPTIONS: HeatMapField[] = [
   { field: "heartrate", unit: "bpm" },
 ];
 
-export const MAP_HEIGHT = "calc(100dvh - 4rem)";
+export const MAP_HEIGHT = "calc(100dvh)";
