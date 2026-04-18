@@ -48,7 +48,6 @@ export default function ActivityDetailClient({
           visible={show3D}
           activityList={[{ id: activity.id, points: enrichedPoints }]}
           onHover={handleHover}
-          hoveredPoint={hoveredPoint}
         />
       </div>
       <div className="mt-5">
