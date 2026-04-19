@@ -1,12 +1,14 @@
 import type { Metadata } from "next";
-import "./globals.css";
-import Providers from "./providers";
 import { Inter } from "next/font/google";
 import { headers } from "next/headers";
 import { userAgent } from "next/server";
-import { cn } from "@/lib/utils";
 import { Toaster } from "sonner";
-import { DeviceProvider } from "@/context/DeviceContext";
+
+import { DeviceProvider, DeviceType } from "@/context/DeviceContext";
+import { cn } from "@/lib/utils";
+
+import "./globals.css";
+import Providers from "./providers";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -21,8 +23,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }) {
   const { device } = userAgent({ headers: await headers() });
-  const isTablet = device.type === "tablet";
-  const isMobile = device.type === "mobile" || isTablet;
+  const deviceType = device.type;
 
   return (
     <html
@@ -31,7 +32,7 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <body>
-        <DeviceProvider isMobile={isMobile} isTablet={isTablet}>
+        <DeviceProvider deviceType={deviceType as DeviceType}>
           <Providers>{children}</Providers>
         </DeviceProvider>
         <Toaster />

@@ -55,4 +55,7 @@ export const HEATMAP_OPTIONS: HeatMapField[] = [
   { field: "heartrate", unit: "bpm" },
 ];
 
-export const MAP_HEIGHT = "calc(100dvh)";
+export const MAP_HEIGHT_MOBILE = "calc(100dvh)";
+export const MAP_HEIGHT = "calc(100dvh - 5rem)"; // 5rem = height of header + some margin
+export const MAP_WIDTH = "100%";
+export const MAP_MAX_ZOOM = 18;

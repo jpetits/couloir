@@ -2,25 +2,30 @@
 
 import { createContext, useContext, useEffect, useState } from "react";
 
+export const DEVICE_MOBILE = "mobile";
+export const DEVICE_TABLET = "tablet";
+export const DEVICE_DESKTOP = "desktop";
+
+export type DeviceType =
+  | typeof DEVICE_MOBILE
+  | typeof DEVICE_TABLET
+  | typeof DEVICE_DESKTOP;
+
 interface DeviceContextValue {
-  isMobile: boolean;
-  isTablet: boolean;
+  deviceType: DeviceType;
   isLandscape: boolean;
 }
 
 const DeviceContext = createContext<DeviceContextValue>({
-  isMobile: false,
-  isTablet: false,
+  deviceType: "desktop",
   isLandscape: false,
 });
 
 export function DeviceProvider({
-  isMobile,
-  isTablet,
+  deviceType = DEVICE_DESKTOP,
   children,
 }: {
-  isMobile: boolean;
-  isTablet: boolean;
+  deviceType?: DeviceType | undefined;
   children: React.ReactNode;
 }) {
   const [isLandscape, setIsLandscape] = useState(false);
@@ -34,18 +39,25 @@ export function DeviceProvider({
   }, []);
 
   return (
-    <DeviceContext.Provider value={{ isMobile, isTablet, isLandscape }}>
+    <DeviceContext.Provider value={{ deviceType, isLandscape }}>
       {children}
     </DeviceContext.Provider>
   );
 }
 
+export function useDeviceType() {
+  return useContext(DeviceContext).deviceType;
+}
+
 export function useIsMobile() {
-  return useContext(DeviceContext).isMobile;
+  return (
+    useContext(DeviceContext).deviceType === DEVICE_MOBILE ||
+    useContext(DeviceContext).deviceType === DEVICE_TABLET
+  );
 }
 
 export function useIsTablet() {
-  return useContext(DeviceContext).isTablet;
+  return useContext(DeviceContext).deviceType === DEVICE_TABLET;
 }
 
 export function useIsLandscape() {
