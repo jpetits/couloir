@@ -10,7 +10,15 @@ import { useTheme } from "next-themes";
 import { useShallow } from "zustand/react/shallow";
 
 import { Button } from "@/components/ui/button";
-import { DATE_FORMAT, HEATMAP_OPTIONS, MAP_HEIGHT } from "@/lib/constants";
+import { useIsMobile } from "@/context/DeviceContext";
+import {
+  DATE_FORMAT,
+  HEATMAP_OPTIONS,
+  MAP_HEIGHT,
+  MAP_HEIGHT_MOBILE,
+  MAP_MAX_ZOOM,
+  MAP_WIDTH,
+} from "@/lib/constants";
 import {
   startLeafletIcon,
   stopLeafletIcon,
@@ -30,6 +38,7 @@ export default function memoActivityStats({
   activityList: Activity[];
 }) {
   const { resolvedTheme } = useTheme();
+  const isMobile = useIsMobile();
   const [showPhotos, setShowPhotos] = useState(false);
   const [show3DView, setShow3DView] = useState(false);
   const {
@@ -137,8 +146,11 @@ export default function memoActivityStats({
             <MapContainer
               className="markercluster-map"
               bounds={activityListBounds}
-              maxZoom={18}
-              style={{ height: MAP_HEIGHT, width: "100%" }}
+              maxZoom={MAP_MAX_ZOOM}
+              style={{
+                height: isMobile ? MAP_HEIGHT_MOBILE : MAP_HEIGHT,
+                width: MAP_WIDTH,
+              }}
             >
               <TileLayer
                 url={
