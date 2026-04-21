@@ -14,7 +14,8 @@ const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
 export const metadata: Metadata = {
   title: "Couloir",
-  description: "Explore your ski activities",
+  description: "Track every activity",
+  icons: { icon: "/favicon.svg" },
 };
 
 export default async function RootLayout({

@@ -1,15 +1,18 @@
 "use client";
 
-import Link from "next/link";
+import { Show, SignInButton, SignUpButton } from "@clerk/nextjs";
 import Image from "next/image";
+import Link from "next/link";
+
+import CouloirLogo from "@/components/CouloirLogo";
 import { ROUTES } from "@/routing/constants";
-import { SignInButton, SignUpButton, Show } from "@clerk/nextjs";
 
 export default function Home() {
   return (
     <main className="min-h-screen bg-background">
       {/* Hero */}
       <section className="flex flex-col items-center justify-center text-center px-6 pt-24 pb-16">
+        <CouloirLogo className="mb-6" />
         <h1 className="text-5xl font-bold tracking-tight mb-4">
           All your adventures,
           <br />

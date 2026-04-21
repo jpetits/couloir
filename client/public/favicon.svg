@@ -1,0 +1,6 @@
+<svg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+  <title>Couloir</title>
+  <polygon points="0,56 20,8 28,56" fill="#B8B0A8" opacity="0.18"/>
+  <polygon points="55,56 39,4 31,56" fill="#B8B0A8" opacity="0.18"/>
+  <polygon points="20,8 39,4 35,56 24,56" fill="#B8B0A8"/>
+</svg>
