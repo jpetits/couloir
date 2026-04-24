@@ -8,6 +8,6 @@
   "ignore": ["src/components/ui/**"],
   "ignoreDependencies": ["postcss", "tailwindcss", "tw-animate-css", "leaflet.markercluster", "react-leaflet-markercluster"],
   "ignoreBinaries": [],
-  "exclude": ["devDependencies"],
+  "exclude": ["devDependencies", "exports"],
   "ignoreExportsUsedInFile": true
 }
