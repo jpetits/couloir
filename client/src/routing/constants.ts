@@ -24,7 +24,12 @@ export const ROUTES = {
         excludeActivityIds: excludeActivityIds.join(","),
         zoom: zoom.toString(),
       })}`,
-    publicMap: (username: string, bounds: MapBounds, excludeActivityIds: string[] = [], zoom: number) =>
+    publicMap: (
+      username: string,
+      bounds: MapBounds,
+      excludeActivityIds: string[] = [],
+      zoom: number,
+    ) =>
       `/api/public/${username}/map?${new URLSearchParams({
         ...JSON.parse(JSON.stringify(MapBoundsSchema.parse(bounds))),
         excludeActivityIds: excludeActivityIds.join(","),
@@ -36,6 +41,8 @@ export const ROUTES = {
     stravaSync: `/api/strava/sync`,
     stravaConnect: `/api/strava/callback`,
     userMe: `/api/user/me`,
+    user: (username: string) => `/api/user/${username}`,
+    userPatch: () => `/api/user`,
     publicStats: (username: string) => `/api/public/${username}/stats`,
     publicActivities: (username: string) =>
       `/api/public/${username}/activities`,

@@ -120,3 +120,12 @@ export const MapPointsResponseSchema = z.record(
 );
 
 export type MapPointsResponse = z.infer<typeof MapPointsResponseSchema>;
+
+export const UserSchema = z.object({
+  id: z.string(),
+  username: z.string().min(2).max(30),
+  isPublic: z.boolean(),
+  stravaConnected: z.boolean(),
+});
+
+export type User = z.infer<typeof UserSchema>;

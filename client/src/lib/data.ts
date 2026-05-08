@@ -8,6 +8,7 @@ import {
   ActivitySchema,
   ActivityStats,
   ActivityStatsSchema,
+  User,
 } from "./schema";
 
 export async function fetchActivities(
@@ -42,4 +43,9 @@ export async function fetchPublicActivities(
 ): Promise<Activity[]> {
   const res = await apiFetch<Activity[]>(ROUTES.api.publicActivities(username));
   return ActivityListSchema.parse(res);
+}
+
+export async function fetchUser(username: string): Promise<User> {
+  const res = await apiFetch<User>(ROUTES.api.user(username));
+  return res;
 }

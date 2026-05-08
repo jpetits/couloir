@@ -2,7 +2,7 @@ import { toast } from "sonner";
 
 import { ROUTES } from "@/routing/constants";
 
-import type { Activity, MapBounds, MapPointsResponse } from "./schema";
+import type { Activity, MapBounds, MapPointsResponse, User } from "./schema";
 import { ActivitySchema } from "./schema";
 
 export type ApiFetch = <T>(path: string, options?: RequestInit) => Promise<T>;
@@ -70,5 +70,18 @@ export async function fetchActivitiesWithPointsInBounds(
     const url = `${process.env.NEXT_PUBLIC_API_URL}${ROUTES.api.publicMap(username, bounds, excludeActivityIds, zoom)}`;
     return fetch(url).then((r) => r.json());
   }
-  return apiFetch<MapPointsResponse>(ROUTES.api.map(bounds, excludeActivityIds, zoom));
+  return apiFetch<MapPointsResponse>(
+    ROUTES.api.map(bounds, excludeActivityIds, zoom),
+  );
 }
+
+export const patchUser = (
+  apiFetch: ApiFetch,
+  fields: Partial<User>,
+): Promise<void> => {
+  return apiFetch(ROUTES.api.userPatch(), {
+    method: "PATCH",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(fields),
+  });
+};
