@@ -35,6 +35,9 @@ export const activityRepository = {
     if (filters.maxDuration) {
       conditions.push(lte(activities.duration, filters.maxDuration));
     }
+    if (filters.maxSpeed) {
+      conditions.push(lte(activities.maxSpeed, filters.maxSpeed));
+    }
 
     const orderFns = { asc, desc } as const;
     const orderFn = orderFns[filters.sortOrder ?? "desc"];
@@ -56,7 +59,11 @@ export const activityRepository = {
   findById: async (id: string) => {
     return db.query.activities.findFirst({
       where: (activities, { eq }) => eq(activities.id, id),
-      with: { points: true, images: true, activitySummits: { with: { summit: true } } },
+      with: {
+        points: true,
+        images: true,
+        activitySummits: { with: { summit: true } },
+      },
     });
   },
   create: async (data: typeof activities.$inferInsert) => {
@@ -101,7 +108,11 @@ export const activityRepository = {
   listWithPoints: async (userId: string) => {
     return db.query.activities.findMany({
       where: (activities, { eq }) => eq(activities.userId, userId),
-      with: { points: true, images: true, activitySummits: { with: { summit: true } } },
+      with: {
+        points: true,
+        images: true,
+        activitySummits: { with: { summit: true } },
+      },
     });
   },
   findByStravaId: async (stravaActivityId: string, userId: string) => {

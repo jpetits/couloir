@@ -11,6 +11,7 @@ export const activityFiltersSchema = z.object({
   maxDistance: z.coerce.number().optional(),
   minDuration: z.coerce.number().optional(),
   maxDuration: z.coerce.number().optional(),
+  maxSpeed: z.coerce.number().optional(),
   sortBy: z.enum(activityColumns).default("startDate").optional(),
   sortOrder: z.enum(["asc", "desc"]).default("desc").optional(),
   limit: z.coerce.number().gt(0).default(100).optional(),
@@ -25,6 +26,11 @@ export const deleteActivitiesSchema = z.object({
 
 export const patchActivitiesSchema = z.object({
   name: z.string().optional(),
+});
+
+export const patchUserSchema = z.object({
+  username: z.string().min(2).max(100),
+  isPublic: z.boolean(),
 });
 
 export const callBackStravaSchema = z.object({

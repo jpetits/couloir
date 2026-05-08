@@ -46,6 +46,5 @@ export async function fetchPublicActivities(
 }
 
 export async function fetchUser(username: string): Promise<User> {
-  const res = await apiFetch<User>(ROUTES.api.user(username));
-  return res;
+  return await apiFetch<User>(ROUTES.api.user(username));
 }

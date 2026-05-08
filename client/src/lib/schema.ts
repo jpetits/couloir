@@ -91,6 +91,7 @@ export const ActivityFiltersSchema = z.object({
   maxDistance: z.coerce.string().optional(),
   minDuration: z.coerce.string().optional(),
   maxDuration: z.coerce.string().optional(),
+  maxSpeed: z.coerce.string().optional(),
   sortBy: z.enum(activityColumns).default("startDate").optional(),
   sortOrder: z.enum(["asc", "desc"]).default("desc").optional(),
   page: z.coerce.string().default("1").optional(),

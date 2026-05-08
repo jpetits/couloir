@@ -11,8 +11,10 @@ export default function ActivityFilters() {
 
   const [minDist, setMinDist] = useState(filters.minDistance ?? "");
   const [maxDist, setMaxDist] = useState(filters.maxDistance ?? "");
+  const [maxSpeed, setMaxSpeed] = useState(filters.maxSpeed ?? "");
   const [debouncedMin] = useDebounce(minDist, 400);
   const [debouncedMax] = useDebounce(maxDist, 400);
+  const [debouncedMaxSpeed] = useDebounce(maxSpeed, 400);
 
   useEffect(() => {
     setFilters({ minDistance: debouncedMin || undefined });
@@ -21,6 +23,10 @@ export default function ActivityFilters() {
   useEffect(() => {
     setFilters({ maxDistance: debouncedMax || undefined });
   }, [debouncedMax]);
+
+  useEffect(() => {
+    setFilters({ maxSpeed: debouncedMaxSpeed || undefined });
+  }, [debouncedMaxSpeed]);
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 items-center mt-2">
@@ -66,6 +72,17 @@ export default function ActivityFilters() {
         placeholder="End date"
         value={filters.dateTo || ""}
         onChange={(e) => setFilters({ dateTo: e.target.value })}
+        className="border p-2 rounded w-full sm:flex-1"
+      />
+      <label className="text-sm font-medium" htmlFor="maxSpeed">
+        Max speed (km/h):
+      </label>
+      <input
+        id="maxSpeed"
+        type="number"
+        placeholder="Maximum speed"
+        value={maxSpeed}
+        onChange={(e) => setMaxSpeed(e.target.value)}
         className="border p-2 rounded w-full sm:flex-1"
       />
     </div>

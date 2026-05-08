@@ -140,13 +140,16 @@ export const activitySummits = pgTable(
   (table) => [primaryKey({ columns: [table.activityId, table.summitId] })],
 );
 
-export const activitySummitsRelations = relations(activitySummits, ({ one }) => ({
-  activity: one(activities, {
-    fields: [activitySummits.activityId],
-    references: [activities.id],
+export const activitySummitsRelations = relations(
+  activitySummits,
+  ({ one }) => ({
+    activity: one(activities, {
+      fields: [activitySummits.activityId],
+      references: [activities.id],
+    }),
+    summit: one(summits, {
+      fields: [activitySummits.summitId],
+      references: [summits.id],
+    }),
   }),
-  summit: one(summits, {
-    fields: [activitySummits.summitId],
-    references: [summits.id],
-  }),
-}));
+);
