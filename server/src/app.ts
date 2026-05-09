@@ -1,13 +1,13 @@
-import express, { type Express } from "express";
-import cors from "cors";
-import helmet from "helmet";
 import { clerkMiddleware } from "@clerk/express";
-import activityRouter from "./routes/activities";
-import stravaRouter from "./routes/strava";
-import userRouter from "./routes/user";
-import publicRouter from "./routes/public";
+import cors from "cors";
+import express, { type Express } from "express";
+import helmet from "helmet";
 import errorHandler from "./middleware/error";
 import notFoundHandler from "./middleware/notFound";
+import activityRouter from "./routes/activities";
+import publicRouter from "./routes/public";
+import stravaRouter from "./routes/strava";
+import userRouter from "./routes/user";
 
 const app: Express = express();
 

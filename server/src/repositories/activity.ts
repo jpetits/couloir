@@ -5,38 +5,38 @@ import {
   desc,
   eq,
   getTableColumns,
+  gt,
   gte,
+  isNotNull,
   lte,
+  SQL,
   sum,
 } from "drizzle-orm";
 import { db } from "../db/index";
 import { activities } from "../db/schema";
 import type { ActivityFilters } from "../schema/query";
 
+const filtersList = {
+  dateFrom: (date: Date) => gte(activities.startDate, date),
+  dateTo: (date: Date) => lte(activities.startDate, date),
+  minDistance: (distance: number) => gte(activities.distance, distance),
+  maxDistance: (distance: number) => lte(activities.distance, distance),
+  minDuration: (duration: number) => gte(activities.duration, duration),
+  maxDuration: (duration: number) => lte(activities.duration, duration),
+  maxSpeed: (speed: number) => lte(activities.maxSpeed, speed),
+};
+
 export const activityRepository = {
   list: async (userId: string, filters: ActivityFilters) => {
     const conditions = [eq(activities.userId, userId)];
 
-    if (filters.dateFrom) {
-      conditions.push(gte(activities.startDate, filters.dateFrom));
-    }
-    if (filters.dateTo) {
-      conditions.push(lte(activities.startDate, filters.dateTo));
-    }
-    if (filters.minDistance) {
-      conditions.push(gte(activities.distance, filters.minDistance));
-    }
-    if (filters.maxDistance) {
-      conditions.push(lte(activities.distance, filters.maxDistance));
-    }
-    if (filters.minDuration) {
-      conditions.push(gte(activities.duration, filters.minDuration));
-    }
-    if (filters.maxDuration) {
-      conditions.push(lte(activities.duration, filters.maxDuration));
-    }
-    if (filters.maxSpeed) {
-      conditions.push(lte(activities.maxSpeed, filters.maxSpeed));
+    for (const key in filtersList) {
+      const filter = filters[key as keyof ActivityFilters];
+      if (filter !== undefined) {
+        conditions.push(
+          filtersList[key as keyof typeof filtersList]!(filter as never),
+        );
+      }
     }
 
     const orderFns = { asc, desc } as const;
@@ -72,7 +72,14 @@ export const activityRepository = {
   delete: async (id: string) => {
     return db.delete(activities).where(eq(activities.id, id));
   },
-  update: async (
+  update(id: string, activity: Partial<typeof activities.$inferInsert>) {
+    return db
+      .update(activities)
+      .set(activity)
+      .where(eq(activities.id, id))
+      .returning();
+  },
+  updateByUserId: async (
     id: string,
     userId: string,
     activity: Partial<typeof activities.$inferInsert>,
@@ -141,5 +148,27 @@ export const activityRepository = {
     if (activitiesData.length === 0) return [];
 
     return db.insert(activities).values(activitiesData).returning();
+  },
+  search: async (
+    userId: string,
+    query: string,
+    similarityScore: SQL<unknown>,
+  ) => {
+    const { embedding, ...rest } = getTableColumns(activities);
+    return db
+      .select({
+        ...rest,
+        similarityScore,
+      })
+      .from(activities)
+      .where(
+        and(
+          eq(activities.userId, userId),
+          isNotNull(activities.embedding),
+          gt(similarityScore, 0.3), // seuil à ajuster selon les résultats
+        ),
+      )
+      .orderBy(asc(similarityScore))
+      .limit(10);
   },
 };

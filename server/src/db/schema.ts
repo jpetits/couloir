@@ -9,6 +9,7 @@ import {
   text,
   timestamp,
   uuid,
+  vector,
 } from "drizzle-orm/pg-core";
 
 export const activities = pgTable(
@@ -35,6 +36,8 @@ export const activities = pgTable(
     endLat: real("end_lat"),
     endLng: real("end_lng"),
     weather: text("weather").default(""), // JSON stringified weather data at the start of the activity
+    embeddingText: text("embedding_text"),
+    embedding: vector("embedding", { dimensions: 1536 }),
   },
   (table) => [
     index("activities_user_id_idx").on(table.userId),

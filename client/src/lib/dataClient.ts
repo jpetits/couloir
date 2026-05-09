@@ -85,3 +85,12 @@ export const patchUser = (
     body: JSON.stringify(fields),
   });
 };
+
+export const searchActivities = (
+  apiFetch: ApiFetch,
+  query: string,
+): Promise<Activity[]> => {
+  return apiFetch<Activity[]>(ROUTES.api.search(query)).then((data) =>
+    data.map((activity) => ActivitySchema.parse(activity)),
+  );
+};

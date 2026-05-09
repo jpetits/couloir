@@ -1,9 +1,10 @@
 import { activityRepository } from "../repositories/activity";
 import { pointRepository } from "../repositories/point";
-import type { NewPoint } from "../types/types";
-import { AppError } from "../types/appError";
-import { parseFitFile } from "./fitParser";
 import type { ActivityFilters, MapBounds } from "../schema/query";
+import { AppError } from "../types/appError";
+import type { NewPoint } from "../types/types";
+import { searchActivitiesEmbeddings } from "./embedding";
+import { parseFitFile } from "./fitParser";
 import { simplifyByMaxDistance } from "./stravaParser";
 
 export const getActivities = async (
@@ -73,7 +74,7 @@ export const patchActivity = async (
   userId: string,
   fields: { name?: string },
 ) => {
-  const activity = await activityRepository.update(id, userId, fields);
+  const activity = await activityRepository.updateByUserId(id, userId, fields);
   if (!activity) throw new AppError("Activity not found", 404);
   return activity;
 };
@@ -97,4 +98,18 @@ export const postActivity = async (buffer: Buffer, userId: string) => {
   await pointRepository.create(newPoints);
 
   return activity;
+};
+
+export const searchActivities = async (
+  userId: string,
+  query: string,
+): Promise<any[]> => {
+  console.log(`Searching activities for user ${userId} with query: ${query}`);
+
+  try {
+    return await searchActivitiesEmbeddings(userId, query);
+  } catch (error) {
+    console.error("Search error:", error);
+    throw new AppError("An error occurred while searching", 500);
+  }
 };

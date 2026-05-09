@@ -67,6 +67,7 @@ export const ActivitySchema = z.object({
   endLat: z.number().nullable(),
   endLng: z.number().nullable(),
   activitySummits: z.array(ActivitySummitSchema).optional(),
+  simmilarityScore: z.number().optional(), // only for search results
 });
 
 export type Activity = z.infer<typeof ActivitySchema>;
@@ -96,6 +97,7 @@ export const ActivityFiltersSchema = z.object({
   sortOrder: z.enum(["asc", "desc"]).default("desc").optional(),
   page: z.coerce.string().default("1").optional(),
   limit: z.coerce.string().default("100").optional(),
+  q: z.string().optional(),
 });
 
 export type ActivityFilters = z.infer<typeof ActivityFiltersSchema>;

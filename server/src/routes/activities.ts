@@ -9,6 +9,7 @@ import {
   getActivitiesStats,
   patchActivity,
   postActivity,
+  searchActivities,
 } from "../controllers/activity";
 import { attachUser } from "../middleware/attachUser";
 import { validateBody, validateQuery } from "../middleware/validate.js";
@@ -17,6 +18,7 @@ import {
   deleteActivitiesSchema,
   mapBoundsSchema,
   patchActivitiesSchema,
+  searchActivitiesSchema,
 } from "../schema/query";
 
 const router: Router = express.Router();
@@ -36,6 +38,13 @@ router.get(
   attachUser,
   validateQuery(mapBoundsSchema),
   getActivitiesMap,
+);
+router.get(
+  "/search",
+  requireAuth(),
+  attachUser,
+  validateQuery(searchActivitiesSchema),
+  searchActivities,
 );
 router.get("/:id", requireAuth(), attachUser, findActivity);
 router.patch(

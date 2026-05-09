@@ -4,17 +4,21 @@ import { useEffect, useState } from "react";
 
 import { useDebounce } from "use-debounce";
 
+import { useApi } from "@/app/hooks/useApi";
 import { useFilters } from "@/app/hooks/useFilters";
 
 export default function ActivityFilters() {
   const { filters, setFilters } = useFilters();
+  const apiFetch = useApi();
 
   const [minDist, setMinDist] = useState(filters.minDistance ?? "");
   const [maxDist, setMaxDist] = useState(filters.maxDistance ?? "");
   const [maxSpeed, setMaxSpeed] = useState(filters.maxSpeed ?? "");
+  const [search, setSearch] = useState("");
   const [debouncedMin] = useDebounce(minDist, 400);
   const [debouncedMax] = useDebounce(maxDist, 400);
   const [debouncedMaxSpeed] = useDebounce(maxSpeed, 400);
+  const [debouncedSearch] = useDebounce(search, 400);
 
   useEffect(() => {
     setFilters({ minDistance: debouncedMin || undefined });
@@ -27,6 +31,10 @@ export default function ActivityFilters() {
   useEffect(() => {
     setFilters({ maxSpeed: debouncedMaxSpeed || undefined });
   }, [debouncedMaxSpeed]);
+
+  useEffect(() => {
+    setFilters({ q: debouncedSearch || undefined });
+  }, [debouncedSearch]);
 
   return (
     <div className="flex flex-col sm:flex-row gap-4 items-center mt-2">
@@ -83,6 +91,18 @@ export default function ActivityFilters() {
         placeholder="Maximum speed"
         value={maxSpeed}
         onChange={(e) => setMaxSpeed(e.target.value)}
+        className="border p-2 rounded w-full sm:flex-1"
+      />
+
+      <label className="text-sm font-medium" htmlFor="search">
+        Search:
+      </label>
+      <input
+        id="search"
+        type="text"
+        placeholder="Search activities..."
+        value={search || ""}
+        onChange={(e) => setSearch(e.target.value)}
         className="border p-2 rounded w-full sm:flex-1"
       />
     </div>

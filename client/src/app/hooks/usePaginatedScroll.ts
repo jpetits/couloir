@@ -13,7 +13,9 @@ export function usePaginatedScroll<T>(
 ) {
   const apiFetch = useApi();
   const { filters } = useFilters();
-  const fetchMorePath = ROUTES.api.activities(filters);
+  const fetchMorePath = filters.q
+    ? ROUTES.api.search(filters.q)
+    : ROUTES.api.activities(filters);
 
   const {
     data,
@@ -32,11 +34,10 @@ export function usePaginatedScroll<T>(
     },
     initialPageParam: 1,
     getNextPageParam: (lastPage, _, lastPageParam) =>
-      (
-        filters.limit
-          ? lastPage.length === Number(filters.limit)
-          : lastPage.length > 0
-      )
+      !filters.q &&
+      (filters.limit
+        ? lastPage.length === Number(filters.limit)
+        : lastPage.length > 0)
         ? lastPageParam + 1
         : undefined,
     initialData: {

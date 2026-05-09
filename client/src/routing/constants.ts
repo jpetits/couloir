@@ -17,6 +17,8 @@ export const ROUTES = {
     activities: (filters: ActivityFilters) =>
       `/api/activities?${new URLSearchParams(JSON.parse(JSON.stringify(ActivityApiParamsSchema.parse(filters))))}`,
     activity: (id: string) => `/api/activities/${id}`,
+    search: (query: string) =>
+      `/api/activities/search?q=${encodeURIComponent(query)}`,
     stats: `/api/activities/stats`,
     map: (bounds: MapBounds, excludeActivityIds: string[] = [], zoom: number) =>
       `/api/activities/map?${new URLSearchParams({

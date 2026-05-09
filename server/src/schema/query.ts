@@ -20,6 +20,10 @@ export const activityFiltersSchema = z.object({
 
 export type ActivityFilters = z.infer<typeof activityFiltersSchema>;
 
+export const searchActivitiesSchema = z.object({
+  q: z.string().min(1),
+});
+
 export const deleteActivitiesSchema = z.object({
   ids: z.array(z.string()).min(1),
 });

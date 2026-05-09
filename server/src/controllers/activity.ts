@@ -109,3 +109,11 @@ export const getActivitiesMap: RequestHandler = asyncHandler(
     res.status(200).json(activities);
   },
 );
+
+export const searchActivities: RequestHandler = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { q } = req.query as { q: string };
+    const results = await activityService.searchActivities(req.user.id, q);
+    res.status(200).json(results);
+  },
+);
