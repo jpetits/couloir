@@ -4,12 +4,10 @@ import { useEffect, useState } from "react";
 
 import { useDebounce } from "use-debounce";
 
-import { useApi } from "@/app/hooks/useApi";
 import { useFilters } from "@/app/hooks/useFilters";
 
 export default function ActivityFilters() {
   const { filters, setFilters } = useFilters();
-  const apiFetch = useApi();
 
   const [minDist, setMinDist] = useState(filters.minDistance ?? "");
   const [maxDist, setMaxDist] = useState(filters.maxDistance ?? "");
