@@ -3,7 +3,7 @@ import { pointRepository } from "../repositories/point";
 import type { ActivityFilters, MapBounds } from "../schema/query";
 import { AppError } from "../types/appError";
 import type { NewPoint } from "../types/types";
-import { searchActivitiesEmbeddings } from "./embedding";
+import { hybridSearchActivities } from "./embedding";
 import { parseFitFile } from "./fitParser";
 import { simplifyByMaxDistance } from "./stravaParser";
 
@@ -107,7 +107,7 @@ export const searchActivities = async (
   console.log(`Searching activities for user ${userId} with query: ${query}`);
 
   try {
-    return await searchActivitiesEmbeddings(userId, query);
+    return await hybridSearchActivities(userId, query);
   } catch (error) {
     console.error("Search error:", error);
     throw new AppError("An error occurred while searching", 500);

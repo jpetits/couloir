@@ -165,10 +165,31 @@ export const activityRepository = {
         and(
           eq(activities.userId, userId),
           isNotNull(activities.embedding),
-          gt(similarityScore, 0.3), // seuil à ajuster selon les résultats
+          gt(similarityScore, 0.3),
         ),
       )
       .orderBy(asc(similarityScore))
-      .limit(10);
+      .limit(100);
+  },
+  searchByFilters: async (
+    userId: string,
+    filters: Partial<ActivityFilters>,
+  ) => {
+    const conditions = [eq(activities.userId, userId)];
+    for (const key in filtersList) {
+      const filter = filters[key as keyof ActivityFilters];
+      if (filter !== undefined) {
+        conditions.push(
+          filtersList[key as keyof typeof filtersList]!(filter as never),
+        );
+      }
+    }
+    const { embedding, ...rest } = getTableColumns(activities);
+    return db
+      .select({ ...rest })
+      .from(activities)
+      .where(and(...conditions))
+      .orderBy(desc(activities.startDate))
+      .limit(200);
   },
 };

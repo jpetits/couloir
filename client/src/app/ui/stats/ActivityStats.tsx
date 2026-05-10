@@ -6,10 +6,14 @@ import { MapContainer } from "react-leaflet/MapContainer";
 import { TileLayer } from "react-leaflet/TileLayer";
 
 import { format } from "date-fns";
+import { X } from "lucide-react";
 import { useTheme } from "next-themes";
+import { useDebounce } from "use-debounce";
 import { useShallow } from "zustand/react/shallow";
 
+import { useApi } from "@/app/hooks/useApi";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { useIsMobile } from "@/context/DeviceContext";
 import {
   DATE_FORMAT,
@@ -19,6 +23,7 @@ import {
   MAP_MAX_ZOOM,
   MAP_WIDTH,
 } from "@/lib/constants";
+import { searchActivities } from "@/lib/dataClient";
 import {
   startLeafletIcon,
   stopLeafletIcon,
@@ -65,6 +70,7 @@ export default function memoActivityStats({
     })),
   );
 
+  const [searchIdList, setSearchIdList] = useState<string[] | null>(null);
   const panelActivity = selectedActivityId
     ? activityList.find((a) => a.id === selectedActivityId)
     : null;
@@ -95,10 +101,28 @@ export default function memoActivityStats({
     [activityList, activityListInBounds],
   );
 
-  const activityListBounds = activityList.map((a) => [
-    a.startLat,
-    a.startLng,
-  ]) as [number, number][];
+  const [searchTerm, setSearchTerm] = useState("");
+  const [debouncedSearchTerm] = useDebounce(searchTerm, 500);
+
+  const apiFetch = useApi();
+
+  useEffect(() => {
+    if (debouncedSearchTerm === "") {
+      setSearchIdList(null);
+      return;
+    }
+    searchActivities(apiFetch, debouncedSearchTerm).then((results) => {
+      if (results.length > 0) {
+        console.log(
+          "search",
+          results.map((r) => r.id),
+        );
+        setSearchIdList(results.map((r) => r.id));
+      } else {
+        setSearchIdList(null);
+      }
+    });
+  }, [debouncedSearchTerm]);
 
   return (
     <div className="flex flex-col gap-1">
@@ -139,13 +163,35 @@ export default function memoActivityStats({
           >
             3D View
           </Button>
+          <div className="relative">
+            <Input
+              type="text"
+              placeholder="Search activities..."
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="w-64 h-7 bg-white pr-6"
+            />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
+              >
+                <X size={12} />
+              </button>
+            )}
+          </div>
         </div>
 
         <div className={show3DView ? "hidden" : ""}>
           <>
             <MapContainer
               className="markercluster-map"
-              bounds={activityListBounds}
+              bounds={
+                activityList.map((a) => [a.startLat, a.startLng]) as [
+                  number,
+                  number,
+                ][]
+              }
               maxZoom={MAP_MAX_ZOOM}
               style={{
                 height: isMobile ? MAP_HEIGHT_MOBILE : MAP_HEIGHT,
@@ -162,7 +208,9 @@ export default function memoActivityStats({
               />
 
               <Map2DView
-                activityList={activityList}
+                activityList={activityList.filter((a) =>
+                  searchIdList ? searchIdList.includes(a.id) : true,
+                )}
                 handleHover={handleHover}
                 hoveredActivity={hoveredActivity}
                 showPhotos={showPhotos}
