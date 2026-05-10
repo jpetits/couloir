@@ -32,6 +32,7 @@ A personal activity tracker for outdoor sports — skiing, surfing, trekking, an
 - Dark/light mode with adaptive map tiles (Stadia Alidade Smooth Dark / OpenStreetMap)
 - Summit detection — named OSM peaks detected along activity tracks via Overpass API, stored in a many-to-many relation and displayed in the activity side panel
 - 3D map view — MapLibre GL JS with free terrain tiles, activity tracks rendered in 3D relief
+- Natural language search — RAG-powered activity search using OpenAI `text-embedding-3-small`; each activity is embedded as a text summary (name, date, location, weather, distance, elevation, duration) and retrieved by cosine similarity
 
 ## Roadmap
 - [ ] **Life map** — photos + activities at all zoom levels with clustering, turning the map into a personal geographic history
