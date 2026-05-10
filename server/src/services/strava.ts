@@ -3,6 +3,7 @@ import { activityRepository } from "../repositories/activity";
 import { pointRepository } from "../repositories/point";
 import { userRepository } from "../repositories/user";
 import type { StravaActivity, StravaStream } from "../types/types";
+import { updateActivityEmbedding } from "./embedding";
 import { syncImmichAssets } from "./immich";
 import { processQueue } from "./queue";
 import { parseStravaActivity, parseStravaStream } from "./stravaParser";
@@ -210,13 +211,15 @@ const queueActivitiesForProcessing = async (
     const maxHeartrate = Math.max(...pointList.map((p) => p.heartrate));
     const minHeartrate = Math.min(...pointList.map((p) => p.heartrate));
 
-    await activityRepository.update(stravaActivity.id, user.id, {
+    await activityRepository.updateByUserId(stravaActivity.id, user.id, {
       minSpeed,
       minElevation,
       maxElevation,
       maxHeartrate,
       minHeartrate,
     });
+
+    updateActivityEmbedding(stravaActivity.id);
 
     sendMessage(user.id, {
       type: "sync:progress",
