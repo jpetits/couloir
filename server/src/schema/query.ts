@@ -16,6 +16,7 @@ export const activityFiltersSchema = z.object({
   sortOrder: z.enum(["asc", "desc"]).default("desc").optional(),
   limit: z.coerce.number().gt(0).default(100).optional(),
   page: z.coerce.number().gt(0).default(1).optional(),
+  name: z.coerce.string().min(3).max(100).optional(),
 });
 
 export type ActivityFilters = z.infer<typeof activityFiltersSchema>;

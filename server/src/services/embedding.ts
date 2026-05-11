@@ -205,6 +205,10 @@ const QueryParseSchema = z.object({
     maxDistance: z.number().nullable().describe("Maximum distance in meters"),
     minDuration: z.number().nullable().describe("Minimum duration in seconds"),
     maxDuration: z.number().nullable().describe("Maximum duration in seconds"),
+    name: z
+      .string()
+      .nullable()
+      .describe("Name of activity, describes succintly activity"),
   }),
 });
 
@@ -214,8 +218,10 @@ async function parseQuery(query: string) {
     messages: [
       {
         role: "system",
-        content:
-          "Extract structured filters and semantic queries from outdoor sports activity search queries (skiing, hiking, cycling, surfing, etc.). Extract explicit filters (dates, distances, durations) and the remaining semantic concept. Distance in meters, duration in seconds.",
+        content: `Extract structured filters and semantic queries from outdoor sports activity search queries (skiing, hiking, cycling, surfing, etc.).
+Extract explicit filters (dates, distances, durations). Distance in meters, duration in seconds.
+Set semanticQuery to null when the query is FULLY captured by filters — no conceptual or descriptive meaning remains (e.g. "activities over 20km in January" → null, "long hikes in the Alps" → "long hikes in the Alps").
+Only set semanticQuery when there is a descriptive or conceptual part that cannot be expressed as a filter.`,
       },
       { role: "user", content: query },
     ],
@@ -250,18 +256,26 @@ export async function hybridSearchActivities(userId: string, query: string) {
     sqlFilters.minDuration = parsed.filters.minDuration;
   if (parsed.filters.maxDuration != null)
     sqlFilters.maxDuration = parsed.filters.maxDuration;
+  if (parsed.filters.name != null) sqlFilters.name = parsed.filters.name;
 
   const hasFilters = Object.keys(sqlFilters).length > 0;
-  const semanticQuery = parsed.semanticQuery ?? query;
+  const semanticQuery = parsed.semanticQuery;
+  console.log("[hybrid]", { semanticQuery, sqlFilters, hasFilters });
+
+  if (hasFilters && semanticQuery === null) {
+    return activityRepository.searchByFilters(userId, sqlFilters);
+  }
+
+  if (!hasFilters && semanticQuery === null) {
+    return [];
+  }
 
   const [sqlResults, embeddingResults] = await Promise.all([
     hasFilters
       ? activityRepository.searchByFilters(userId, sqlFilters)
       : Promise.resolve([]),
-    searchActivitiesEmbeddings(userId, semanticQuery),
+    searchActivitiesEmbeddings(userId, semanticQuery!),
   ]);
-
-  if (!hasFilters) return embeddingResults;
 
   const rankedIds = rrf([sqlResults, embeddingResults]);
 
