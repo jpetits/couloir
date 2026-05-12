@@ -17,7 +17,6 @@ import { Input } from "@/components/ui/input";
 import { useIsMobile } from "@/context/DeviceContext";
 import {
   DATE_FORMAT,
-  HEATMAP_OPTIONS,
   MAP_HEIGHT,
   MAP_HEIGHT_MOBILE,
   MAP_MAX_ZOOM,
@@ -135,18 +134,7 @@ export default function memoActivityStats({
           if (!selectedActivityId) setHoveredActivityPoints([]);
         }}
       >
-        <div className="absolute top-2.5 left-15 z-1000 flex gap-1 flex-wrap">
-          {HEATMAP_OPTIONS.map(({ field, unit }) => (
-            <Button
-              key={field}
-              variant={heatMapField.field === field ? "default" : "outline"}
-              className="cursor-pointer shadow"
-              size="sm"
-              onClick={() => setHeatMapField(field, unit)}
-            >
-              {field.charAt(0).toUpperCase() + field.slice(1)}
-            </Button>
-          ))}
+        <div className="absolute top-2.5 left-15 z-1000 flex gap-2 flex-wrap">
           <Button
             variant={showPhotos ? "default" : "outline"}
             className="cursor-pointer shadow"
@@ -163,23 +151,21 @@ export default function memoActivityStats({
           >
             3D View
           </Button>
-          <div className="relative">
-            <Input
-              type="text"
-              placeholder="Search activities..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              className="w-64 h-7 bg-white pr-6"
-            />
-            {searchTerm && (
-              <button
-                onClick={() => setSearchTerm("")}
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
-              >
-                <X size={12} />
-              </button>
-            )}
-          </div>
+          <Input
+            type="text"
+            placeholder="Search activities..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            className=""
+          />
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm("")}
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
+            >
+              <X size={12} />
+            </button>
+          )}
         </div>
 
         <div className={show3DView ? "hidden" : ""}>

@@ -205,10 +205,24 @@ const QueryParseSchema = z.object({
     maxDistance: z.number().nullable().describe("Maximum distance in meters"),
     minDuration: z.number().nullable().describe("Minimum duration in seconds"),
     maxDuration: z.number().nullable().describe("Maximum duration in seconds"),
-    name: z
-      .string()
+    minElevationGain: z
+      .number()
       .nullable()
-      .describe("Name of activity, describes succintly activity"),
+      .describe("Minimum elevation gained in meters d+"),
+    maxElevationGain: z
+      .number()
+      .nullable()
+      .describe("Maximum elevation gained in meters d+"),
+    maxElevationLoss: z
+      .number()
+      .nullable()
+      .describe("Maximum elevation loss in meters d-"),
+    minElevationLoss: z
+      .number()
+      .nullable()
+      .describe("Minimum elevation loss in meters d-"),
+    minSpeed: z.number().nullable().describe("Minimum speed in km/h"),
+    maxSpeed: z.number().nullable().describe("Maximum speed in km/h"),
   }),
 });
 
@@ -219,7 +233,7 @@ async function parseQuery(query: string) {
       {
         role: "system",
         content: `Extract structured filters and semantic queries from outdoor sports activity search queries (skiing, hiking, cycling, surfing, etc.).
-Extract explicit filters (dates, distances, durations). Distance in meters, duration in seconds.
+Extract explicit filters (dates, distances, durations, elevation gain/loss). Distance in meters, duration in seconds.
 Set semanticQuery to null when the query is FULLY captured by filters — no conceptual or descriptive meaning remains (e.g. "activities over 20km in January" → null, "long hikes in the Alps" → "long hikes in the Alps").
 Only set semanticQuery when there is a descriptive or conceptual part that cannot be expressed as a filter.`,
       },
@@ -256,7 +270,14 @@ export async function hybridSearchActivities(userId: string, query: string) {
     sqlFilters.minDuration = parsed.filters.minDuration;
   if (parsed.filters.maxDuration != null)
     sqlFilters.maxDuration = parsed.filters.maxDuration;
-  if (parsed.filters.name != null) sqlFilters.name = parsed.filters.name;
+  if (parsed.filters.minElevationGain != null)
+    sqlFilters.minElevationGain = parsed.filters.minElevationGain;
+  if (parsed.filters.maxElevationLoss != null)
+    sqlFilters.maxElevationLoss = parsed.filters.maxElevationLoss;
+  if (parsed.filters.minSpeed != null)
+    sqlFilters.minSpeed = parsed.filters.minSpeed;
+  if (parsed.filters.maxSpeed != null)
+    sqlFilters.maxSpeed = parsed.filters.maxSpeed;
 
   const hasFilters = Object.keys(sqlFilters).length > 0;
   const semanticQuery = parsed.semanticQuery;
@@ -267,7 +288,7 @@ export async function hybridSearchActivities(userId: string, query: string) {
   }
 
   if (!hasFilters && semanticQuery === null) {
-    return [];
+    return searchActivitiesEmbeddings(userId, query);
   }
 
   const [sqlResults, embeddingResults] = await Promise.all([

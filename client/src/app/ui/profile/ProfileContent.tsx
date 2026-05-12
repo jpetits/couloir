@@ -48,7 +48,7 @@ export default function ProfileContent({
 
   return (
     <>
-      <div className="relative overflow-hidden">
+      <div className="relative overflow-hidden pointer-events-auto">
         <ActivityStatsWrapper activityList={activityListByYearSelection} />
 
         <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-1002 pointer-events-none">
@@ -89,7 +89,7 @@ export default function ProfileContent({
             </div>
             <button
               onClick={() => setShowCalendar(false)}
-              className="absolute right-0 text-muted-foreground hover:text-foreground cursor-pointer"
+              className="absolute right-0  hover:text-foreground cursor-pointer"
             >
               <X className="w-4 h-4" />
             </button>

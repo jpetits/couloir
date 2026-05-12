@@ -23,7 +23,16 @@ const filtersList = {
   maxDistance: (distance: number) => lte(activities.distance, distance),
   minDuration: (duration: number) => gte(activities.duration, duration),
   maxDuration: (duration: number) => lte(activities.duration, duration),
+  maxElevationGain: (elevation: number) =>
+    lte(activities.elevationGain, elevation),
+  minElevationGain: (elevation: number) =>
+    lte(activities.elevationGain, elevation),
+  maxElevationLoss: (elevation: number) =>
+    lte(activities.elevationLoss, elevation),
+  minElevationLoss: (elevation: number) =>
+    lte(activities.elevationLoss, elevation),
   maxSpeed: (speed: number) => lte(activities.maxSpeed, speed),
+  minSpeed: (speed: number) => gte(activities.minSpeed, speed),
 };
 
 export const activityRepository = {

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useOptimistic } from "react";
 
 import { useRouter } from "next/navigation";
 
@@ -12,7 +12,7 @@ export default function ProfileForm({ user }: { user: User }) {
   const apiFetch = useApi();
   const router = useRouter();
 
-  const [localUser, setLocalUser] = useState(user);
+  const [localUser, setLocalUser] = useOptimistic(user);
 
   const togglePublic = async () => {
     const newUser = { ...localUser, isPublic: !localUser.isPublic };
