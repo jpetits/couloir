@@ -6,7 +6,7 @@ import Map, { Marker } from "react-map-gl/maplibre";
 import "maplibre-gl/dist/maplibre-gl.css";
 import { useShallow } from "zustand/react/shallow";
 
-import { MAP_HEIGHT, MAP_WIDTH } from "@/lib/constants";
+import { MAP_WIDTH } from "@/lib/constants";
 import type { ActivityWithPoints } from "@/store/mapStore";
 import { useMapStore } from "@/store/mapStore";
 import type { PointStats } from "@/types/activity";
@@ -75,7 +75,10 @@ export default function Map3DView({
   }, [activityList]);
 
   return (
-    <div style={{ height: MAP_HEIGHT, width: MAP_WIDTH }}>
+    <div
+      className="h-[calc(100dvh-4rem)] md:h-dvh"
+      style={{ width: MAP_WIDTH }}
+    >
       <Map
         initialViewState={initialViewState}
         maxPitch={85}

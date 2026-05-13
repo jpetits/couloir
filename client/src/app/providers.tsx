@@ -29,7 +29,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         <ClerkProvider>
           <div className="flex min-h-screen flex-col">
             <header className="relative">
-              <div className="hidden lg:flex justify-end items-center p-4 gap-4 h-16">
+              <div className="hidden md:flex justify-end items-center p-4 gap-4 h-16">
                 <ThemeButton />
                 <Show when="signed-out">
                   <SignInButton>
@@ -47,7 +47,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
               </div>
 
               <button
-                className="lg:hidden absolute top-3 right-3 z-[10001] p-2 rounded-md bg-background/80 backdrop-blur-sm border"
+                className="md:hidden absolute top-3 right-3 z-[10001] p-2 rounded-md bg-background/80 backdrop-blur-sm border"
                 onClick={() => setMobileMenuOpen((v) => !v)}
               >
                 {mobileMenuOpen ? (
@@ -58,7 +58,7 @@ export default function Providers({ children }: { children: React.ReactNode }) {
               </button>
 
               {mobileMenuOpen && (
-                <div className="lg:hidden absolute top-12 right-3 z-[10001] flex items-center gap-3 p-3 rounded-lg bg-background border shadow-lg">
+                <div className="md:hidden absolute top-12 right-3 z-[10001] flex items-center gap-3 p-3 rounded-lg bg-background border shadow-lg">
                   <ThemeButton />
                   <Show when="signed-out">
                     <SignInButton>

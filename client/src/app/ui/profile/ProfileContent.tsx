@@ -51,7 +51,7 @@ export default function ProfileContent({
       <div className="relative overflow-hidden pointer-events-auto">
         <ActivityStatsWrapper activityList={activityListByYearSelection} />
 
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-1002 pointer-events-none">
+        <div className="absolute bottom-0 left-1/2 -translate-x-1/2 z-1002 pointer-events-none">
           {!showSideBar && (
             <Button
               variant="outline"

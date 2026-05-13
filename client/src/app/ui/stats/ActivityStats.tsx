@@ -14,14 +14,7 @@ import { useShallow } from "zustand/react/shallow";
 import { useApi } from "@/app/hooks/useApi";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { useIsMobile } from "@/context/DeviceContext";
-import {
-  DATE_FORMAT,
-  MAP_HEIGHT,
-  MAP_HEIGHT_MOBILE,
-  MAP_MAX_ZOOM,
-  MAP_WIDTH,
-} from "@/lib/constants";
+import { DATE_FORMAT, MAP_MAX_ZOOM, MAP_WIDTH } from "@/lib/constants";
 import { searchActivities } from "@/lib/dataClient";
 import {
   startLeafletIcon,
@@ -42,15 +35,12 @@ export default function memoActivityStats({
   activityList: Activity[];
 }) {
   const { resolvedTheme } = useTheme();
-  const isMobile = useIsMobile();
   const [showPhotos, setShowPhotos] = useState(false);
   const [show3DView, setShow3DView] = useState(false);
   const {
     setHoveredDate,
     setHoveredPoint,
     setHoveredActivityPoints,
-    heatMapField,
-    setHeatMapField,
     activityListInBounds,
     hoveredActivity,
     setHoveredActivity,
@@ -171,7 +161,7 @@ export default function memoActivityStats({
         <div className={show3DView ? "hidden" : ""}>
           <>
             <MapContainer
-              className="markercluster-map"
+              className="markercluster-map  md:h-[calc(100dvh-4rem)] h-dvh"
               bounds={
                 activityList.map((a) => [a.startLat, a.startLng]) as [
                   number,
@@ -180,7 +170,6 @@ export default function memoActivityStats({
               }
               maxZoom={MAP_MAX_ZOOM}
               style={{
-                height: isMobile ? MAP_HEIGHT_MOBILE : MAP_HEIGHT,
                 width: MAP_WIDTH,
               }}
             >
