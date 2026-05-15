@@ -32,6 +32,7 @@ A personal activity tracker for outdoor sports — skiing, surfing, trekking, an
 - Summit detection — named OSM peaks detected along activity tracks via Overpass API, stored in a many-to-many relation and displayed in the activity side panel
 - 3D map view — MapLibre GL JS with free terrain tiles, activity tracks rendered in 3D relief
 - Natural language search — hybrid RAG search combining vector embeddings (OpenAI `text-embedding-3-small`, cosine similarity) and SQL filters extracted by `gpt-4o-mini` structured output; results merged with Reciprocal Rank Fusion (RRF)
+- Mobile-responsive — adaptive layout for phones and tablets with touch-friendly map controls and bottom drawer activity panel
 
 ## Roadmap
 - [ ] **Life map** — photos + activities at all zoom levels with clustering, turning the map into a personal geographic history
@@ -39,7 +40,6 @@ A personal activity tracker for outdoor sports — skiing, surfing, trekking, an
 - [ ] **Personal records** — longest, highest, fastest, displayed on profile
 - [ ] **Activity type tagging** — ski/hike/bike/surf labels with per-type colors on map
 - [ ] **Route planning** — draw a route, get elevation profile, export as GPX
-- [ ] **Mobile version** — responsive layout optimized for phones
 - [ ] **Simplify map state** — refactor Zustand map store to reduce complexity
 - [ ] **Cluster sidebar** — clicking a marker cluster opens a sidebar listing the grouped activities with links, and previews each track on the map
 

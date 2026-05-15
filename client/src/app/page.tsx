@@ -61,15 +61,6 @@ export default function Home() {
           </div>
           <div className="rounded-xl overflow-hidden border shadow-2xl">
             <Image
-              src="/map2.webp"
-              alt="2D speed heatmap view"
-              width={1200}
-              height={700}
-              className="w-full object-cover"
-            />
-          </div>
-          <div className="rounded-xl overflow-hidden border shadow-2xl">
-            <Image
               src="/map3.webp"
               alt="400+ activities overview"
               width={1200}
