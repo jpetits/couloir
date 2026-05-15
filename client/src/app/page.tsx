@@ -48,7 +48,7 @@ export default function Home() {
 
       {/* Screenshots */}
       <section className="px-6 max-w-6xl mx-auto">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <div className="rounded-xl overflow-hidden border shadow-2xl">
             <Image
               src="/map.webp"
