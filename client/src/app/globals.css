@@ -1,7 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap');
 @import "tailwindcss";
 @import "tw-animate-css";
-@import 'leaflet/dist/leaflet.css'; 
-@import 'react-leaflet-markercluster/styles'; 
+@import 'leaflet/dist/leaflet.css';
+@import 'react-leaflet-markercluster/styles';
 
 @source "../../src";
 
@@ -122,6 +123,66 @@ body {
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
 }
+
+/* ── Logbook design tokens ─────────────────────────────────────────────── */
+/*
+ * 5 text levels  · 2 borders  · 2 surfaces  · 1 accent
+ * Dark mode is handled here — components use plain text-ui-* classes.
+ *
+ * Text scale (light → dark):
+ *   hi    stone-900 → stone-100   titles, active names
+ *   base  stone-700 → stone-300   body names, labels
+ *   muted stone-500 → stone-500   data values (same both modes)
+ *   dim   stone-300 → stone-700   units, captions, inactive
+ *   ghost stone-200 → stone-900   barely-visible (empty state)
+ */
+:root {
+  --ui-hi:       #1c1917;  /* stone-900 */
+  --ui-base:     #44403c;  /* stone-700 */
+  --ui-muted:    #78716c;  /* stone-500 */
+  --ui-dim:      #d6d3d1;  /* stone-300 */
+  --ui-ghost:    #e7e5e4;  /* stone-200 */
+  --ui-line:     #e7e5e4;  /* stone-200 — main border  */
+  --ui-line-dim: #f5f5f4;  /* stone-100 — row divider  */
+  --ui-surface:  #fafaf9;  /* stone-50  — hover / panel bg */
+  --ui-fill:     #f5f5f4;  /* stone-100 — chip / skeleton bg */
+  --ui-accent:   #f97316;  /* orange-500 */
+}
+
+.dark {
+  --ui-hi:       #f5f5f4;  /* stone-100 */
+  --ui-base:     #d6d3d1;  /* stone-300 */
+  --ui-muted:    #78716c;  /* stone-500 */
+  --ui-dim:      #44403c;  /* stone-700 */
+  --ui-ghost:    #1c1917;  /* stone-900 */
+  --ui-line:     #0c0a09;  /* stone-950 */
+  --ui-line-dim: #0c0a09;  /* stone-950 */
+  --ui-surface:  #0c0a09;  /* stone-950 */
+  --ui-fill:     #1c1917;  /* stone-900 */
+  --ui-accent:   #f97316;  /* orange-500 */
+}
+
+@theme inline {
+  --color-ui-hi:       var(--ui-hi);
+  --color-ui-base:     var(--ui-base);
+  --color-ui-muted:    var(--ui-muted);
+  --color-ui-dim:      var(--ui-dim);
+  --color-ui-ghost:    var(--ui-ghost);
+  --color-ui-line:     var(--ui-line);
+  --color-ui-line-dim: var(--ui-line-dim);
+  --color-ui-surface:  var(--ui-surface);
+  --color-ui-fill:     var(--ui-fill);
+  --color-ui-accent:   var(--ui-accent);
+
+  --font-condensed: 'Barlow Condensed', sans-serif;
+  --font-mono:      'JetBrains Mono', monospace;
+
+  --text-2xs: 0.625rem;   /* 10px */
+  --text-3xs: 0.5625rem;  /* 9px  */
+
+  --tracking-loose: 0.15em;
+}
+/* ─────────────────────────────────────────────────────────────────────── */
 
 @layer base {
   * {

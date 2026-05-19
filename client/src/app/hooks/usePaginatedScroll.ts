@@ -66,7 +66,15 @@ export function usePaginatedScroll<T>(
     return () => observer.disconnect();
   }, [hasNextPage, isFetchingNextPage, fetchNextPage, error, loadMoreRef]);
 
-  const allItems = useMemo(() => data.pages.flat(), [data.pages]);
+  const allItems = useMemo(() => {
+    const seen = new Set<string>();
+    return data.pages.flat().filter((item) => {
+      const id = (item as { id: string }).id;
+      if (seen.has(id)) return false;
+      seen.add(id);
+      return true;
+    });
+  }, [data.pages]);
 
   return { data, allItems, hasNextPage, isFetchingNextPage, error, isLoading };
 }
