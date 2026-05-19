@@ -8,7 +8,6 @@ import { X } from "lucide-react";
 import Link from "next/link";
 import { useShallow } from "zustand/react/shallow";
 
-import { Button } from "@/components/ui/button";
 import { Drawer, DrawerContent, DrawerTitle } from "@/components/ui/drawer";
 import {
   useIsLandscape,
@@ -69,61 +68,58 @@ export default memo(function MapSidePanel({
 
   const content = (
     <>
-      <div className="flex items-start justify-between p-4 border-b">
-        <div>
-          <h2 className="font-semibold text-sm truncate">{activity.name}</h2>
-          <p className="text-muted-foreground text-sm">
+      <div className="flex items-start justify-between px-4 py-3 border-b border-ui-line">
+        <div className="min-w-0 font-condensed">
+          <h2 className="text-base font-bold uppercase tracking-wide text-ui-hi truncate">
+            {activity.name}
+          </h2>
+          <p className="font-mono text-2xs text-ui-muted mt-0.5">
             {format(activity.startDate!, DATE_FORMAT)}
           </p>
         </div>
         <button
           onClick={close}
-          className="text-muted-foreground hover:text-foreground ml-2 mt-0.5"
+          className="text-ui-dim hover:text-ui-base ml-3 mt-0.5 shrink-0 transition-colors"
         >
-          <X className="w-4 h-4 hover:cursor-pointer" />
+          <X className="w-4 h-4" />
         </button>
       </div>
-      <div className="p-4 flex flex-col gap-3 text-sm flex-1 overflow-y-auto">
-        <p className="text-muted-foreground">
-          <ActivityWeather activity={activity} />
-        </p>
-        <div className="grid grid-cols-2 gap-2">
-          <div className="bg-muted rounded p-2">
-            <p className="text-xs text-muted-foreground">Distance</p>
-            <p className="font-semibold">
-              {(activity.distance / 1000).toFixed(1)} km
-            </p>
-          </div>
-          <div className="bg-muted rounded p-2">
-            <p className="text-xs text-muted-foreground">Durée</p>
-            <p className="font-semibold">
-              {formatDuration(activity.duration, false)}
-            </p>
-          </div>
-          <div className="bg-muted rounded p-2">
-            <p className="text-xs text-muted-foreground">Dénivelé +</p>
-            <p className="font-semibold">
-              {activity.elevationGain.toFixed(0)} m
-            </p>
-          </div>
-          <div className="bg-muted rounded p-2">
-            <p className="text-xs text-muted-foreground">Vitesse max</p>
-            <p className="font-semibold">{activity.maxSpeed.toFixed(1)} km/h</p>
-          </div>
-        </div>
-        <div className="flex gap-2">
-          {HEATMAP_OPTIONS.map(({ field, unit }) => (
-            <Button
-              key={field}
-              variant={heatMapField.field === field ? "default" : "outline"}
-              className="cursor-pointer flex-1"
-              size="sm"
-              onClick={() => setHeatMapField(field, unit)}
-            >
-              {field.charAt(0).toUpperCase() + field.slice(1)}
-            </Button>
+
+      <div className="px-4 py-3 flex flex-col gap-3 flex-1 overflow-y-auto">
+        <ActivityWeather activity={activity} />
+
+        <div className="grid grid-cols-2 gap-px bg-ui-line border border-ui-line">
+          {[
+            { label: "DISTANCE", value: `${(activity.distance / 1000).toFixed(1)} km` },
+            { label: "DURÉE", value: formatDuration(activity.duration, false) },
+            { label: "DÉNIVELÉ +", value: `${activity.elevationGain.toFixed(0)} m` },
+            { label: "VITESSE MAX", value: `${activity.maxSpeed.toFixed(1)} km/h` },
+          ].map(({ label, value }) => (
+            <div key={label} className="bg-background px-3 py-2">
+              <p className="font-mono text-3xs tracking-widest text-ui-muted">{label}</p>
+              <p className="font-condensed text-base font-bold text-ui-hi tabular-nums mt-0.5">
+                {value}
+              </p>
+            </div>
           ))}
         </div>
+
+        <div className="flex gap-1">
+          {HEATMAP_OPTIONS.map(({ field, unit }) => (
+            <button
+              key={field}
+              onClick={() => setHeatMapField(field, unit)}
+              className={`flex-1 py-1 border font-mono text-3xs tracking-widest uppercase transition-all duration-150 ${
+                heatMapField.field === field
+                  ? "border-ui-muted text-ui-hi bg-ui-fill"
+                  : "border-ui-line text-ui-muted hover:border-ui-dim hover:text-ui-base"
+              }`}
+            >
+              {field.charAt(0).toUpperCase() + field.slice(1)}
+            </button>
+          ))}
+        </div>
+
         <DataChart
           pointList={selectedPoints}
           onHover={(point) => setHoveredPoint(point)}
@@ -133,24 +129,27 @@ export default memo(function MapSidePanel({
           dataKey={heatMapField.field}
           unit={heatMapField.unit}
         />
-        <div className="flex gap-2">
-          {activity?.activitySummits
-            ?.map((as) => as.summit)
-            .map((summit) => (
-              <div key={summit.id} className="bg-muted rounded p-2 flex-1">
-                <p className="font-semibold">{summit.name}</p>
-                <p className="text-sm text-muted-foreground">
-                  {summit.elevation} m
-                </p>
-              </div>
-            ))}
-        </div>
+
+        {activity?.activitySummits && activity.activitySummits.length > 0 && (
+          <div className="flex gap-1">
+            {activity.activitySummits
+              .map((as) => as.summit)
+              .map((summit) => (
+                <div key={summit.id} className="flex-1 border border-ui-line px-3 py-2">
+                  <p className="font-condensed text-sm font-bold text-ui-hi">{summit.name}</p>
+                  <p className="font-mono text-2xs text-ui-muted tabular-nums">{summit.elevation} m</p>
+                </div>
+              ))}
+          </div>
+        )}
       </div>
-      <div className="p-4 border-t w-[90%] mx-auto">
-        <Link href={ROUTES.activity(activity.id)}>
-          <Button className="w-full cursor-pointer" size="sm">
-            Voir l'activité
-          </Button>
+
+      <div className="px-4 py-3 border-t border-ui-line">
+        <Link
+          href={ROUTES.activity(activity.id)}
+          className="block w-full py-2 text-center font-condensed text-sm font-bold uppercase tracking-widest border border-ui-line text-ui-base hover:border-ui-muted hover:text-ui-hi transition-colors"
+        >
+          Voir l'activité
         </Link>
       </div>
     </>
