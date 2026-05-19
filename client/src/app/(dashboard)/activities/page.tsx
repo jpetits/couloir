@@ -13,23 +13,33 @@ export default async function Activities({
   searchParams: Promise<typeof ActivityFiltersSchema>;
 }) {
   const filters = await searchParams;
-
   const parsedFilters = ActivityFiltersSchema.parse(filters || {});
-
   const data = await fetchActivities(parsedFilters);
   const isStravaConnected = await userIsStravaConnected();
 
   return (
-    <>
-      <BackButton />
-      <h1 className="text-2xl font-bold mb-4">Mes activités</h1>
-      <div className="flex gap-2 mb-4">
-        <UploadButton />
-        {!isStravaConnected && <StravaConnectButton />}
-        {isStravaConnected && <StravaSyncButton />}
-        <StatsButton />
+    <div style={{ fontFamily: "'Barlow Condensed', sans-serif" }}>
+      <div className="flex items-end justify-between pb-4 mb-1 border-b border-[#1a1a1a]">
+        <div className="flex items-baseline gap-4">
+          <BackButton />
+          <h1 className="text-4xl font-bold tracking-wider uppercase text-[#f0ebe0]">
+            Activités
+          </h1>
+          <span
+            className="text-[11px] text-[#444] tracking-widest"
+            style={{ fontFamily: "'JetBrains Mono', monospace" }}
+          >
+            {data.length} logged
+          </span>
+        </div>
+        <div className="flex gap-2 items-center">
+          <UploadButton />
+          {!isStravaConnected && <StravaConnectButton />}
+          {isStravaConnected && <StravaSyncButton />}
+          <StatsButton />
+        </div>
       </div>
       <ActivityList initialActivityList={data} />
-    </>
+    </div>
   );
 }

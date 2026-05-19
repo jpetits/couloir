@@ -19,20 +19,26 @@ export default function BulkActionBar() {
   };
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t p-4 flex items-center justify-between z-50">
-      <span>{selected.length} activité(s) sélectionnée(s)</span>
-      <div className="flex gap-2">
+    <div
+      className="fixed bottom-0 left-0 right-0 border-t border-[#222] bg-[#0a0a0a]/95 backdrop-blur-sm px-6 py-4 flex items-center justify-between z-50"
+      style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
+    >
+      <span className="text-sm tracking-widest uppercase text-[#666]">
+        <span className="text-[#f0ebe0] font-semibold">{selected.length}</span>{" "}
+        selected
+      </span>
+      <div className="flex gap-3">
         <button
           onClick={deleteSelected}
-          className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+          className="px-4 py-1.5 border border-[#FF6B35]/40 text-[#FF6B35] text-xs tracking-widest uppercase hover:bg-[#FF6B35]/10 transition-colors"
         >
-          Supprimer la sélection
+          Delete
         </button>
         <button
           onClick={clear}
-          className="px-4 py-2 bg-gray-200 dark:bg-gray-600 rounded hover:bg-gray-300 dark:hover:bg-gray-500"
+          className="px-4 py-1.5 border border-[#333] text-[#666] text-xs tracking-widest uppercase hover:border-[#555] hover:text-[#888] transition-colors"
         >
-          Effacer la sélection
+          Cancel
         </button>
       </div>
     </div>
