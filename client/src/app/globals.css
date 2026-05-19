@@ -137,29 +137,29 @@ body {
  *   ghost stone-200 → stone-900   barely-visible (empty state)
  */
 :root {
-  --ui-hi:       #1c1917;  /* stone-900 */
-  --ui-base:     #44403c;  /* stone-700 */
-  --ui-muted:    #78716c;  /* stone-500 */
-  --ui-dim:      #d6d3d1;  /* stone-300 */
-  --ui-ghost:    #e7e5e4;  /* stone-200 */
-  --ui-line:     #e7e5e4;  /* stone-200 — main border  */
-  --ui-line-dim: #f5f5f4;  /* stone-100 — row divider  */
-  --ui-surface:  #fafaf9;  /* stone-50  — hover / panel bg */
-  --ui-fill:     #f5f5f4;  /* stone-100 — chip / skeleton bg */
-  --ui-accent:   #f97316;  /* orange-500 */
+  --ui-hi:       var(--color-stone-900);
+  --ui-base:     var(--color-stone-700);
+  --ui-muted:    var(--color-stone-500);
+  --ui-dim:      var(--color-stone-300);
+  --ui-ghost:    var(--color-stone-200);
+  --ui-line:     var(--color-stone-200);
+  --ui-line-dim: var(--color-stone-100);
+  --ui-surface:  var(--color-stone-50);
+  --ui-fill:     var(--color-stone-100);
+  --ui-accent:   var(--color-orange-500);
 }
 
 .dark {
-  --ui-hi:       #f5f5f4;  /* stone-100 */
-  --ui-base:     #d6d3d1;  /* stone-300 */
-  --ui-muted:    #78716c;  /* stone-500 */
-  --ui-dim:      #44403c;  /* stone-700 */
-  --ui-ghost:    #1c1917;  /* stone-900 */
-  --ui-line:     #0c0a09;  /* stone-950 */
-  --ui-line-dim: #0c0a09;  /* stone-950 */
-  --ui-surface:  #0c0a09;  /* stone-950 */
-  --ui-fill:     #1c1917;  /* stone-900 */
-  --ui-accent:   #f97316;  /* orange-500 */
+  --ui-hi:       var(--color-stone-100);
+  --ui-base:     var(--color-stone-300);
+  --ui-muted:    var(--color-stone-500);
+  --ui-dim:      var(--color-stone-700);
+  --ui-ghost:    var(--color-stone-900);
+  --ui-line:     var(--color-stone-950);
+  --ui-line-dim: var(--color-stone-950);
+  --ui-surface:  var(--color-stone-950);
+  --ui-fill:     var(--color-stone-900);
+  --ui-accent:   var(--color-orange-500);
 }
 
 @theme inline {
