@@ -38,6 +38,13 @@ export default defineConfig({
         storageState: "playwright/.clerk/user.json",
       },
       dependencies: ["global setup"],
+      testIgnore: /homepage\.spec\.ts/,
+    },
+    {
+      // Unauthenticated — no global setup dependency, for public pages
+      name: "public",
+      testMatch: /homepage\.spec\.ts/,
+      use: { ...devices["Desktop Chrome"] },
     },
 
     // {
