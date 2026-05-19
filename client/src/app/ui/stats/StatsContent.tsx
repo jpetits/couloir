@@ -19,9 +19,21 @@ export default async function StatsContent() {
 
   const metrics = [
     { value: stats.count.toString(), unit: "", label: "ACTIVITÉS" },
-    { value: (stats.totalDistance / 1000).toFixed(0), unit: "km", label: "DISTANCE" },
-    { value: Math.round(stats.totalElevationLoss).toLocaleString("fr"), unit: "m", label: "DÉNIVELÉ" },
-    { value: formatDuration(stats.totalDuration, false), unit: "", label: "DURÉE" },
+    {
+      value: (stats.totalDistance / 1000).toFixed(0),
+      unit: "km",
+      label: "DISTANCE",
+    },
+    {
+      value: Math.round(stats.totalElevationLoss).toLocaleString("fr"),
+      unit: "m",
+      label: "DÉNIVELÉ",
+    },
+    {
+      value: formatDuration(stats.totalDuration, false),
+      unit: "",
+      label: "DURÉE",
+    },
   ];
 
   return (
@@ -39,12 +51,14 @@ export default async function StatsContent() {
         {metrics.map(({ value, unit, label }, i) => (
           <div
             key={i}
-            className="py-5 px-4 md:px-6 border-r border-ui-line last:border-r-0 [&:nth-child(-n+2)]:border-b md:[&:nth-child(-n+2)]:border-b-0"
+            className="py-5 px-4 md:px-6 border-r border-ui-line last:border-r-0 nth-[-n+2]:border-b md:nth-[-n+2]:border-b-0"
           >
             <div className="text-4xl font-bold tabular-nums text-ui-hi leading-none">
               {value}
               {unit && (
-                <span className="text-lg font-normal text-ui-dim ml-1">{unit}</span>
+                <span className="text-lg font-normal text-ui-dim ml-1">
+                  {unit}
+                </span>
               )}
             </div>
             <div className="font-mono text-3xs tracking-widest text-ui-muted mt-2">
