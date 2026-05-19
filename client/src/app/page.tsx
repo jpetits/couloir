@@ -24,7 +24,9 @@ export default function Home() {
           </h1>
 
           <div className="flex items-center gap-3 mb-12">
-            <span className="font-mono text-3xs tracking-widest text-ui-dim">/</span>
+            <span className="font-mono text-3xs tracking-widest text-ui-dim">
+              /
+            </span>
             <span className="font-mono text-3xs tracking-widest text-ui-muted uppercase">
               GPS · STRAVA · FIT · KML
             </span>
@@ -58,17 +60,35 @@ export default function Home() {
       {/* Feature strip */}
       <section className="grid grid-cols-1 md:grid-cols-3 border-b border-ui-line">
         {[
-          { index: "01", title: "Upload FIT files", body: "Import directly from your GPS device or sports watch." },
-          { index: "02", title: "Sync with Strava", body: "Connect once and your activities sync automatically." },
-          { index: "03", title: "Explore your tracks", body: "Interactive map with elevation and speed charts for every activity." },
+          {
+            index: "01",
+            title: "Upload FIT files",
+            body: "Import directly from your GPS device or sports watch.",
+          },
+          {
+            index: "02",
+            title: "Sync with Strava",
+            body: "Connect once and your activities sync automatically.",
+          },
+          {
+            index: "03",
+            title: "Explore your tracks",
+            body: "Interactive map with elevation and speed charts for every activity.",
+          },
         ].map(({ index, title, body }) => (
           <div
             key={index}
             className="px-6 md:px-10 py-10 border-r border-ui-line last:border-r-0 border-b md:border-b-0"
           >
-            <div className="font-mono text-3xs tracking-widest text-ui-dim mb-4">{index}</div>
-            <h3 className="text-2xl font-bold uppercase tracking-wide text-ui-hi mb-2">{title}</h3>
-            <p className="font-mono text-2xs text-ui-muted leading-relaxed">{body}</p>
+            <div className="font-mono text-3xs tracking-widest text-ui-dim mb-4">
+              {index}
+            </div>
+            <h3 className="text-2xl font-bold uppercase tracking-wide text-ui-hi mb-2">
+              {title}
+            </h3>
+            <p className="font-mono text-2xs text-ui-muted leading-relaxed">
+              {body}
+            </p>
           </div>
         ))}
       </section>
@@ -79,51 +99,40 @@ export default function Home() {
           / Screenshots
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-ui-line border border-ui-line">
-          <div className="overflow-hidden bg-background">
-            <Image
-              src="/map.webp"
-              alt="3D terrain map view"
-              width={1200}
-              height={700}
-              className="w-full object-cover hover:scale-105 transition-transform duration-500"
-              priority
-            />
-            <div className="px-3 py-2 border-t border-ui-line">
-              <span className="font-mono text-3xs tracking-widest text-ui-muted uppercase">3D terrain map</span>
+          {[
+            { src: "/map.webp", alt: "3D terrain map view", caption: "3D terrain map", priority: true },
+            { src: "/map3.webp", alt: "400+ activities overview", caption: "400+ activities", priority: false },
+            { src: "/map4.webp", alt: "Activity list", caption: "Activity list", priority: false },
+          ].map(({ src, alt, caption, priority }) => (
+            <div key={src} className="flex flex-col bg-background">
+              <div className="relative h-52 overflow-hidden">
+                <Image
+                  src={src}
+                  alt={alt}
+                  fill
+                  className="object-cover hover:scale-105 transition-transform duration-500"
+                  priority={priority}
+                />
+              </div>
+              <div className="px-3 py-2 border-t border-ui-line">
+                <span className="font-mono text-3xs tracking-widest text-ui-muted uppercase">
+                  {caption}
+                </span>
+              </div>
             </div>
-          </div>
-          <div className="overflow-hidden bg-background">
-            <Image
-              src="/map3.webp"
-              alt="400+ activities overview"
-              width={1200}
-              height={700}
-              className="w-full object-cover hover:scale-105 transition-transform duration-500"
-            />
-            <div className="px-3 py-2 border-t border-ui-line">
-              <span className="font-mono text-3xs tracking-widest text-ui-muted uppercase">400+ activities</span>
-            </div>
-          </div>
-          <div className="overflow-hidden bg-background">
-            <Image
-              src="/map4.webp"
-              alt="Activity list with FIT upload and Strava sync"
-              width={1200}
-              height={700}
-              className="w-full object-cover hover:scale-105 transition-transform duration-500"
-            />
-            <div className="px-3 py-2 border-t border-ui-line">
-              <span className="font-mono text-3xs tracking-widest text-ui-muted uppercase">Activity list</span>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
       {/* Footer CTA */}
       <section className="border-t border-ui-line px-6 md:px-16 py-16 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 max-w-7xl mx-auto">
         <div>
-          <p className="text-3xl font-bold uppercase tracking-wide text-ui-hi">Start logging.</p>
-          <p className="font-mono text-2xs text-ui-muted mt-1 tracking-widest">Free to use. No subscription.</p>
+          <p className="text-3xl font-bold uppercase tracking-wide text-ui-hi">
+            Start logging.
+          </p>
+          <p className="font-mono text-2xs text-ui-muted mt-1 tracking-widest">
+            Free to use. No subscription.
+          </p>
         </div>
         <Show when="signed-out">
           <SignUpButton>
