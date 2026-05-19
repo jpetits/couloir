@@ -10,6 +10,7 @@ import {
   useReactTable,
 } from "@tanstack/react-table";
 import { format } from "date-fns/format";
+import { Trash } from "lucide-react";
 import {
   useRouter,
   useSearchParams,
@@ -25,9 +26,6 @@ import { formatDuration } from "@/lib/utils";
 import { ROUTES } from "@/routing/constants";
 import { useActivitySelectionStore } from "@/store/activitySelection";
 
-const FONT_CONDENSED = "'Barlow Condensed', sans-serif";
-const FONT_MONO = "'JetBrains Mono', monospace";
-
 const SORT_COLS = [
   { id: "name", label: "NAME" },
   { id: "startDate", label: "DATE" },
@@ -37,22 +35,28 @@ const SORT_COLS = [
   { id: "maxSpeed", label: "SPEED" },
 ] as const;
 
-function getSportColor(name: string): string {
+type SportClasses = { dot: string; border: string };
+
+function getSportClasses(name: string): SportClasses {
   const n = name.toLowerCase();
-  if (n.includes("snowboard") || n.includes("ski")) return "#74C0FC";
-  if (n.includes("surf")) return "#38D9A9";
+  if (n.includes("snowboard") || n.includes("ski"))
+    return { dot: "bg-blue-300", border: "border-l-blue-300" };
+  if (n.includes("surf"))
+    return { dot: "bg-teal-400", border: "border-l-teal-400" };
   if (
     n.includes("vélo") ||
     n.includes("velo") ||
     n.includes("bike") ||
     n.includes("cycl")
   )
-    return "#FFD43B";
-  if (n.includes("natation") || n.includes("swim")) return "#4DABF7";
+    return { dot: "bg-yellow-400", border: "border-l-yellow-400" };
+  if (n.includes("natation") || n.includes("swim"))
+    return { dot: "bg-blue-400", border: "border-l-blue-400" };
   if (n.includes("course") || n.includes("run") || n.includes("trail"))
-    return "#FF6B35";
-  if (n.includes("marche") || n.includes("rando")) return "#A9E34B";
-  return "#555555";
+    return { dot: "bg-orange-400", border: "border-l-orange-400" };
+  if (n.includes("marche") || n.includes("rando"))
+    return { dot: "bg-lime-400", border: "border-l-lime-400" };
+  return { dot: "bg-stone-400", border: "border-l-stone-400" };
 }
 
 function SortBtn({
@@ -68,9 +72,8 @@ function SortBtn({
   return (
     <button
       onClick={() => onSort(col.id)}
-      style={{ fontFamily: FONT_MONO, fontSize: "9px" }}
-      className={`tracking-widest transition-colors ${
-        active ? "text-[#aaa]" : "text-[#333] hover:text-[#666]"
+      className={`font-mono text-3xs tracking-widest transition-colors ${
+        active ? "text-ui-base" : "text-ui-dim hover:text-ui-muted"
       }`}
     >
       {col.label}
@@ -78,6 +81,16 @@ function SortBtn({
     </button>
   );
 }
+
+const SKELETON_WIDTHS = ["w-36", "w-44", "w-52"] as const;
+const SKELETON_COL_WIDTHS = ["w-20", "w-12", "w-14", "w-14", "w-14"] as const;
+const SKELETON_DELAYS = [
+  "delay-0",
+  "delay-75",
+  "delay-100",
+  "delay-150",
+  "delay-200",
+] as const;
 
 export function DataTable<TData extends { id: string }, TValue>({
   columns,
@@ -154,22 +167,35 @@ export function DataTable<TData extends { id: string }, TValue>({
   return (
     <div className="mt-4">
       {/* Sort header */}
-      <div className="flex items-center justify-end gap-6 px-4 pb-2 border-b border-[#161616]">
-        {SORT_COLS.map((col) => (
-          <SortBtn
-            key={col.id}
-            col={col}
-            sorting={sorting}
-            onSort={handleSort}
-          />
-        ))}
-        <div className="w-5" />
+      <div className="flex items-center gap-3 px-4 pb-2 border-b border-ui-line">
+        <div className="w-1.5 shrink-0" />
+        <div className="flex-1 min-w-0">
+          <SortBtn col={SORT_COLS[0]} sorting={sorting} onSort={handleSort} />
+        </div>
+        <div className="hidden md:flex items-center gap-6 shrink-0">
+          <div className="w-20 flex justify-end">
+            <SortBtn col={SORT_COLS[1]} sorting={sorting} onSort={handleSort} />
+          </div>
+          <div className="w-12 flex justify-end">
+            <SortBtn col={SORT_COLS[2]} sorting={sorting} onSort={handleSort} />
+          </div>
+          <div className="w-14 flex justify-end">
+            <SortBtn col={SORT_COLS[3]} sorting={sorting} onSort={handleSort} />
+          </div>
+          <div className="w-14 flex justify-end">
+            <SortBtn col={SORT_COLS[4]} sorting={sorting} onSort={handleSort} />
+          </div>
+          <div className="w-14 flex justify-end">
+            <SortBtn col={SORT_COLS[5]} sorting={sorting} onSort={handleSort} />
+          </div>
+        </div>
+        <div className="w-5 shrink-0" />
       </div>
 
       {/* Activity rows */}
       <div>
         {activities.map((activity) => {
-          const color = getSportColor(activity.name);
+          const sport = getSportClasses(activity.name);
           const isSelected = selected.includes(activity.id);
           const distKm = (activity.distance / 1000).toFixed(1);
           const avgSpeedKmh = (
@@ -182,135 +208,116 @@ export function DataTable<TData extends { id: string }, TValue>({
             <div
               key={activity.id}
               onClick={() => toggle(activity.id)}
-              className="group flex items-center gap-3 px-4 py-3 cursor-pointer border-b border-[#131313] transition-colors duration-75 hover:bg-[#0f0f0f]"
-              style={{
-                borderLeft: `2px solid ${isSelected ? color : "transparent"}`,
-              }}
+              className={`group flex items-center gap-3 px-4 py-3 cursor-pointer border-b border-ui-line-dim border-l-2 transition-colors duration-75 hover:bg-ui-surface ${
+                isSelected ? sport.border : "border-l-transparent"
+              }`}
             >
-              {/* Sport color dot */}
               <div
-                className="w-1.5 h-1.5 rounded-full flex-shrink-0 transition-transform duration-150 group-hover:scale-125"
-                style={{ backgroundColor: color }}
+                className={`w-1.5 h-1.5 rounded-full shrink-0 transition-transform duration-150 group-hover:scale-125 ${sport.dot}`}
               />
 
-              {/* Name + mobile data */}
               <div className="flex-1 min-w-0">
                 <Link
                   href={ROUTES.activity(activity.id)}
                   onClick={(e) => e.stopPropagation()}
-                  className="block truncate"
-                  style={{ fontFamily: FONT_CONDENSED }}
+                  className="block truncate font-condensed"
                 >
-                  <span className="text-[15px] font-semibold uppercase tracking-wide text-[#c8c3b8] hover:text-[#f0ebe0] transition-colors">
+                  <span className="text-sm font-semibold uppercase tracking-wide text-ui-base hover:text-ui-hi transition-colors">
                     {activity.name}
                   </span>
                 </Link>
-                <div
-                  className="md:hidden mt-0.5 text-[#444]"
-                  style={{ fontFamily: FONT_MONO, fontSize: "10px" }}
-                >
+                <div className="font-mono text-2xs md:hidden mt-0.5 text-ui-muted">
                   {format(activity.startDate, DATE_FORMAT)} · {distKm} km ·{" "}
                   {formatDuration(activity.duration, false)}
                 </div>
+                {activity.images && activity.images.length > 0 && (
+                  <div className="flex gap-1 mt-1.5">
+                    {activity.images.slice(0, 3).map((img) => (
+                      <img
+                        key={img.id}
+                        src={ROUTES.api.imagePath(img.immichId, "thumbnail")}
+                        alt=""
+                        className="w-8 h-8 object-cover rounded-sm opacity-80 group-hover:opacity-100 transition-opacity"
+                      />
+                    ))}
+                    {activity.images.length > 3 && (
+                      <div className="w-8 h-8 rounded-sm bg-ui-fill flex items-center justify-center">
+                        <span className="font-mono text-3xs text-ui-dim">
+                          +{activity.images.length - 3}
+                        </span>
+                      </div>
+                    )}
+                  </div>
+                )}
               </div>
 
-              {/* Desktop data strip */}
-              <div
-                className="hidden md:flex items-center gap-6 flex-shrink-0"
-                style={{ fontFamily: FONT_MONO }}
-              >
-                <span className="text-[11px] text-[#444] w-20 text-right tabular-nums">
+              <div className="font-mono hidden md:flex items-center gap-6 shrink-0">
+                <span className="text-xs text-ui-muted w-20 text-right tabular-nums">
                   {format(activity.startDate, DATE_FORMAT)}
                 </span>
-                <span className="text-[11px] text-[#666] w-12 text-right tabular-nums">
+                <span className="text-xs text-ui-muted w-12 text-right tabular-nums">
                   {distKm}
-                  <span className="text-[#333] text-[9px] ml-0.5">km</span>
+                  <span className="text-ui-dim text-xs ml-0.5">km</span>
                 </span>
-                <span className="text-[11px] text-[#666] w-14 text-right tabular-nums">
+                <span className="text-xs text-ui-muted w-14 text-right tabular-nums">
                   {formatDuration(activity.duration, false)}
                 </span>
-                <span className="text-[11px] text-[#555] w-14 text-right tabular-nums">
+                <span className="text-xs text-ui-muted w-14 text-right tabular-nums">
                   {activity.elevationGain > 0
                     ? `+${Math.round(activity.elevationGain)}`
                     : "—"}
                   {activity.elevationGain > 0 && (
-                    <span className="text-[#333] text-[9px] ml-0.5">m</span>
+                    <span className="text-ui-dim text-xs ml-0.5">m</span>
                   )}
                 </span>
-                <span className="text-[11px] text-[#444] w-14 text-right tabular-nums">
+                <span className="text-xs text-ui-muted w-14 text-right tabular-nums">
                   {avgSpeedKmh}
-                  <span className="text-[#333] text-[9px] ml-0.5">km/h</span>
+                  <span className="text-ui-dim text-xs ml-0.5">km/h</span>
                 </span>
               </div>
 
-              {/* Delete — appears on hover */}
               <button
                 onClick={(e) => {
                   e.stopPropagation();
                   setSelectedActivityToDelete(activity);
                 }}
-                className="opacity-0 group-hover:opacity-100 transition-opacity duration-100 text-[#2a2a2a] hover:text-[#FF6B35] flex-shrink-0 ml-1"
+                className="opacity-0 group-hover:opacity-100 transition-opacity duration-100 text-ui-dim hover:text-ui-accent shrink-0 ml-1"
                 aria-label="Delete"
               >
-                <svg width="13" height="13" viewBox="0 0 14 14" fill="none">
-                  <path
-                    d="M1 3h12M4.5 3V2a.5.5 0 01.5-.5h3a.5.5 0 01.5.5v1M5.5 6v5M8.5 6v5M2 3l.7 8.3A1 1 0 003.7 12h6.6a1 1 0 001-.7L12 3"
-                    stroke="currentColor"
-                    strokeWidth="1.2"
-                    strokeLinecap="round"
-                  />
-                </svg>
+                <Trash size={14} />
               </button>
             </div>
           );
         })}
 
-        {/* Empty state */}
         {!isLoading && activities.length === 0 && (
           <div className="py-20 text-center">
-            <div
-              className="text-[#1e1e1e] mb-3"
-              style={{
-                fontFamily: FONT_CONDENSED,
-                fontSize: "48px",
-                fontWeight: 700,
-              }}
-            >
+            <div className="font-condensed text-5xl font-bold text-ui-ghost mb-3">
               NO RESULTS
             </div>
-            <div
-              className="text-[#333]"
-              style={{
-                fontFamily: FONT_MONO,
-                fontSize: "10px",
-                letterSpacing: "0.15em",
-              }}
-            >
+            <div className="font-mono text-2xs tracking-loose text-ui-dim">
               ADJUST YOUR FILTERS
             </div>
           </div>
         )}
 
-        {/* Loading skeletons */}
         {skeletonCount > 0 &&
           Array.from({ length: skeletonCount }).map((_, idx) => (
             <div
               key={idx}
-              className="flex items-center gap-3 px-4 py-3 border-b border-[#131313]"
+              className="flex items-center gap-3 px-4 py-3 border-b border-ui-line-dim"
             >
-              <div className="w-1.5 h-1.5 rounded-full bg-[#1e1e1e] animate-pulse" />
+              <div className="w-1.5 h-1.5 rounded-full bg-ui-fill animate-pulse" />
               <div className="flex-1">
                 <div
-                  className="h-3.5 bg-[#1a1a1a] rounded-sm animate-pulse"
-                  style={{ width: `${140 + (idx % 3) * 40}px` }}
+                  className={`h-3.5 bg-ui-fill rounded-sm animate-pulse ${SKELETON_WIDTHS[idx % 3]}`}
                 />
               </div>
               <div className="hidden md:flex gap-6">
-                {[80, 48, 56, 56, 56].map((w, j) => (
+                {SKELETON_COL_WIDTHS.map((w, j) => (
                   <div
                     key={j}
-                    className="h-3 bg-[#181818] rounded-sm animate-pulse"
-                    style={{ width: `${w}px`, animationDelay: `${j * 60}ms` }}
+                    className={`h-3 bg-ui-fill rounded-sm animate-pulse ${w} ${SKELETON_DELAYS[j]}`}
                   />
                 ))}
               </div>

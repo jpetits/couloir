@@ -19,24 +19,21 @@ export default function BulkActionBar() {
   };
 
   return (
-    <div
-      className="fixed bottom-0 left-0 right-0 border-t border-[#222] bg-[#0a0a0a]/95 backdrop-blur-sm px-6 py-4 flex items-center justify-between z-50"
-      style={{ fontFamily: "'Barlow Condensed', sans-serif" }}
-    >
-      <span className="text-sm tracking-widest uppercase text-[#666]">
-        <span className="text-[#f0ebe0] font-semibold">{selected.length}</span>{" "}
+    <div className="font-condensed fixed bottom-0 left-0 right-0 border-t border-ui-line bg-ui-surface/95 backdrop-blur-sm px-6 py-4 flex items-center justify-between z-50">
+      <span className="text-sm tracking-widest uppercase text-ui-muted">
+        <span className="text-ui-hi font-semibold">{selected.length}</span>{" "}
         selected
       </span>
       <div className="flex gap-3">
         <button
           onClick={deleteSelected}
-          className="px-4 py-1.5 border border-[#FF6B35]/40 text-[#FF6B35] text-xs tracking-widest uppercase hover:bg-[#FF6B35]/10 transition-colors"
+          className="px-4 py-1.5 border border-ui-accent/40 text-ui-accent text-xs tracking-widest uppercase hover:bg-ui-accent/10 transition-colors"
         >
           Delete
         </button>
         <button
           onClick={clear}
-          className="px-4 py-1.5 border border-[#333] text-[#666] text-xs tracking-widest uppercase hover:border-[#555] hover:text-[#888] transition-colors"
+          className="px-4 py-1.5 border border-ui-line text-ui-muted text-xs tracking-widest uppercase hover:border-ui-dim hover:text-ui-base transition-colors"
         >
           Cancel
         </button>
