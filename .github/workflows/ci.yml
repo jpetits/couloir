@@ -117,8 +117,8 @@ jobs:
       - name: Install Playwright browsers
         run: pnpm exec playwright install chromium --with-deps
 
-      - name: Load e2e env
-        run: cat .env.e2e >> $GITHUB_ENV
+      - name: Load test env
+        run: cat .env.test >> $GITHUB_ENV
 
       - name: Run homepage tests
         run: pnpm exec playwright test --project=public
