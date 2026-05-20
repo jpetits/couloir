@@ -21,8 +21,12 @@ test.describe("hero section", () => {
   test("shows Sign In and Sign Up buttons when signed out", async ({
     page,
   }) => {
-    await expect(page.getByRole("button", { name: /sign in/i })).toBeVisible();
-    await expect(page.getByRole("button", { name: /sign up/i })).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: /sign in/i }).first(),
+    ).toBeVisible();
+    await expect(
+      page.getByRole("button", { name: /sign up/i }).first(),
+    ).toBeVisible();
   });
 
   test("does not show My Activities link when signed out", async ({ page }) => {
@@ -52,7 +56,10 @@ test.describe("screenshots section", () => {
   });
 
   test("renders three screenshot images", async ({ page }) => {
-    await expect(page.getByRole("img")).toHaveCount(3);
+    const section = page
+      .locator("section")
+      .filter({ hasText: "/ Screenshots" });
+    await expect(section.getByRole("img")).toHaveCount(3);
   });
 
   test("renders image captions", async ({ page }) => {
