@@ -12,8 +12,6 @@ import { useDebounce } from "use-debounce";
 import { useShallow } from "zustand/react/shallow";
 
 import { useApi } from "@/app/hooks/useApi";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { DATE_FORMAT, MAP_MAX_ZOOM, MAP_WIDTH } from "@/lib/constants";
 import { searchActivities } from "@/lib/dataClient";
 import {
@@ -124,38 +122,47 @@ export default function memoActivityStats({
           if (!selectedActivityId) setHoveredActivityPoints([]);
         }}
       >
-        <div className="absolute top-2.5 left-15 z-1000 flex gap-2 flex-wrap">
-          <Button
-            variant={showPhotos ? "default" : "outline"}
-            className="cursor-pointer shadow"
-            size="sm"
+        <div className="absolute top-2.5 left-15 z-1000 flex gap-2 items-center flex-wrap font-condensed">
+          <button
             onClick={() => setShowPhotos((v) => !v)}
+            className={`px-3 py-1 border font-mono text-3xs tracking-widest uppercase transition-all duration-150 shadow-sm ${
+              showPhotos
+                ? "border-ui-muted text-ui-hi bg-ui-fill"
+                : "border-ui-line text-ui-muted bg-ui-surface hover:border-ui-dim hover:text-ui-base"
+            }`}
           >
             Photos
-          </Button>
-          <Button
-            variant={show3DView ? "default" : "outline"}
-            className="cursor-pointer shadow"
-            size="sm"
+          </button>
+          <button
             onClick={() => setShow3DView((v) => !v)}
+            className={`px-3 py-1 border font-mono text-3xs tracking-widest uppercase transition-all duration-150 shadow-sm ${
+              show3DView
+                ? "border-ui-muted text-ui-hi bg-ui-fill"
+                : "border-ui-line text-ui-muted bg-ui-surface hover:border-ui-dim hover:text-ui-base"
+            }`}
           >
-            3D View
-          </Button>
-          <Input
-            type="text"
-            placeholder="Search activities..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className=""
-          />
-          {searchTerm && (
-            <button
-              onClick={() => setSearchTerm("")}
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 cursor-pointer"
-            >
-              <X size={12} />
-            </button>
-          )}
+            3D
+          </button>
+          <div className="relative">
+            <span className="font-mono absolute left-2.5 top-1/2 -translate-y-1/2 text-ui-dim pointer-events-none text-3xs">
+              /
+            </span>
+            <input
+              type="text"
+              placeholder="search…"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+              className="font-condensed h-7 pl-6 pr-7 bg-ui-surface border border-ui-line hover:border-ui-dim focus:border-ui-muted text-ui-hi placeholder-ui-ghost focus:outline-none text-sm tracking-wide shadow-sm transition-colors"
+            />
+            {searchTerm && (
+              <button
+                onClick={() => setSearchTerm("")}
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-ui-muted hover:text-ui-base leading-none"
+              >
+                <X size={10} />
+              </button>
+            )}
+          </div>
         </div>
 
         <div className={show3DView ? "hidden" : ""}>
