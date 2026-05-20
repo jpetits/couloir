@@ -38,6 +38,13 @@ export default defineConfig({
         storageState: "playwright/.clerk/user.json",
       },
       dependencies: ["global setup"],
+      testIgnore: /homepage\.spec\.ts/,
+    },
+    {
+      // Unauthenticated — no global setup dependency, for public pages
+      name: "public",
+      testMatch: /homepage\.spec\.ts/,
+      use: { ...devices["Desktop Chrome"] },
     },
 
     // {
@@ -82,8 +89,15 @@ export default defineConfig({
   /* Run your local dev server before starting the tests */
   webServer: [
     {
+      name: "Frontend",
+      command: `pnpm build && pnpm exec next start -p ${process.env.CLIENT_PORT || 3001}`,
+      url: `http://localhost:${process.env.CLIENT_PORT || 3001}`,
+      cwd: __dirname,
+      timeout: 120000,
+    },
+    {
       name: "Backend",
-      command: `pnpm exec tsx --env-file=.env.test server.ts`,
+      command: `pnpm exec tsx server.ts`,
       url: `http://localhost:${process.env.SERVER_PORT || 8002}`,
       cwd: path.resolve(__dirname, "../server"),
       timeout: 30000,
@@ -93,16 +107,6 @@ export default defineConfig({
       wait: {
         stdout: /Server running on port/,
       },
-    },
-    {
-      name: "Frontend",
-      command: `pnpm exec next dev -p ${process.env.CLIENT_PORT || 3001}`,
-      url: `http://localhost:${process.env.CLIENT_PORT || 3001}`,
-      reuseExistingServer: true,
-      cwd: __dirname,
-      timeout: 120000,
-      stderr: "pipe",
-      stdout: "pipe",
     },
   ],
 });

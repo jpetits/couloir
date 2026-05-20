@@ -1,5 +1,7 @@
 import { useAuth } from "@clerk/nextjs";
 
+import { API_BASE_URL } from "@/lib/constants";
+
 export function useApi() {
   const { getToken } = useAuth();
 
@@ -11,7 +13,7 @@ export function useApi() {
 
     const isFormData = options?.body instanceof FormData;
 
-    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}${path}`, {
+    const res = await fetch(`${API_BASE_URL}${path}`, {
       ...options,
       headers: {
         ...(!isFormData && { "Content-Type": "application/json" }),

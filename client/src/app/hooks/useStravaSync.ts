@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 
 import { useAuth } from "@clerk/nextjs";
 
+import { API_BASE_URL } from "@/lib/constants";
 import { ROUTES } from "@/routing/constants";
 
 import { useApi } from "./useApi";
@@ -22,7 +23,7 @@ export function useStravaSync() {
       if (!token) return;
 
       ws = new WebSocket(
-        `${process.env.NEXT_PUBLIC_API_URL?.replace(/^http/, "ws")}/ws?token=${token}`,
+        `${API_BASE_URL?.replace(/^http/, "ws")}/ws?token=${token}`,
       );
 
       ws.addEventListener("message", (event) => {
