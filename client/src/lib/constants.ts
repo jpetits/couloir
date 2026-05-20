@@ -58,3 +58,4 @@ export const HEATMAP_OPTIONS: HeatMapField[] = [
 export const MAP_HEIGHT = "md:calc(100dvh) calc(100dvh - 4rem)"; // 4rem = height of header + some margin
 export const MAP_WIDTH = "100%";
 export const MAP_MAX_ZOOM = 18;
+export const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL;

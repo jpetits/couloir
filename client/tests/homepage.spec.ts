@@ -18,13 +18,11 @@ test.describe("hero section", () => {
     await expect(page.getByText("GPS · STRAVA · FIT · KML")).toBeVisible();
   });
 
-  test("shows Sign In and Sign Up buttons when signed out", async ({ page }) => {
-    await expect(
-      page.getByRole("button", { name: /sign in/i }),
-    ).toBeVisible();
-    await expect(
-      page.getByRole("button", { name: /sign up/i }),
-    ).toBeVisible();
+  test("shows Sign In and Sign Up buttons when signed out", async ({
+    page,
+  }) => {
+    await expect(page.getByRole("button", { name: /sign in/i })).toBeVisible();
+    await expect(page.getByRole("button", { name: /sign up/i })).toBeVisible();
   });
 
   test("does not show My Activities link when signed out", async ({ page }) => {
@@ -81,9 +79,7 @@ test.describe("mobile viewport", () => {
 
   test("hero renders on mobile", async ({ page }) => {
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    await expect(
-      page.getByRole("button", { name: /sign up/i }),
-    ).toBeVisible();
+    await expect(page.getByRole("button", { name: /sign up/i })).toBeVisible();
   });
 
   test("feature strip visible on mobile", async ({ page }) => {

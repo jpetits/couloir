@@ -2,6 +2,7 @@ import { toast } from "sonner";
 
 import { ROUTES } from "@/routing/constants";
 
+import { API_BASE_URL } from "./constants";
 import type { Activity, MapBounds, MapPointsResponse, User } from "./schema";
 import { ActivitySchema } from "./schema";
 
@@ -67,7 +68,7 @@ export async function fetchActivitiesWithPointsInBounds(
   username?: string,
 ): Promise<MapPointsResponse> {
   if (username) {
-    const url = `${process.env.NEXT_PUBLIC_API_URL}${ROUTES.api.publicMap(username, bounds, excludeActivityIds, zoom)}`;
+    const url = `${API_BASE_URL}${ROUTES.api.publicMap(username, bounds, excludeActivityIds, zoom)}`;
     return fetch(url).then((r) => r.json());
   }
   return apiFetch<MapPointsResponse>(

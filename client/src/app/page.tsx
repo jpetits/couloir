@@ -100,9 +100,24 @@ export default function Home() {
         </div>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-px bg-ui-line border border-ui-line">
           {[
-            { src: "/map.webp", alt: "3D terrain map view", caption: "3D terrain map", priority: true },
-            { src: "/map3.webp", alt: "400+ activities overview", caption: "400+ activities", priority: false },
-            { src: "/map4.webp", alt: "Activity list", caption: "Activity list", priority: false },
+            {
+              src: "/map.webp",
+              alt: "3D terrain map view",
+              caption: "3D terrain map",
+              priority: true,
+            },
+            {
+              src: "/map3.webp",
+              alt: "400+ activities overview",
+              caption: "400+ activities",
+              priority: false,
+            },
+            {
+              src: "/map4.webp",
+              alt: "Activity list",
+              caption: "Activity list",
+              priority: false,
+            },
           ].map(({ src, alt, caption, priority }) => (
             <div key={src} className="flex flex-col bg-background">
               <div className="relative h-52 overflow-hidden">

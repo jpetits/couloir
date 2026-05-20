@@ -50,6 +50,21 @@ jobs:
       run:
         working-directory: client
 
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: test
+          POSTGRES_PASSWORD: test
+          POSTGRES_DB: testdb
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
     steps:
       - uses: actions/checkout@v4
 
@@ -61,19 +76,34 @@ jobs:
         with:
           node-version: 22
           cache: pnpm
-          cache-dependency-path: client/pnpm-lock.yaml
+          cache-dependency-path: |
+            client/pnpm-lock.yaml
+            server/pnpm-lock.yaml
 
       - run: pnpm install --frozen-lockfile
+
+      - run: pnpm install --frozen-lockfile
+        working-directory: server
 
       - name: Install Playwright browsers
         run: pnpm exec playwright install chromium --with-deps
 
       - name: Run homepage tests
-        run: pnpm exec playwright test --project=public
+        run: pnpm exec playwright test --project=public -env=test
         env:
-          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: ${{ secrets.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY || 'pk_test_placeholder' }}
-          CLERK_SECRET_KEY: ${{ secrets.CLERK_SECRET_KEY || 'sk_test_placeholder' }}
-          NEXT_PUBLIC_API_URL: http://localhost:3001
+          NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY: pk_test_ZXhjaXRlZC1nYXplbGxlLTg5LmNsZXJrLmFjY291bnRzLmRldiQ
+          CLERK_SECRET_KEY: sk_test_QJRTrhkWpp4rfFcEGqrzVi5QaL7cdaN6B0QZrQS4GU
+          NEXT_PUBLIC_API_URL: http://localhost:8002
+          CLIENT_PORT: 3001
+          SERVER_PORT: 8002
+          CLERK_TEST_USER_EMAIL: doe+clerk_test@example.com
+          CLERK_TEST_USER_PASSWORD: test
+          NEXT_PUBLIC_CLERK_SIGN_IN_URL: /sign-in
+          NEXT_PUBLIC_STRAVA_CLIENT_ID: 221437
+          DATABASE_URL: postgresql://test:test@localhost:5432/testdb
+          CLIENT_URL: http://localhost:3001
+          PORT: 8002
+          OPENAI_API_KEY: sk-placeholder-not-used-in-homepage-tests
 
       - uses: actions/upload-artifact@v4
         if: ${{ !cancelled() }}

@@ -49,7 +49,7 @@ export const ROUTES = {
     publicActivities: (username: string) =>
       `/api/public/${username}/activities`,
     imagePath: (imageId: string, size: AssetMediaSize = "thumbnail") =>
-      `${process.env.NEXT_PUBLIC_API_URL}/api/public/assets/${imageId}/thumbnail?size=${size}`,
+      `/api/public/assets/${imageId}/thumbnail?size=${size}`,
   },
   external: {
     stravaAuth: (redirect: string) =>

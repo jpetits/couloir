@@ -90,7 +90,7 @@ export default defineConfig({
   webServer: [
     {
       name: "Backend",
-      command: `pnpm exec tsx --env-file=.env.test server.ts`,
+      command: `pnpm exec tsx server.ts`,
       url: `http://localhost:${process.env.SERVER_PORT || 8002}`,
       cwd: path.resolve(__dirname, "../server"),
       timeout: 30000,
