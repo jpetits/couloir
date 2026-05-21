@@ -51,18 +51,17 @@ test.describe("feature strip", () => {
 });
 
 test.describe("screenshots section", () => {
-  test("renders section label", async ({ page }) => {
-    await expect(page.getByText("/ Screenshots")).toBeVisible();
-  });
-
   test("renders three screenshot images", async ({ page }) => {
-    const section = page
-      .locator("section")
-      .filter({ hasText: "/ Screenshots" });
-    await expect(section.getByRole("img")).toHaveCount(3);
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.waitForTimeout(500);
+    await expect(page.getByAltText("3D terrain map view")).toBeVisible();
+    await expect(page.getByAltText("400+ activities overview")).toBeVisible();
+    await expect(page.getByAltText("Activity list")).toBeVisible();
   });
 
   test("renders image captions", async ({ page }) => {
+    await page.evaluate(() => window.scrollTo(0, document.body.scrollHeight));
+    await page.waitForTimeout(500);
     await expect(page.getByText(/3d terrain map/i)).toBeVisible();
     await expect(page.getByText(/400\+ activities/i)).toBeVisible();
     await expect(page.getByText(/activity list/i)).toBeVisible();

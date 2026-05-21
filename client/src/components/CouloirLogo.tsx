@@ -32,18 +32,6 @@ export default function CouloirLogo({
       >
         couloir
       </text>
-      <text
-        x="70"
-        y="55"
-        fontFamily="system-ui, -apple-system, sans-serif"
-        fontSize="9"
-        fontWeight="400"
-        letterSpacing="3.5"
-        fill="#1a1a1a"
-        opacity="0.5"
-      >
-        track every activity
-      </text>
     </svg>
   );
 }

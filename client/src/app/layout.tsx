@@ -8,6 +8,7 @@ import { DeviceProvider, DeviceType } from "@/context/DeviceContext";
 import { cn } from "@/lib/utils";
 
 import "./globals.css";
+import Header from "./header";
 import Providers from "./providers";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
@@ -34,9 +35,12 @@ export default async function RootLayout({
     >
       <body>
         <DeviceProvider deviceType={deviceType as DeviceType}>
-          <Providers>{children}</Providers>
+          <Providers>
+            <Header />
+            {children}
+            <Toaster />
+          </Providers>
         </DeviceProvider>
-        <Toaster />
       </body>
     </html>
   );

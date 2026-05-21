@@ -1,3 +1,4 @@
+import { API_BASE_URL } from "@/lib/constants";
 import {
   ActivityApiParamsSchema,
   ActivityFilters,
@@ -11,6 +12,8 @@ export const ROUTES = {
   activities: "/activities",
   stats: "/stats",
   activity: (id: string) => `/activities/${id}`,
+  profile: (username: string) => `/u/${username}`,
+  editProfile: (username: string) => `/u/${username}/edit`,
   signIn: "/sign-in",
   signUp: "/sign-up",
   api: {
@@ -43,13 +46,13 @@ export const ROUTES = {
     stravaSync: `/api/strava/sync`,
     stravaConnect: `/api/strava/callback`,
     userMe: `/api/user/me`,
-    user: (username: string) => `/api/user/${username}`,
+    user: (stravaAthleteId: string) => `/api/user/${stravaAthleteId}`,
     userPatch: () => `/api/user`,
     publicStats: (username: string) => `/api/public/${username}/stats`,
     publicActivities: (username: string) =>
       `/api/public/${username}/activities`,
     imagePath: (imageId: string, size: AssetMediaSize = "thumbnail") =>
-      `/api/public/assets/${imageId}/thumbnail?size=${size}`,
+      `${API_BASE_URL}/api/public/assets/${imageId}/thumbnail?size=${size}`,
   },
   external: {
     stravaAuth: (redirect: string) =>

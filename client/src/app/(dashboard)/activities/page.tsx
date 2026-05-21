@@ -1,5 +1,4 @@
 import ActivityList from "@/app/ui/activityList/ActivityList";
-import BackButton from "@/app/ui/dashboard/BackButton";
 import StatsButton from "@/app/ui/dashboard/StatsButton";
 import StravaConnectButton from "@/app/ui/dashboard/StravaConnectButton";
 import StravaSyncButton from "@/app/ui/dashboard/StravaSyncButton";
@@ -22,9 +21,8 @@ export default async function Activities({
 
   return (
     <div className="font-condensed">
-      <div className="flex items-end justify-between pb-4 mb-1 border-b border-ui-line">
+      <div className="flex flex-wrap items-end justify-between gap-y-3 pb-4 mb-1 border-b border-ui-line">
         <div className="flex items-baseline gap-4">
-          <BackButton />
           <h1 className="text-4xl font-bold tracking-wider uppercase text-ui-hi">
             Activités
           </h1>
