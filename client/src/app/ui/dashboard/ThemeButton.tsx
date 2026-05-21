@@ -16,7 +16,7 @@ export default function ThemeButton() {
 
   return (
     <button
-      className="p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+      className="cursor-pointer p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
       onClick={() => setTheme(resolvedTheme === "light" ? "dark" : "light")}
     >
       {resolvedTheme === "light" ? (

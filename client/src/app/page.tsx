@@ -63,7 +63,7 @@ export default function Home() {
             <span className="font-mono text-3xs tracking-widest text-ui-dim">
               /
             </span>
-            <span className="font-mono text-3xs tracking-widest text-ui-muted uppercase">
+            <span className="font-mono text-sm tracking-widest text-ui-muted uppercase">
               GPS · STRAVA · FIT · KML
             </span>
           </div>
@@ -71,12 +71,12 @@ export default function Home() {
           <div className="flex gap-3">
             <Show when="signed-out">
               <SignInButton>
-                <button className="px-6 py-2.5 border border-ui-line text-ui-base font-mono text-3xs tracking-widest uppercase hover:border-ui-muted hover:text-ui-hi transition-colors cursor-pointer">
+                <button className="px-6 py-2.5 border border-ui-line text-ui-base font-mono text-sm tracking-widest uppercase hover:border-ui-muted hover:text-ui-hi transition-colors cursor-pointer">
                   Sign In
                 </button>
               </SignInButton>
               <SignUpButton>
-                <button className="px-6 py-2.5 bg-ui-hi text-background font-mono text-3xs tracking-widest uppercase hover:bg-ui-base transition-colors cursor-pointer">
+                <button className="px-6 py-2.5 bg-ui-hi text-background font-mono text-sm tracking-widest uppercase hover:bg-ui-base transition-colors cursor-pointer">
                   Sign Up
                 </button>
               </SignUpButton>
@@ -116,13 +116,13 @@ export default function Home() {
             key={index}
             className="px-6 md:px-10 py-10 border-r border-ui-line last:border-r-0 border-b md:border-b-0"
           >
-            <div className="font-mono text-3xs tracking-widest text-ui-dim mb-4">
+            <div className="font-mono text-sm tracking-widest text-ui-dim mb-4">
               {index}
             </div>
-            <h3 className="text-2xl font-bold uppercase tracking-wide text-ui-hi mb-2">
+            <h3 className="text-4xl font-bold uppercase tracking-wide text-ui-hi mb-2">
               {title}
             </h3>
-            <p className="font-mono text-2xs text-ui-muted leading-relaxed">
+            <p className="font-mono text-sm text-ui-muted leading-relaxed">
               {body}
             </p>
           </div>
@@ -182,7 +182,7 @@ export default function Home() {
                 />
               </div>
             </div>
-            <p className="font-mono text-3xs tracking-widest text-ui-muted uppercase mt-3 px-1">
+            <p className="font-mono text-sm tracking-widest text-ui-muted uppercase mt-3 px-1">
               {caption}
             </p>
           </div>
@@ -192,10 +192,10 @@ export default function Home() {
       {/* Footer CTA */}
       <section className="border-t border-ui-line px-6 md:px-16 py-16 flex flex-col md:flex-row items-start md:items-center justify-between gap-6 max-w-7xl mx-auto">
         <div>
-          <p className="text-3xl font-bold uppercase tracking-wide text-ui-hi">
+          <p className="text-5xl font-bold uppercase tracking-wide text-ui-hi">
             Start logging.
           </p>
-          <p className="font-mono text-xs text-ui-muted mt-1 tracking-widest">
+          <p className="font-mono text-sm text-ui-muted mt-1 tracking-widest">
             Free to use. No subscription.
           </p>
         </div>

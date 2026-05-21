@@ -68,12 +68,12 @@ export default function Header() {
           <ThemeButton />
           <Show when="signed-out">
             <SignInButton>
-              <button className="font-mono text-3xs tracking-widest uppercase text-ui-muted hover:text-ui-hi transition-colors">
+              <button className="cursor-pointer font-mono text-sm tracking-widest uppercase text-ui-muted hover:text-ui-hi transition-colors">
                 Sign In
               </button>
             </SignInButton>
             <SignUpButton>
-              <button className="font-mono text-3xs tracking-widest uppercase border border-ui-line px-4 py-2 text-ui-base hover:text-ui-hi hover:border-ui-base transition-colors">
+              <button className="cursor-pointer font-mono text-sm tracking-widest uppercase border border-ui-line px-4 py-2 text-ui-base hover:text-ui-hi hover:border-ui-base transition-colors">
                 Sign Up
               </button>
             </SignUpButton>
