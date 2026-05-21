@@ -2,7 +2,13 @@
 
 import { useState } from "react";
 
-import { Show, SignInButton, SignUpButton, UserButton } from "@clerk/nextjs";
+import {
+  Show,
+  SignInButton,
+  SignUpButton,
+  useAuth,
+  UserButton,
+} from "@clerk/nextjs";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -34,9 +40,11 @@ function NavLink({ href, label }: { href: string; label: string }) {
     </Link>
   );
 }
-export default function Header() {
+export default function Header({ isSignedIn }: { isSignedIn: boolean }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user } = useUserMe();
+  const { userId } = useAuth();
+  const isLoggedIn = !!userId;
 
   return (
     <header className="relative border-b border-ui-line bg-background">
@@ -64,24 +72,29 @@ export default function Header() {
             </nav>
           </Show>
         </div>
-        <div className="flex items-center gap-4">
-          <ThemeButton />
-          <Show when="signed-out">
+
+        {!isLoggedIn && (
+          <div className="flex items-center gap-4">
+            <ThemeButton />
             <SignInButton>
               <button className="cursor-pointer font-mono text-sm tracking-widest uppercase text-ui-muted hover:text-ui-hi transition-colors">
                 Sign In
               </button>
             </SignInButton>
+
             <SignUpButton>
               <button className="cursor-pointer font-mono text-sm tracking-widest uppercase border border-ui-line px-4 py-2 text-ui-base hover:text-ui-hi hover:border-ui-base transition-colors">
                 Sign Up
               </button>
             </SignUpButton>
-          </Show>
+          </div>
+        )}
+        {isLoggedIn && (
           <Show when="signed-in">
+            <ThemeButton />
             <UserButton />
           </Show>
-        </div>
+        )}
       </div>
 
       {/* Mobile */}

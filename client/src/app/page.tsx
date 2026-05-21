@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-import { Show, SignInButton, SignUpButton } from "@clerk/nextjs";
+import { Show, SignInButton, SignUpButton, useAuth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -12,6 +12,8 @@ import { ROUTES } from "@/routing/constants";
 export default function Home() {
   const [visible, setVisible] = useState([false, false, false]);
   const cardRefs = useRef<(HTMLDivElement | null)[]>([]);
+  const { userId } = useAuth();
+  const isLoggedIn = !!userId;
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -68,8 +70,8 @@ export default function Home() {
             </span>
           </div>
 
-          <div className="flex gap-3">
-            <Show when="signed-out">
+          {!isLoggedIn && (
+            <div className="flex gap-3">
               <SignInButton>
                 <button className="px-6 py-2.5 border border-ui-line text-ui-base font-mono text-sm tracking-widest uppercase hover:border-ui-muted hover:text-ui-hi transition-colors cursor-pointer">
                   Sign In
@@ -80,16 +82,16 @@ export default function Home() {
                   Sign Up
                 </button>
               </SignUpButton>
-            </Show>
-            <Show when="signed-in">
-              <Link
-                href={ROUTES.activities}
-                className="px-6 py-2.5 bg-ui-hi text-background font-mono text-sm tracking-widest uppercase hover:bg-ui-base transition-colors cursor-pointer"
-              >
-                My Activities →
-              </Link>
-            </Show>
-          </div>
+            </div>
+          )}
+          {isLoggedIn && (
+            <Link
+              href={ROUTES.activities}
+              className="px-6 py-2.5 bg-ui-hi text-background font-mono text-sm tracking-widest uppercase hover:bg-ui-base transition-colors cursor-pointer"
+            >
+              My Activities →
+            </Link>
+          )}
         </div>
       </section>
 
