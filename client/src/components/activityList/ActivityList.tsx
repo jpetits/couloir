@@ -8,12 +8,12 @@ import {
   useSearchParams,
 } from "next/dist/client/components/navigation";
 
+import { useApi } from "@/app/hooks/useApi";
+import { usePaginatedScroll } from "@/app/hooks/usePaginatedScroll";
 import { stravaConnect } from "@/lib/dataClient";
 import { Activity } from "@/lib/schema";
 import { useActivitySelectionStore } from "@/store/activitySelection";
 
-import { useApi } from "../../hooks/useApi";
-import { usePaginatedScroll } from "../../hooks/usePaginatedScroll";
 import ActivityFilters from "./ActivityFilters";
 import BulkActionBar from "./BulkActionBar";
 import { columns } from "./Columns";

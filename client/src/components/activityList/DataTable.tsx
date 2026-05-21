@@ -19,7 +19,7 @@ import Link from "next/link";
 import { useShallow } from "zustand/react/shallow";
 
 import { useDeleteActivity } from "@/app/hooks/useDeleteActivity";
-import DeleteDialog from "@/app/ui/modal/DeleteDialog";
+import DeleteDialog from "@/components/modal/DeleteDialog";
 import { DATE_FORMAT } from "@/lib/constants";
 import { Activity } from "@/lib/schema";
 import { formatDuration } from "@/lib/utils";

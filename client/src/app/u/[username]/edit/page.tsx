@@ -1,4 +1,4 @@
-import ProfileForm from "@/app/ui/profile/ProfileForm";
+import ProfileForm from "@/components/profile/ProfileForm";
 import { fetchUser } from "@/lib/data";
 
 export default async function EditProfilePage({

@@ -1,4 +1,4 @@
-import NotFoundDisplay from "@/app/ui/not-found";
+import NotFoundDisplay from "@/components/not-found";
 
 export default function NotFound() {
   return (

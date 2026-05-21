@@ -1,6 +1,6 @@
 import { Suspense } from "react";
 
-import StatsContent from "@/app/ui/stats/StatsContent";
+import StatsContent from "@/components/stats/StatsContent";
 
 export function StatsSkeleton() {
   return (

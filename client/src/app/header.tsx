@@ -11,8 +11,8 @@ import CouloirLogo from "@/components/CouloirLogo";
 import { cn } from "@/lib/utils";
 import { ROUTES } from "@/routing/constants";
 
+import ThemeButton from "../components/dashboard/ThemeButton";
 import { useUserMe } from "./context/UserContext";
-import ThemeButton from "./ui/dashboard/ThemeButton";
 
 const NAV_LINKS = [
   { label: "Activities", href: ROUTES.activities },

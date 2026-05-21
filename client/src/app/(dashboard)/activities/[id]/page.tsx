@@ -2,12 +2,12 @@ import { Suspense } from "react";
 
 import { format } from "date-fns";
 
-import ActivityDetailClient from "@/app/ui/activity/ActivityDetailClient";
-import ActivityImages from "@/app/ui/activity/ActivityImages";
-import ActivityName from "@/app/ui/activity/ActivityName";
-import ActivityWeather from "@/app/ui/activity/ActivityWeather";
-import BackButton from "@/app/ui/dashboard/BackButton";
-import StatsCard from "@/app/ui/stats/StatsCard";
+import ActivityDetailClient from "@/components/activity/ActivityDetailClient";
+import ActivityImages from "@/components/activity/ActivityImages";
+import ActivityName from "@/components/activity/ActivityName";
+import ActivityWeather from "@/components/activity/ActivityWeather";
+import BackButton from "@/components/dashboard/BackButton";
+import StatsCard from "@/components/stats/StatsCard";
 import { DATE_FORMAT } from "@/lib/constants";
 import { fetchActivity } from "@/lib/data";
 import { formatDuration } from "@/lib/utils";

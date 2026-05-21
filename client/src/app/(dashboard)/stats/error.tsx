@@ -1,6 +1,6 @@
 "use client";
 
-import ErrorDisplay from "@/app/ui/error";
+import ErrorDisplay from "@/components/error";
 
 export default function Error({
   error,

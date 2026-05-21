@@ -1,6 +1,6 @@
 import { notFound } from "next/navigation";
 
-import ProfileContent from "@/app/ui/profile/ProfileContent";
+import ProfileContent from "@/components/profile/ProfileContent";
 import { fetchPublicActivities } from "@/lib/data";
 
 export default async function PublicProfilePage({

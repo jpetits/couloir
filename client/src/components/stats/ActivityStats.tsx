@@ -23,9 +23,9 @@ import { Activity } from "@/lib/schema";
 import { useMapStore } from "@/store/mapStore";
 import { PointStats } from "@/types/activity";
 
-import Map2DView from "./Map2DView";
-import Map3DView from "./Map3DView";
-import MapSidePanel from "./MapSidePanel";
+import Map2DView from "../map/Map2DView";
+import Map3DView from "../map/Map3DView";
+import MapSidePanel from "../map/MapSidePanel";
 
 export default function memoActivityStats({
   activityList,

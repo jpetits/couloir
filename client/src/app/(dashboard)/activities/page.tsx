@@ -1,8 +1,8 @@
-import ActivityList from "@/app/ui/activityList/ActivityList";
-import StatsButton from "@/app/ui/dashboard/StatsButton";
-import StravaConnectButton from "@/app/ui/dashboard/StravaConnectButton";
-import StravaSyncButton from "@/app/ui/dashboard/StravaSyncButton";
-import UploadButton from "@/app/ui/dashboard/UploadButton";
+import ActivityList from "@/components/activityList/ActivityList";
+import StatsButton from "@/components/dashboard/StatsButton";
+import StravaConnectButton from "@/components/dashboard/StravaConnectButton";
+import StravaSyncButton from "@/components/dashboard/StravaSyncButton";
+import UploadButton from "@/components/dashboard/UploadButton";
 import { fetchActivities, fetchStats, userIsStravaConnected } from "@/lib/data";
 import { ActivityFiltersSchema } from "@/lib/schema";
 

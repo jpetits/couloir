@@ -7,7 +7,7 @@ import type { Activity, Point } from "@/lib/schema";
 import { enrichPointList } from "@/lib/utils";
 import type { PointStats } from "@/types/activity";
 
-import Map3DView from "../stats/Map3DView";
+import Map3DView from "../map/Map3DView";
 import ActivityMapWrapper from "./ActivityMapWrapper";
 import DataChart from "./DataChart";
 
