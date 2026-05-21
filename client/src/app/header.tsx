@@ -3,10 +3,11 @@
 import { useState } from "react";
 
 import {
+  ClerkLoaded,
+  ClerkLoading,
   Show,
   SignInButton,
   SignUpButton,
-  useAuth,
   UserButton,
 } from "@clerk/nextjs";
 import { Menu, X } from "lucide-react";
@@ -40,11 +41,9 @@ function NavLink({ href, label }: { href: string; label: string }) {
     </Link>
   );
 }
-export default function Header({ isSignedIn }: { isSignedIn: boolean }) {
+export default function Header() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { user } = useUserMe();
-  const { userId } = useAuth();
-  const isLoggedIn = !!userId;
 
   return (
     <header className="relative border-b border-ui-line bg-background">
@@ -73,7 +72,7 @@ export default function Header({ isSignedIn }: { isSignedIn: boolean }) {
           </Show>
         </div>
 
-        {!isLoggedIn && (
+        {!user && (
           <div className="flex items-center gap-4">
             <ThemeButton />
             <SignInButton>
@@ -89,11 +88,16 @@ export default function Header({ isSignedIn }: { isSignedIn: boolean }) {
             </SignUpButton>
           </div>
         )}
-        {isLoggedIn && (
-          <Show when="signed-in">
+        {user && (
+          <div className="flex items-center gap-4">
             <ThemeButton />
-            <UserButton />
-          </Show>
+            <ClerkLoading>
+              <span className="w-9 h-9 rounded-full bg-ui-surface animate-pulse" />
+            </ClerkLoading>
+            <ClerkLoaded>
+              <UserButton />
+            </ClerkLoaded>
+          </div>
         )}
       </div>
 
