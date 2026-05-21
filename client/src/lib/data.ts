@@ -33,8 +33,17 @@ export async function fetchStats(): Promise<ActivityStats> {
   return stats;
 }
 
+export async function fetchUserMe(): Promise<{
+  stravaConnected: boolean;
+  stravaAthleteId: string | null;
+  username: string | null;
+  isPublic: boolean;
+}> {
+  return apiFetch(ROUTES.api.userMe);
+}
+
 export async function userIsStravaConnected(): Promise<boolean> {
-  const res = await apiFetch<{ stravaConnected: boolean }>(ROUTES.api.userMe);
+  const res = await fetchUserMe();
   return res.stravaConnected;
 }
 

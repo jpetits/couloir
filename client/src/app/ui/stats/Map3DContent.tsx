@@ -74,7 +74,7 @@ export default memo(function Map3DContent({
               id={`tracks-line-${activity.id}-zone`}
               type="line"
               paint={{
-                "line-width": 10,
+                "line-width": 15,
                 "line-opacity": 1,
               }}
             />
@@ -91,9 +91,20 @@ export default memo(function Map3DContent({
               type="line"
               paint={{
                 "line-color": ["get", "color"],
-                "line-width": 5,
+                "line-width": 12,
                 "line-dasharray": [1, 1],
                 "line-opacity": 0.8,
+              }}
+            />
+            <Layer
+              key={`tracks-halo-${activity.id}`}
+              id={`tracks-halo-${activity.id}`}
+              type="line"
+              paint={{
+                "line-color": "#fff",
+                "line-width": 29,
+                "line-blur": 6,
+                "line-opacity": 0.5,
               }}
             />
           </Source>
