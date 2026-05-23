@@ -23,7 +23,7 @@ export function useStravaSync() {
       if (!token) return;
 
       ws = new WebSocket(
-        `${API_BASE_URL?.replace(/^http/, "ws")}/ws?token=${token}`,
+        `${API_BASE_URL?.replace(/^http/, "ws")}/ws/strava?token=${token}`,
       );
 
       ws.addEventListener("message", (event) => {

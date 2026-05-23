@@ -46,7 +46,7 @@ export default function Header() {
   const { user } = useUserMe();
 
   return (
-    <header className="relative border-b border-ui-line bg-background">
+    <header className="sticky top-0 z-50 border-b border-ui-line bg-background">
       {/* Desktop */}
       <div className="hidden md:flex items-center justify-between px-6 h-16">
         <div className="flex items-center gap-8">
