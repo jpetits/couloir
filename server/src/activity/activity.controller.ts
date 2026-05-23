@@ -22,6 +22,7 @@ import {
   activityFiltersSchema,
   deleteActivitiesSchema,
   patchActivitiesSchema,
+  searchActivitiesSchema,
   type ActivityFilters,
   type MapBounds,
 } from "../schema/query";
@@ -55,7 +56,10 @@ export class ActivityController {
   }
 
   @Get("search")
-  searchActivities(@CurrentUser() user: User, @Query("q") q: string) {
+  searchActivities(
+    @CurrentUser() user: User,
+    @Query(new ZodValidationPipe(searchActivitiesSchema)) q: string,
+  ) {
     return this.activityService.searchActivities(user.id, q);
   }
 

@@ -6,7 +6,7 @@
   ],
   "project": ["src/**/*.{ts,tsx}"],
   "ignore": ["src/components/ui/**"],
-  "ignoreDependencies": ["postcss", "tailwindcss", "tw-animate-css", "leaflet.markercluster", "react-leaflet-markercluster"],
+  "ignoreDependencies": ["tailwindcss", "tw-animate-css", "leaflet.markercluster", "react-leaflet-markercluster"],
   "ignoreBinaries": [],
   "exclude": ["devDependencies", "exports"],
   "ignoreExportsUsedInFile": true

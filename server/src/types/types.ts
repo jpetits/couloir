@@ -37,10 +37,6 @@ export interface FitRecord {
   heart_rate?: number;
 }
 
-export interface HttpError extends Error {
-  status?: number;
-}
-
 export type NewPoint = typeof points.$inferInsert;
 export type NewActivity = typeof activities.$inferInsert;
 
