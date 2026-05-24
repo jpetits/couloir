@@ -1,5 +1,4 @@
 import ActivityList from "@/components/activityList/ActivityList";
-import StatsButton from "@/components/dashboard/StatsButton";
 import StravaConnectButton from "@/components/dashboard/StravaConnectButton";
 import StravaSyncButton from "@/components/dashboard/StravaSyncButton";
 import UploadButton from "@/components/dashboard/UploadButton";
@@ -34,7 +33,6 @@ export default async function Activities({
           <UploadButton />
           {!isStravaConnected && <StravaConnectButton />}
           {isStravaConnected && <StravaSyncButton />}
-          <StatsButton />
         </div>
       </div>
       <ActivityList initialActivityList={data} />

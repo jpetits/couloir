@@ -37,10 +37,6 @@ export interface FitRecord {
   heart_rate?: number;
 }
 
-export interface HttpError extends Error {
-  status?: number;
-}
-
 export type NewPoint = typeof points.$inferInsert;
 export type NewActivity = typeof activities.$inferInsert;
 
@@ -48,3 +44,21 @@ export type ParsedActivity = Omit<NewActivity, "id" | "userId"> & {
   points: ParsedPoint[];
 };
 export type ParsedPoint = Omit<NewPoint, "id" | "activityId">;
+
+export interface ImmichImage {
+  id: string;
+  fileCreatedAt: string;
+  exifInfo: {
+    latitude?: number;
+    longitude?: number;
+  } | null;
+}
+
+export interface NominatimResponse {
+  address: {
+    city?: string;
+    town?: string;
+    village?: string;
+    country?: string;
+  };
+}

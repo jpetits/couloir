@@ -97,7 +97,7 @@ export default defineConfig({
     },
     {
       name: "Backend",
-      command: `pnpm exec tsx server.ts`,
+      command: `nest start`,
       url: `http://localhost:${process.env.SERVER_PORT || 8002}`,
       cwd: path.resolve(__dirname, "../server"),
       timeout: 30000,
@@ -105,7 +105,7 @@ export default defineConfig({
       stderr: "pipe",
       stdout: "pipe",
       wait: {
-        stdout: /Server running on port/,
+        stdout: /Nest application successfully started/,
       },
     },
   ],

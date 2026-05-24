@@ -34,7 +34,7 @@ export const deleteActivitiesSchema = z.object({
 });
 
 export const patchActivitiesSchema = z.object({
-  name: z.string().optional(),
+  name: z.string().min(3).max(100),
 });
 
 export const patchUserSchema = z.object({
