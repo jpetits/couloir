@@ -25,6 +25,7 @@ jobs:
           cache-dependency-path: pnpm-lock.yaml
 
       - run: pnpm install --frozen-lockfile
+        working-directory: client
 
       - name: Typecheck
         run: pnpm typecheck:client
@@ -57,6 +58,7 @@ jobs:
           cache-dependency-path: pnpm-lock.yaml
 
       - run: pnpm install --frozen-lockfile
+        working-directory: server
 
       - name: Typecheck
         run: pnpm typecheck:server
