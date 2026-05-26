@@ -91,23 +91,30 @@ Strava sync runs as a background job on the server, streaming progress back to t
 
 ## Local Development
 
-**Prerequisites:** Node.js 20+, pnpm, a PostgreSQL database (or NeonDB)
+**Prerequisites:** Node.js 22+, pnpm 10+, Docker (or [Colima](https://github.com/abiosoft/colima) on Mac)
 
 ```bash
 # Clone
 git clone https://github.com/jpetits/couloir.git
 cd couloir
 
-# Server
-cd server
-cp .env.example .env   # fill in DATABASE_URL, CLERK_SECRET_KEY, STRAVA_*
+# Install all dependencies (pnpm workspace — installs client + server)
 pnpm install
-pnpm db:push
+
+# Configure env files
+cp server/.env.example server/.env   # fill in DATABASE_URL, CLERK_SECRET_KEY, STRAVA_*
+cp client/.env.example client/.env   # fill in NEXT_PUBLIC_API_URL, NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY, CLERK_SECRET_KEY
+
+# Start PostgreSQL
+docker compose up -d
+
+# Push DB schema
+pnpm --filter server db:push
+
+# Run both client and server in parallel
 pnpm dev
 
-# Client (separate terminal)
-cd client
-cp .env.example .env   # fill in NEXT_PUBLIC_API_URL, CLERK keys
-pnpm install
-pnpm dev
+# Or run separately
+pnpm dev:client   # Next.js on http://localhost:3000
+pnpm dev:server   # API on http://localhost:9000
 ```
