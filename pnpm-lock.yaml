@@ -17,6 +17,9 @@ importers:
       '@clerk/nextjs':
         specifier: ^7.0.7
         version: 7.4.1(next@16.2.6(@babel/core@7.29.7)(@playwright/test@1.60.0)(react-dom@19.2.6(react@19.2.6))(react@19.2.6))(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      '@couloir/types':
+        specifier: workspace:*
+        version: link:../packages/types
       '@heroicons/react':
         specifier: ^2.2.0
         version: 2.2.0(react@19.2.6)
@@ -172,6 +175,12 @@ importers:
         specifier: ^6.0.2
         version: 6.0.3
 
+  packages/types:
+    dependencies:
+      zod:
+        specifier: ^4.3.6
+        version: 4.4.3
+
   server:
     dependencies:
       '@clerk/backend':
@@ -180,6 +189,9 @@ importers:
       '@clerk/express':
         specifier: ^2.0.7
         version: 2.1.21(express@5.2.1)(react-dom@19.2.6(react@19.2.6))(react@19.2.6)
+      '@couloir/types':
+        specifier: workspace:*
+        version: link:../packages/types
       '@nestjs/common':
         specifier: ^11.1.23
         version: 11.1.24(reflect-metadata@0.2.2)(rxjs@7.8.2)
