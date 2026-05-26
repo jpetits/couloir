@@ -72,7 +72,7 @@ export default function Header() {
           </Show>
         </div>
 
-        {!user && (
+        <Show when="signed-out">
           <div className="flex items-center gap-4">
             <ThemeButton />
             <SignInButton>
@@ -80,15 +80,14 @@ export default function Header() {
                 Sign In
               </button>
             </SignInButton>
-
             <SignUpButton>
               <button className="cursor-pointer font-mono text-sm tracking-widest uppercase border border-ui-line px-4 py-2 text-ui-base hover:text-ui-hi hover:border-ui-base transition-colors">
                 Sign Up
               </button>
             </SignUpButton>
           </div>
-        )}
-        {user && (
+        </Show>
+        <Show when="signed-in">
           <div className="flex items-center gap-4">
             <ThemeButton />
             <ClerkLoading>
@@ -98,7 +97,7 @@ export default function Header() {
               <UserButton />
             </ClerkLoaded>
           </div>
-        )}
+        </Show>
       </div>
 
       {/* Mobile */}
