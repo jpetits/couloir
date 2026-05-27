@@ -1,5 +1,6 @@
 import { getTableColumns } from "drizzle-orm";
 import z from "zod";
+import { ActivityFiltersSchema, MapBoundsSchema } from "@couloir/types";
 import { activities } from "../db/schema";
 
 const activityColumns = Object.keys(getTableColumns(activities));
@@ -65,11 +66,7 @@ export type CallBackStravaQuery = z.infer<typeof callBackStravaSchema>;
 export type GetStravaWebhookQuery = z.infer<typeof getStravaWebhookSchema>;
 export type PostStravaWebhookBody = z.infer<typeof postStravaWebhookSchema>;
 
-export const mapBoundsSchema = z.object({
-  north: z.coerce.number(),
-  south: z.coerce.number(),
-  east: z.coerce.number(),
-  west: z.coerce.number(),
+export const mapBoundsSchema = MapBoundsSchema.extend({
   excludeActivityIds: z.string().optional(), // comma-separated list of activity IDs to exclude
   zoom: z.coerce.number().optional(),
 });

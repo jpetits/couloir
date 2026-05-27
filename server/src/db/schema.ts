@@ -129,6 +129,30 @@ export const summitsRelations = relations(summits, ({ many }) => ({
   activitySummits: many(activitySummits),
 }));
 
+export const activitySegments = pgTable(
+  "activity_segments",
+  {
+    id: uuid("id").primaryKey().defaultRandom(),
+    activityId: uuid("activity_id")
+      .notNull()
+      .references(() => activities.id, { onDelete: "cascade" }),
+    type: text("type").notNull(), // 'lift' | 'descent'
+    startCumDistance: real("start_cum_distance").notNull(), // meters from activity start
+    endCumDistance: real("end_cum_distance").notNull(),     // meters from activity start
+    speedMean: real("speed_mean").notNull(),                // km/h
+    elevationGain: real("elevation_gain").notNull(),        // meters (negative for descent)
+    durationS: real("duration_s"),                         // seconds
+  },
+  (table) => [index("activity_segments_activity_id_idx").on(table.activityId)],
+);
+
+export const activitySegmentsRelations = relations(activitySegments, ({ one }) => ({
+  activity: one(activities, {
+    fields: [activitySegments.activityId],
+    references: [activities.id],
+  }),
+}));
+
 // Join table: which activities reached which summits
 export const activitySummits = pgTable(
   "activity_summits",
