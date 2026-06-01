@@ -1,8 +1,11 @@
+import { Address, Sports, Units } from "@couloir/types";
 import { relations } from "drizzle-orm";
 import {
   boolean,
   index,
+  jsonb,
   numeric,
+  pgEnum,
   pgTable,
   primaryKey,
   real,
@@ -80,6 +83,9 @@ export const pointsRelations = relations(points, ({ one }) => ({
   }),
 }));
 
+export const unitsEnum = pgEnum("units", Units);
+export const sportsEnum = pgEnum("sport", Sports);
+
 export const users = pgTable("users", {
   id: text("id").primaryKey(),
   username: text("username").unique(),
@@ -88,6 +94,14 @@ export const users = pgTable("users", {
   stravaRefreshToken: text("strava_refresh_token"),
   stravaTokenExpiresAt: timestamp("strava_token_expires_at"),
   stravaAthleteId: numeric("strava_athlete_id").unique(),
+
+  bio: text("bio"),
+  units: unitsEnum("units").default("km"),
+  sports: sportsEnum("sport").default("running").array(),
+  weeklyDistance: real("weekly_distance").default(0),
+  birthDate: timestamp("birth_date"),
+  website: text("website"),
+  address: jsonb("address").$type<Address>(),
 });
 
 export const usersRelations = relations(users, ({ one }) => ({
@@ -138,20 +152,23 @@ export const activitySegments = pgTable(
       .references(() => activities.id, { onDelete: "cascade" }),
     type: text("type").notNull(), // 'lift' | 'descent'
     startCumDistance: real("start_cum_distance").notNull(), // meters from activity start
-    endCumDistance: real("end_cum_distance").notNull(),     // meters from activity start
-    speedMean: real("speed_mean").notNull(),                // km/h
-    elevationGain: real("elevation_gain").notNull(),        // meters (negative for descent)
-    durationS: real("duration_s"),                         // seconds
+    endCumDistance: real("end_cum_distance").notNull(), // meters from activity start
+    speedMean: real("speed_mean").notNull(), // km/h
+    elevationGain: real("elevation_gain").notNull(), // meters (negative for descent)
+    durationS: real("duration_s"), // seconds
   },
   (table) => [index("activity_segments_activity_id_idx").on(table.activityId)],
 );
 
-export const activitySegmentsRelations = relations(activitySegments, ({ one }) => ({
-  activity: one(activities, {
-    fields: [activitySegments.activityId],
-    references: [activities.id],
+export const activitySegmentsRelations = relations(
+  activitySegments,
+  ({ one }) => ({
+    activity: one(activities, {
+      fields: [activitySegments.activityId],
+      references: [activities.id],
+    }),
   }),
-}));
+);
 
 // Join table: which activities reached which summits
 export const activitySummits = pgTable(

@@ -4,7 +4,7 @@
   "description": "",
   "main": "main.ts",
   "scripts": {
-    "dev": "nest start --watch",
+    "dev": "NODE_OPTIONS='--max-old-space-size=512' nest start --watch",
     "db:push": "drizzle-kit push",
     "test": "jest",
     "typecheck": "tsc --noEmit",
