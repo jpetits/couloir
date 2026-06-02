@@ -1,3 +1,4 @@
+import { PatchUser, PatchUserSchema } from "@couloir/types";
 import {
   Body,
   Controller,
@@ -9,12 +10,10 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import type { Request } from "express";
-import type { z } from "zod";
 import { ClerkGuard } from "../auth/clerk.guard";
 import { CurrentUser } from "../auth/current-user.decorator";
 import type { users } from "../db/schema";
 import { ZodValidationPipe } from "../pipes/zod-validation.pipe";
-import { patchUserSchema } from "../schema/query";
 import { UserService } from "./user.service";
 
 type User = typeof users.$inferSelect;
@@ -37,10 +36,10 @@ export class UserController {
   @Patch()
   @UseGuards(ClerkGuard)
   patch(
-    @Body(new ZodValidationPipe(patchUserSchema))
-    body: z.infer<typeof patchUserSchema>,
+    @Body(new ZodValidationPipe(PatchUserSchema))
+    body: Partial<PatchUser>,
     @CurrentUser() user: User,
   ) {
-    return this.userService.patch(user.id, body.username, body.isPublic);
+    return this.userService.patch(user.id, body);
   }
 }

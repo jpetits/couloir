@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 
 import { Show, SignInButton, SignUpButton, useAuth } from "@clerk/nextjs";
+import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -156,25 +157,18 @@ export default function Home() {
             priority: false,
           },
         ].map(({ src, alt, caption, right, priority }, i) => (
-          <div
+          <motion.div
             key={src}
             ref={(el) => {
               cardRefs.current[i] = el;
             }}
-            className={`flex flex-col w-full md:w-3/4 ${right ? "self-end" : "self-start"} ${visible[i] ? "opacity-100 translate-y-0" : "opacity-0 translate-y-20"}`}
-            style={{
-              transition:
-                "transform 0.9s cubic-bezier(0.16,1,0.3,1), opacity 0.9s ease",
-            }}
+            initial={{ opacity: 0, x: right ? 100 : -100 }}
+            whileInView={{ opacity: 1, x: right ? -50 : 50 }}
+            viewport={{ once: true, margin: "-100px" }}
+            className={`flex flex-col w-full md:w-3/4 ${right ? "self-end" : "self-start"}`}
           >
             <div className="relative w-full h-96 overflow-hidden rounded-sm">
-              <div
-                className="absolute inset-0"
-                style={{
-                  transform: visible[i] ? "translateY(0)" : "translateY(80px)",
-                  transition: "transform 1.4s cubic-bezier(0.16,1,0.3,1)",
-                }}
-              >
+              <div className="absolute inset-0">
                 <Image
                   src={src}
                   alt={alt}
@@ -187,7 +181,7 @@ export default function Home() {
             <p className="font-mono text-sm tracking-widest text-ui-muted uppercase mt-3 px-1">
               {caption}
             </p>
-          </div>
+          </motion.div>
         ))}
       </section>
 

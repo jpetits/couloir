@@ -1,6 +1,6 @@
+import { MapBoundsSchema } from "@couloir/types";
 import { getTableColumns } from "drizzle-orm";
 import z from "zod";
-import { ActivityFiltersSchema, MapBoundsSchema } from "@couloir/types";
 import { activities } from "../db/schema";
 
 const activityColumns = Object.keys(getTableColumns(activities));
@@ -36,11 +36,6 @@ export const deleteActivitiesSchema = z.object({
 
 export const patchActivitiesSchema = z.object({
   name: z.string().min(3).max(100),
-});
-
-export const patchUserSchema = z.object({
-  username: z.string().min(2).max(100),
-  isPublic: z.boolean(),
 });
 
 export const callBackStravaSchema = z.object({

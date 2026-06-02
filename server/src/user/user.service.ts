@@ -23,23 +23,24 @@ export class UserService {
   async getByUsername(username: string) {
     const user = await this.userRepository.findByUsername(username);
     if (!user) throw new NotFoundException("User not found");
-    return { username: user.username, isPublic: user.isPublic };
+    return user;
   }
 
-  async patch(userId: string, username: string, isPublic: boolean) {
-    const existing = await this.userRepository.findByUsername(username);
-    if (existing && existing.id !== userId) {
-      console.log("inside existing && existing.id !== userId", {
-        existing,
-        userId,
-      });
-      throw new BadRequestException("Username already taken");
+  async patch(userId: string, userData: Partial<User>) {
+    if (userData.username) {
+      const existing = await this.userRepository.findByUsername(
+        userData.username,
+      );
+      if (existing && existing.id !== userId) {
+        console.log("inside existing && existing.id !== userId", {
+          existing,
+          userId,
+        });
+        throw new BadRequestException("Username already taken");
+      }
     }
 
-    const result = await this.userRepository.update(userId, {
-      username,
-      isPublic,
-    });
+    const result = await this.userRepository.update(userId, userData);
 
     if (!result) throw new NotFoundException("User not found");
     console.log("User updated", { result });

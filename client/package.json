@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "dev": "NODE_OPTIONS=\"--max-old-space-size=1024\" next dev",
+    "dev": "NODE_OPTIONS=\"--max-old-space-size=2048\" next dev",
     "test": "pnpm exec playwright test",
     "build": "next build",
     "start": "next start",
@@ -27,6 +27,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.1.0",
     "embla-carousel-react": "^8.6.0",
+    "framer-motion": "^12.40.0",
     "leaflet": "^1.9.4",
     "leaflet.markercluster": "^1.5.3",
     "lucide-react": "^1.7.0",

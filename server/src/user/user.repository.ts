@@ -26,13 +26,11 @@ export class UserRepository {
   }
 
   async update(id: string, data: Partial<typeof users.$inferInsert>) {
-    console.log("Updating user", { id, data });
     const [result] = await this.db
       .update(users)
       .set(data)
       .where(eq(users.id, id))
       .returning();
-    console.log("User updated", { result });
     return result;
   }
 

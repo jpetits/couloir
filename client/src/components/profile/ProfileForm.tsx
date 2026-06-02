@@ -1,6 +1,6 @@
 "use client";
 
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useForm, useWatch } from "react-hook-form";
 
 import { FrontPatchUserSchema, Sports, Units, type User } from "@couloir/types";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -53,6 +53,8 @@ export default function ProfileForm({ user }: { user: User }) {
       address: user.address ?? {},
     },
   });
+
+  const units = useWatch({ control: form.control, name: "units" });
 
   const onSubmit = async (data: FormValues) => {
     try {
@@ -237,20 +239,25 @@ export default function ProfileForm({ user }: { user: User }) {
         render={({ field, fieldState }) => (
           <Field data-invalid={fieldState.invalid}>
             <FieldLabel htmlFor="weeklyDistance">Weekly Distance</FieldLabel>
-            <Input
-              {...field}
-              id="weeklyDistance"
-              type="number"
-              placeholder="Weekly Distance"
-              value={field.value}
-              onChange={(e) =>
-                field.onChange(
-                  e.target.value === "" ? 0 : Number(e.target.value),
-                )
-              }
-              aria-invalid={fieldState.invalid}
-              onInvalid={(e) => e.preventDefault()}
-            />
+            <div className="relative">
+              <Input
+                {...field}
+                id="weeklyDistance"
+                type="number"
+                placeholder="Weekly Distance"
+                value={field.value}
+                onChange={(e) =>
+                  field.onChange(
+                    e.target.value === "" ? 0 : Number(e.target.value),
+                  )
+                }
+                aria-invalid={fieldState.invalid}
+                onInvalid={(e) => e.preventDefault()}
+              />
+              <span className="text-sm text-muted-foreground absolute right-7 top-1.5">
+                {units ?? "km"}
+              </span>
+            </div>
             {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
           </Field>
         )}
@@ -287,6 +294,7 @@ export default function ProfileForm({ user }: { user: User }) {
           className="cursor-pointer"
           type="button"
           variant="outline"
+          disabled={!form.formState.isDirty || form.formState.isSubmitting}
           onClick={() => form.reset()}
         >
           Reset
